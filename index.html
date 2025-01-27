@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LENA AI - Coming Soon</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=FIVER-MULTLINE&display=swap');
+        
+        body {
+            background-color: black;
+            color: #cbb26a;
+            text-align: center;
+            font-family: 'FIVER-MULTLINE', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 3rem;
+        }
+        .countdown {
+            font-size: 2rem;
+            margin: 20px 0;
+        }
+        .careers {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: rgba(203, 178, 106, 0.1);
+            border-radius: 10px;
+            max-width: 600px;
+            text-align: left;
+        }
+        .careers h2 {
+            color: #cbb26a;
+        }
+        .careers p {
+            text-align: left;
+        }
+        .careers a {
+            color: #cbb26a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <img src="logo.png" alt="LENA AI Logo" width="200">
+    <h1>Coming Soon</h1>
+    <div class="countdown" id="countdown"></div>
+    
+    <div class="careers">
+        <h2>Careers</h2>
+        <p><strong>Python Developer</strong></p>
+        <p><strong>What We’re Looking For:</strong></p>
+        <ul>
+            <li>✅ Python & FastAPI/Flask</li>
+            <li>✅ LangChain / GPT-4 API experience</li>
+            <li>✅ WhatsApp Business & Voice API (Vonage) integration</li>
+            <li>✅ Cloud database experience (Firebase Firestore)</li>
+            <li>✅ Cloud deployment (Vercel/DigitalOcean)</li>
+        </ul>
+        <p>Send your CV to <a href="mailto:careers@lenaai.net">careers@lenaai.net</a></p>
+    </div>
+    
+    <script>
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 30);
+            const distance = endDate - now;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+        
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
