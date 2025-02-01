@@ -61,6 +61,9 @@
             <p>Send your CV to <a href="mailto:careers@lenaai.net">careers@lenaai.net</a></p>
         </div>
     </div>
+
+    <!-- Chat-Bot -->
+
     <div class="chatbot">
         <div class="chat-header">
             <h2>
@@ -68,12 +71,14 @@
                 Chat With Us
             </h2>
         </div>
-        <div class="messages">
+        <div id="messages">
             <div class="message">Welcome to Lena Ai How can I help you today?</div>
         </div>
         <div class="input-field">
-            <input type="text" placeholder="Type Something Here">
-            <i class="fa-solid fa-paper-plane"></i>
+            <form id="input-form">
+                <input type="text" id="user-input" placeholder="Type Something Here" autocomplete="off">
+            </form>
+            <i class="fa-solid fa-paper-plane" id="submit-btn"></i>
         </div>
     </div>
 </body>

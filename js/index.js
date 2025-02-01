@@ -13,4 +13,33 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     setInterval(updateCountdown, 1000);
+
+    // Handle user input for Chat-Bot
+    const chatSubmit = document.getElementById("submit-btn");
+    const inputForm = document.getElementById("input-form");
+
+
+    function takeUserInput() {
+        let inputField = document.getElementById("user-input");
+        const userInput = inputField.value.trim();
+        const messagesDiv = document.getElementById("messages");
+        let message = document.createElement("div");
+
+
+        if (userInput === "") return;
+        message.innerHTML = userInput;
+        message.classList.add("message", "sent");
+        messagesDiv.appendChild(message);
+        inputField.value = "";
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    chatSubmit.addEventListener("click", function() {
+        takeUserInput();
+    });
+
+    inputForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        takeUserInput();
+    });
 })
