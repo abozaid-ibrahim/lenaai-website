@@ -17,16 +17,21 @@ document.addEventListener("DOMContentLoaded", function () {
     // Handle user input for Chat-Bot
     const chatSubmit = document.getElementById("submit-btn");
     const inputForm = document.getElementById("input-form");
+    let fileAttached = false;
 
 
     function takeUserInput() {
         let inputField = document.getElementById("user-input");
-        const userInput = inputField.value.trim();
+        let userInput = inputField.value.trim();
         const messagesDiv = document.getElementById("messages");
         let message = document.createElement("div");
 
 
         if (userInput === "") return;
+        if (fileAttached) {
+            userInput = `<i class="fa-solid fa-file"></i> ${userInput}`;
+            fileAttached = false;
+        }
         message.innerHTML = userInput;
         message.classList.add("message", "sent");
         messagesDiv.appendChild(message);
@@ -34,12 +39,48 @@ document.addEventListener("DOMContentLoaded", function () {
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    chatSubmit.addEventListener("click", function() {
+    chatSubmit.addEventListener("click", function () {
         takeUserInput();
     });
 
-    inputForm.addEventListener("submit", function(event) {
+    inputForm.addEventListener("submit", function (event) {
         event.preventDefault();
         takeUserInput();
     });
+
+    // upload a file
+    const attachButton = document.getElementById("attach-btn");
+    const fileField = document.getElementById("file-field");
+
+    attachButton.addEventListener("click", function () {
+        fileField.click();
+    });
+
+    fileField.addEventListener("change", function () {
+        let fileName = fileField.files[0]?.name;
+
+        if (fileName) {
+            let inputField = document.getElementById("user-input");
+            inputField.value = fileName;
+            fileAttached = true;
+            fileField.value = "";
+        }
+
+    });
+
+    const callBtn = document.getElementById("call-btn");
+    const phoneField = document.querySelector(".phone-field");
+
+    callBtn.addEventListener("click", function () {
+        phoneField.classList.toggle("active");
+        callBtn.classList.toggle("call-active");
+    });
+
+    const closeBtn = document.querySelector(".fa-circle-xmark");
+
+    closeBtn.addEventListener("click", function () {
+        phoneField.classList.remove("active");
+        callBtn.classList.remove("call-active");
+    });
+
 })

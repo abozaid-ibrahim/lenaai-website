@@ -94,12 +94,15 @@ h1 {
 .chat-header {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     color: #cbb26a;
     text-align: center;
 }
 
 .chat-header h2 {
-    margin: 10px auto;
+    margin: 10px;
+    margin-left: 30px;
+    flex: 1;
 }
 
 .chat-header .fa-solid {
@@ -172,4 +175,88 @@ h1 {
 .sent {
     margin-left: auto;
     background-color: #D9D9D9;
+}
+
+#call-btn {
+    padding: 10px;
+    border-radius: 50%;
+}
+
+#call-btn:hover {
+    cursor: pointer;
+    background-color: #cbb26a;
+    color: black;
+}
+
+.call-active {
+    background-color: #cbb26a;
+    color: black;
+}
+
+#attach-btn {
+    margin-right: 5px;
+    background-color: transparent;
+    color: #cbb26a;
+    padding: 10px;
+    border-radius: 50%;
+    border: 1px solid #cbb26a;
+}
+
+#attach-btn:hover {
+    cursor: pointer;
+    background-color: #cbb26a;
+    color: black;
+}
+
+#file-field {
+    display: none;
+}
+
+.phone-field {
+    position: absolute;
+    top: 5px;
+    right: 70px;
+    width: 240px;
+    background-color: black;
+    padding: 10px;
+    border-radius: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #cbb26a;
+    transition: display 0.3s ease-in-out;
+    display: none;
+}
+
+.phone-field input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 1rem;
+    background: transparent;
+    color: #cbb26a;
+}
+
+.phone-field .fa-solid {
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 18px;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.phone-field .fa-phone:hover {
+    background-color: #fff;
+    color: #015f11;
+}
+
+.phone-field .fa-circle-xmark:hover {
+    background-color: #fff;
+    color: #ac0e03;
+}
+
+.phone-field.active {
+    display: flex;
 }
