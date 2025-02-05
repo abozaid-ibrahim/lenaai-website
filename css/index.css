@@ -97,6 +97,8 @@ h1 {
     justify-content: flex-end;
     color: #cbb26a;
     text-align: center;
+    border-bottom: 1px solid #cbb26a;
+    margin-bottom: 5px;
 }
 
 .chat-header h2 {
@@ -113,7 +115,7 @@ h1 {
 #messages {
     border: 1px solid #616060;
     border-radius: 16px;
-    height: 700px;
+    height: 650px;
     padding: 20px;
     overflow-y: auto;
     scrollbar-width: none;
@@ -391,9 +393,158 @@ h1 {
     margin-bottom: 15px;
 }
 
-.photo-preview img {
+.photo-preview img,
+.chat-preview img {
     border-radius: 16px;
     object-fit: contain;
     height: auto;
     width: 100%;
+    display: block;
+}
+
+.chat-preview img {
+    margin-top: 10px;
+}
+
+/* Chat Engine List */
+
+.chat-engine {
+    color: #cbb26a;
+    display: inline-block;
+    position: relative;
+}
+
+.current-engine {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    padding: 10px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #cbb26a;
+    border-radius: 10px;
+}
+
+.current-engine .fa-solid {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.engine-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.current-engine:hover {
+    color: #000;
+    background-color: #cbb26a;
+    cursor: pointer;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 5%;
+    background: #cbb26a;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+    z-index: 10;
+    border-radius: 10px;
+    padding: 15px 0;
+}
+
+.dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown ul li {
+    padding: 10px;
+    color: black;
+    font-weight: bold;
+}
+
+.dropdown ul li:hover {
+    background: black;
+    color: #cbb26a;
+    cursor: pointer;
+}
+
+.engine-list-active {
+    color: #000;
+    background-color: #cbb26a;
+    cursor: pointer;
+}
+
+/* Images In Chat */
+
+.images {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.chat-image {
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.chat-image:hover {
+    cursor: pointer;
+    background-color: rgba(48, 58, 88, 0.849);
+}
+
+.chat-image img,
+.img-message img {
+    object-fit: contain;
+    display: block;
+    height: 70px;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 3px;
+}
+
+.react {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 15px;
+}
+
+.react .bi {
+    color: #cbb26a;
+    padding: 5px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.react .bi:hover {
+    cursor: pointer;
+    background-color: #cbb26a;
+    color: black;
+}
+
+.img-message {
+    max-width: 60%;
+    background-color: #cbb26a;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.img-message img {
+    margin-bottom: 0;
+    height: auto;
+}
+
+.img-message-sent img {
+    object-fit: contain;
+    display: block;
+    height: auto;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 3px;
+    margin-top: 5px;
 }
