@@ -193,7 +193,8 @@ h1 {
     color: black;
 }
 
-#attach-btn {
+#attach-btn,
+#bin-btn {
     margin-right: 5px;
     background-color: transparent;
     color: #cbb26a;
@@ -202,7 +203,8 @@ h1 {
     border: 1px solid #cbb26a;
 }
 
-#attach-btn:hover {
+#attach-btn:hover,
+#bin-btn:hover {
     cursor: pointer;
     background-color: #cbb26a;
     color: black;
@@ -259,4 +261,139 @@ h1 {
 
 .phone-field.active {
     display: flex;
+}
+
+#facebook-btn {
+    font-size: 24px;
+    padding: 10px 12px;
+    margin-left: 5px;
+}
+
+#facebook-btn:hover {
+    cursor: pointer;
+    background-color: #cbb26a;
+    color: black;
+    border-radius: 50%;
+}
+
+/* Facebook Upload Overlay */
+
+.upload-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.466);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.fb-upload {
+    background: #cbb26a;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 40%;
+    height: auto;
+    border-radius: 10px;
+    margin: auto;
+    position: relative;
+    min-height: min-content;
+}
+
+.upload-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 15px 30px;
+    border-bottom: 1px solid #cbb26a;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .08), 0 4px 12px rgba(0, 0, 0, .08);
+}
+
+.upload-header h1 {
+    flex: 1;
+    font-size: 24px;
+    font-family: 'FIVER-MULTLINE', sans-serif;
+    text-align: left;
+    margin: 0;
+    color: black;
+}
+
+.upload-header .fa-solid {
+    font-size: 30px;
+    color: black;
+}
+
+.upload-header .fa-solid:hover {
+    color: #5e5c5c;
+    cursor: pointer;
+}
+
+.upload-data {
+    padding: 15px;
+    background-color: #fff;
+}
+
+#upload-form {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#upload-form input {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+#upload-form textarea {
+    resize: none;
+    font-family: 'FIVER-MULTLINE', sans-serif;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+    border: none;
+}
+
+#post-btn {
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    background-color: #cbb26a;
+    border-radius: 16px;
+}
+
+#post-btn:hover {
+    cursor: pointer;
+    background-color: #000;
+    color: #cbb26a;
+}
+
+#post-photo {
+    display: none;
+}
+
+.content-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #cbb26a;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    padding: 15px;
+    width: 100%;
+}
+
+.photo-preview {
+    margin-bottom: 15px;
+}
+
+.photo-preview img {
+    border-radius: 16px;
+    object-fit: contain;
+    height: auto;
+    width: 100%;
 }

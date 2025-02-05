@@ -35,6 +35,20 @@ document.addEventListener("DOMContentLoaded", function () {
         message.innerHTML = userInput;
         message.classList.add("message", "sent");
         messagesDiv.appendChild(message);
+
+        // $.ajax({
+        //     url: "https://lenaai.net/search",
+        //     method: "POST",
+        //     contentType: "application/json",
+        //     data: JSON.stringify({"query": userInput}),
+        //     success: function (response) {
+        //         console.log(response);
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error("Error:", error);
+        //     }
+        // })
+
         inputField.value = "";
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
@@ -68,6 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
+    // Call Section
     const callBtn = document.getElementById("call-btn");
     const phoneField = document.querySelector(".phone-field");
 
@@ -83,4 +98,101 @@ document.addEventListener("DOMContentLoaded", function () {
         callBtn.classList.remove("call-active");
     });
 
+    // Facebook page posting
+    const facebookButton = document.getElementById("facebook-btn");
+    const uploadOverlay = document.querySelector(".upload-overlay");
+    const uploadDetails = document.querySelector(".fb-upload");
+
+    facebookButton.addEventListener("click", function () {
+        uploadOverlay.style.display = "flex";
+        uploadDetails.innerHTML = `
+            <div class="upload-header">
+                <h1>Post on Facebook</h1>
+                <i class="fa-solid close-btn fa-circle-xmark"></i>
+            </div>
+            <div class="upload-data">
+            <div class="photo-preview"></div>
+                <form id="upload-form">
+                    <div class="content-container">
+                        <textarea placeholder="Post Content ..." id="post-content"></textarea>
+                        <i class="fa-solid fa-paperclip" id="bin-btn"></i>
+                    </div>
+                    <input type="file" id="post-photo">
+                    <input type="submit" value="Post" id="post-btn">
+                </form>
+            </div>`;
+        
+        document.querySelector(".close-btn").addEventListener("click", function () {
+            uploadOverlay.style.display = "none";
+            uploadDetails.innerHTML = '';
+        });
+
+        $("textarea").each(function () {
+            this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+        }).on("input", function () {
+            this.style.height = 0;
+            this.style.height = (this.scrollHeight) + "px";
+        });
+
+        const attachButton = document.getElementById("bin-btn");
+        const fileField = document.getElementById("post-photo");
+        const postButton = document.getElementById("post-btn");
+        let file;
+
+        attachButton.addEventListener("click", function () {
+            fileField.click();
+        });
+
+        fileField.addEventListener("change", function () {
+            file = fileField.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('.photo-preview').html(`<img src="${e.target.result}" alt="Photo Preview">`);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                $('.photo-preview').html('');
+            }
+        });
+
+        async function uploadPhoto(file) {
+            const formData = new FormData();
+            formData.append("file", file);
+        
+            const response = await fetch("http://localhost:8000/upload_photo", {
+                method: "POST",
+                body: formData
+            });
+        
+            const data = await response.json();
+            return data.photo_url; // Return the uploaded photo URL
+        }
+        
+        postButton.addEventListener("click", async function (event) {
+            event.preventDefault();
+        
+            const postContent = document.getElementById("post-content").value;
+            let photoUrl = null;
+
+            if (file) {
+                photoUrl = await uploadPhoto(file); // Upload and get URL
+            }
+        
+            $.ajax({
+                url: "http://localhost:8000/fb_post",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    content: postContent,
+                    photo_url: photoUrl
+                }),
+                success: function (response) {
+                    console.log(response);
+                }
+            });
+
+            uploadOverlay.style.display = "none";
+        });
+    });
 })
