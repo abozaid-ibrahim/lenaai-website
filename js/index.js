@@ -29,7 +29,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (userInput === "") return;
         if (fileAttached) {
-            userInput = `<i class="fa-solid fa-file"></i> ${userInput}`;
+            const fileContent = document.querySelector(".chat-preview");
+            const fileContentSource = fileContent.querySelector("img").getAttribute("src");
+            const chatPreview = document.querySelector(".chat-preview");
+
+
+            userInput = `<i class="fa-solid fa-file"></i> ${userInput}
+            <div class="img-message-sent">
+                <img src="${fileContentSource}">
+            </div>`;
+            chatPreview.innerHTML = "";
+            messagesDiv.style.height = "650px";
             fileAttached = false;
         }
         message.innerHTML = userInput;
@@ -77,6 +87,19 @@ document.addEventListener("DOMContentLoaded", function () {
             let inputField = document.getElementById("user-input");
             inputField.value = fileName;
             fileAttached = true;
+            file = fileField.files[0];
+            if (file) {
+                const reader = new FileReader();
+                const messagesDiv = document.getElementById("messages");
+
+                messagesDiv.style.height = "390px";
+                reader.onload = function(e) {
+                    $('.chat-preview').html(`<img src="${e.target.result}" alt="Chat Preview">`);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                $('.chat-preview').html('');
+            }
             fileField.value = "";
         }
 
@@ -193,6 +216,59 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             uploadOverlay.style.display = "none";
+        });
+    });
+  
+    // Chat engine list
+    const currentChatEngine = document.querySelector(".current-engine");
+    const dropdown = document.getElementById('dropdown-menu');
+    const chatEngines = Array.from(document.getElementsByClassName("engine-item"));
+    
+    function toggleDropdown() {
+        const isVisible = dropdown.style.display === "block";
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        currentChatEngine.classList.toggle("engine-list-active", !isVisible);
+    }
+
+    currentChatEngine.addEventListener("click", function (event) {
+        event.stopPropagation();
+        toggleDropdown();
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!currentChatEngine.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.style.display = "none";
+            currentChatEngine.classList.remove("engine-list-active");
+        }
+    });
+
+    chatEngines.forEach((engine) => {
+        engine.addEventListener("click", function () {
+            const messagesDiv = document.getElementById("messages");
+            let selectedEngineName = engine.textContent;
+            const currentEngineName = document.querySelector(".engine-name");
+
+            if (currentEngineName.textContent !== selectedEngineName) {
+                currentEngineName.textContent = selectedEngineName;
+                messagesDiv.innerHTML = `
+                <div class="message">
+                    Welcome to Lena Ai How can I help you today?
+                </div>`;
+            }
+        });
+    });
+
+    // Chat images select
+    const chatImages = Array.from(document.getElementsByClassName("chat-image"));
+    const imagesDiv = document.querySelector(".images");
+
+    chatImages.forEach((image) => {
+        image = image.querySelector("img");
+        image.addEventListener("click", function () {
+            const imageSource = image.getAttribute("src");
+            imagesDiv.innerHTML = `<div class="img-message">
+                <img src="${imageSource}" alt="Chat Image">
+            </div>`;
         });
     });
 })

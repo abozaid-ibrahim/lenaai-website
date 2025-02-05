@@ -8,6 +8,8 @@
 
     <!-- Font -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
 
     <!-- CSS files -->
     <link rel="stylesheet" href="css/index.css">
@@ -81,9 +83,50 @@
                 <i class="fa-solid fa-circle-xmark"></i>
             </div>
         </div>
+        <div class="chat-engine">
+            <div class="current-engine">
+                <i class="fa-solid fa-microchip"></i>
+                <div class="engine-name">AI-Agent (Default)</div>
+                <div class="dropdown" id="dropdown-menu">
+                    <ul>
+                        <li class="engine-item">AI-Agent (Default)</li>
+                        <li class="engine-item">GPT-4 Turbo</li>
+                        <li class="engine-item">Custom Model</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div id="messages">
             <div class="message">Welcome to Lena Ai How can I help you today?</div>
+            <div class="message sent">Hi</div>
+            <div class="message">Hello how can i help you?</div>
+            <div class="message sent">Can you bring me some images</div>
+            <div class="message">Yeah sure here it is</div>
+            <div class="images">
+                <div class="chat-image">
+                    <img src="assets/logo.png" alt="Chat Image">
+                    <div class="react">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                        <i class="bi bi-hand-thumbs-down"></i>
+                    </div>
+                </div>
+                <div class="chat-image">
+                    <img src="assets/careers2.png" alt="Chat Image">
+                    <div class="react">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                        <i class="bi bi-hand-thumbs-down"></i>
+                    </div>
+                </div>
+                <div class="chat-image">
+                    <img src="assets/logo.png" alt="Chat Image">
+                    <div class="react">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                        <i class="bi bi-hand-thumbs-down"></i>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="chat-preview"></div>
         <div class="input-field">
             <form id="input-form">
                 <input type="text" id="user-input" placeholder="Type Something Here" autocomplete="off">
