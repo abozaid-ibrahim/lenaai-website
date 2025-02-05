@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
             uploadOverlay.style.display = "none";
         });
     });
-
+  
     // Chat engine list
     const currentChatEngine = document.querySelector(".current-engine");
     const dropdown = document.getElementById('dropdown-menu');
