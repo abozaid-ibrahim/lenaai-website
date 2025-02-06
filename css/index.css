@@ -119,7 +119,7 @@ h1 {
 #messages {
     border: 1px solid #616060;
     border-radius: 16px;
-    height: 700px;
+    height: 650px;
     padding: 20px;
     overflow-y: auto;
     scrollbar-width: none;

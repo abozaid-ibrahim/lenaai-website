@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const imagesDiv = document.querySelector(".images");
     const galleryOverlay = document.querySelector(".gallery-overlay");
     const gallerycontent = document.querySelector(".gallery-content");
-
+  
 
     chatImages.forEach((image) => {
         image = image.querySelector("img");
