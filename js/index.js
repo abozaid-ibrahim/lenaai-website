@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <img src="${fileContentSource}">
             </div>`;
             chatPreview.innerHTML = "";
-            messagesDiv.style.height = "650px";
+            messagesDiv.style.height = "700px";
             fileAttached = false;
         }
         message.innerHTML = userInput;
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const reader = new FileReader();
                 const messagesDiv = document.getElementById("messages");
 
-                messagesDiv.style.height = "390px";
+                messagesDiv.style.height = "450px";
                 reader.onload = function(e) {
                     $('.chat-preview').html(`<img src="${e.target.result}" alt="Chat Preview">`);
                 };
@@ -261,14 +261,129 @@ document.addEventListener("DOMContentLoaded", function () {
     // Chat images select
     const chatImages = Array.from(document.getElementsByClassName("chat-image"));
     const imagesDiv = document.querySelector(".images");
+    const galleryOverlay = document.querySelector(".gallery-overlay");
+    const gallerycontent = document.querySelector(".gallery-content");
+  
 
     chatImages.forEach((image) => {
         image = image.querySelector("img");
         image.addEventListener("click", function () {
-            const imageSource = image.getAttribute("src");
-            imagesDiv.innerHTML = `<div class="img-message">
-                <img src="${imageSource}" alt="Chat Image">
+            galleryOverlay.style.display = "flex";
+            gallerycontent.innerHTML = `
+            <div class="upload-header">
+                <h1>Image Tile</h1>
+                <i class="fa-solid close-btn fa-circle-xmark"></i>
+            </div>
+            <div class="slider">
+                <div class="slider-wrapper">
+                    <i class="bi bi-hand-thumbs-up like"></i>
+                    <i class="bi bi-hand-thumbs-down dislike"></i>
+                    <div class="slide">
+                        <img src="assets/logo.png">
+                    </div>
+                    <div class="slide">
+                        <img src="assets/careers2.png">
+                    </div>
+                    <div class="slide">
+                        <img src="assets/logo.png">
+                    </div>
+                    <div class="slide">
+                        <img src="assets/careers2.png">
+                    </div>
+                </div>
+
+                <div id="prev"><i class="fa-solid iconCall fa-chevron-left"></i></div>
+                <div id="next"><i class="fa-solid iconCall fa-chevron-right"></i></div>
+
+                <i class="bi bi-hand-thumbs-up like"></i>
+                <i class="bi bi-hand-thumbs-down dislike"></i>
+
+                <div class="content">
+                    <p>
+                        Find your dream home today!<br>
+                        Explore top properties at unbeatable prices.
+                    </p>
+                </div>
             </div>`;
+
+            document.querySelector(".close-btn").addEventListener("click", function () {
+                galleryOverlay.style.display = "none";
+                gallerycontent.innerHTML = '';
+            });
+
+            const slides = document.getElementsByClassName("slide");
+            const sliderWrapper = document.querySelector('.slider-wrapper');
+            const prev = document.getElementById("prev");
+            const next = document.getElementById("next");
+            let slideIndex = 0;
+
+            showSlides(slideIndex);
+
+            function plusSlides(num) {
+                showSlides(slideIndex += num);
+            }
+        
+            function showSlides(num) {      
+                slideIndex = (num + slides.length) % slides.length;
+                if (slideIndex === 0) {
+                    prev.style.display = "none";
+                } else {
+                    prev.style.display = "block";
+                }
+
+                if (slideIndex === slides.length - 1) {
+                    next.style.display = "none";
+                } else {
+                    next.style.display = "block";
+                }
+
+                sliderWrapper.style.transform = `translateX(-${slideIndex * 100}%)`;
+            }
+
+            prev.addEventListener("click", function () {
+                plusSlides(-1);
+            });
+        
+            next.addEventListener("click", function () {
+                plusSlides(1);
+            });
+
+            // like & dislike buttons
+            const likeButtons = Array.from(document.getElementsByClassName("like"));
+            const dislikeButtons = Array.from(document.getElementsByClassName("dislike"));
+
+            likeButtons.forEach((like) => {
+                like.addEventListener("click", function () {
+                    let liked = document.createElement("i");
+                    liked.classList.add("bi", "bi-hand-thumbs-up-fill", "liked");
+
+                    liked.addEventListener("click", function() {
+                        liked.replaceWith(like);
+                    });
+
+                    setTimeout(() => document.querySelector(".close-btn").click(), 1000);
+
+                    like.replaceWith(liked);
+                });
+            });
+
+            dislikeButtons.forEach((dislike) => {
+                dislike.addEventListener("click", function () {
+                    let disliked = document.createElement("i");
+                    disliked.classList.add("bi", "bi-hand-thumbs-down-fill", "disliked");
+
+                    disliked.addEventListener("click", function() {
+                        disliked.replaceWith(dislike);
+                    });
+
+                    dislike.replaceWith(disliked);
+                });
+            });
+
+            // // const imageSource = image.getAttribute("src");
+            // imagesDiv.innerHTML = `<div class="img-message">
+            //     <img src="${imageSource}" alt="Chat Image">
+            // </div>`;
         });
     });
 })

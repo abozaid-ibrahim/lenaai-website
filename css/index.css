@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=FIVER-MULTLINE&display=swap');
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     display: flex;
@@ -86,7 +90,7 @@ h1 {
     margin-left: 0;
     padding: 10px;
     position: sticky;
-    top: 3%;
+    top: 2%;
     height: fit-content;
     font-family: 'FIVER-MULTLINE', sans-serif;
 }
@@ -280,7 +284,8 @@ h1 {
 
 /* Facebook Upload Overlay */
 
-.upload-overlay {
+.upload-overlay,
+.gallery-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -296,7 +301,8 @@ h1 {
     box-sizing: border-box;
 }
 
-.fb-upload {
+.fb-upload,
+.gallery-content {
     background: #cbb26a;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     width: 40%;
@@ -528,7 +534,7 @@ h1 {
 }
 
 .img-message {
-    max-width: 60%;
+    max-width: 100%;
     background-color: #cbb26a;
     border-radius: 10px;
     padding: 5px;
@@ -547,4 +553,96 @@ h1 {
     border-radius: 10px;
     margin-bottom: 3px;
     margin-top: 5px;
+}
+
+.gallery-content {
+    width: 70%;
+}
+
+.slider {
+    margin: auto;
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.slider-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+}
+
+.slide {
+    flex: 0 0 100%;
+    display: block;
+    position: relative;
+}
+
+.slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 70vh;
+    margin: auto;
+    object-fit: cover;
+}
+
+#prev,
+#next {
+    position: absolute;
+    font-size: clamp(26px, 5vw, 50px);
+    top: 50%;
+    color: #f0f0f0;
+    padding: 20px;
+    transform: translateY(-50%);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+#next,
+.bi-hand-thumbs-down,
+.bi-hand-thumbs-down-fill {
+    right: 0;
+}
+
+#prev:hover,
+#next:hover {
+    color: #fff;
+    cursor: pointer;
+    font-size: clamp(30px, 5vw, 54px);
+}
+
+.slider .bi {
+    position: absolute;
+    font-size: clamp(26px, 5vw, 35px);
+    top: 10%;
+    color: #cbb26a;
+    padding: 20px;
+    transform: translateY(-50%);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.slider .bi:hover {
+    cursor: pointer;
+    font-size: clamp(30px, 5vw, 40px);
+}
+
+.slider .content {
+    position: absolute;
+    top: 80%;
+    font-size: clamp(8px, 3vw, 35px);
+    color: #fff;
+    padding: clamp(2px, 2vw, 15px);
+    transform: translateY(-50%);
+    background-color: #00000091;
+    font-family: 'FIVER-MULTLINE', sans-serif;
+    width: 100%;
+}
+
+.slider .content p {
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    margin-left: 30px;
 }
