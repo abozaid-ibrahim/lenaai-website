@@ -1,0 +1,51 @@
+/* Media queries */
+
+@media (max-width: 1200px) {
+    .main-container {
+        display: none;
+    }
+
+    .chatbot {
+        width: 100%;
+        height: 100%;
+        margin: 5px;
+        margin-top: 8px;
+    }
+
+    #messages {
+        height: 80vh;
+    }
+
+    .chat-header h2 {
+        font-size: 20px;
+    }
+
+    .chat-header .fa-solid {
+        font-size: 19px;
+    }
+
+    #facebook-btn {
+        font-size: 22px;
+    }
+
+    .fb-upload {
+        width: fit-content;
+    }
+
+    .phone-field {
+        top: 9px;
+        padding: 6px;
+    }
+
+    .gallery-content {
+        width: 90%;
+    }
+
+    .slider {
+        overflow-x: auto;
+    }
+
+    .slide img {
+        min-height: 31vh;
+    }
+}
