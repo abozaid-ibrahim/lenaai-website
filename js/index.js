@@ -428,10 +428,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 dislike.replaceWith(disliked);
             });
         });
+    });
 
-        // // const imageSource = image.getAttribute("src");
-        // imagesDiv.innerHTML = `<div class="img-message">
-        //     <img src="${imageSource}" alt="Chat Image">
-        // </div>`;
+    const video = document.getElementById("ai-video");
+    const playButton = document.getElementById("play-button");
+
+    playButton.addEventListener("click", function () {
+        if (video.paused) {
+            video.controls = true;
+            video.play();
+            playButton.classList.add("hide");
+        }
+    });
+
+    video.addEventListener("ended", function () {
+        playButton.classList.remove("hide");
+        video.controls = false;
+    });
+
+    const menuToggle = document.getElementById("menu-toggle");
+    const navList = document.getElementById("nav-list");
+
+    menuToggle.addEventListener("click", function () {
+        navList.classList.toggle("show"); // Toggle class to show/hide menu
     });
 })
