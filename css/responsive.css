@@ -13,7 +13,7 @@
     }
 
     #messages {
-        height: 80vh;
+        height: 60vh;
     }
 
     .chat-header h2 {
@@ -43,5 +43,107 @@
     
     .slide img {
         min-height: 31vh;
+    }
+
+    .hero {
+        width: 100%;
+    }
+
+    .grid-item {
+        padding: 0;
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        justify-content: space-between;
+    }
+
+    .header-container button {
+        padding: 10px;
+    }
+
+    .nav-list {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    .nav-list li {
+        width: fit-content;
+        margin: auto;
+    }
+
+    .nav-list button {
+        display: block;
+        width: 0%;
+        margin: auto;
+        text-align: center;
+    }
+
+    .nav-list.show {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+        font-size: 24px;
+        cursor: pointer;
+        color: #cbb26a;
+        font-size: 2.5rem;
+        margin-left: 10px;
+    }
+
+    .hero-title {
+        font-size: 2.5em;
+    }
+
+    .trial button {
+        font-size: 1em;
+        padding: 15px;
+    }
+
+    .hub-grid {
+        margin: 0;
+    }
+
+    .hub-subheader {
+        margin-bottom: 1rem;
+    }
+
+    .grid-item:first-child {
+        flex-direction: column-reverse;
+    }
+
+    .grid-item img {
+        margin-bottom: 1rem;
+    }
+
+    .item-title {
+        font-size: 2rem;
+    }
+
+    .item-content {
+        margin-left: 15px;
+    }
+
+    #ai-video {
+        width: 99%;
+    }
+
+    .efficiency-hub {
+        padding: 10px;
+        margin-top: 2rem;
+    }
+
+    .item-list li {
+        width: 90%;
     }
 }

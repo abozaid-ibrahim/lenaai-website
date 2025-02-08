@@ -2,19 +2,22 @@
 
 * {
     box-sizing: border-box;
+    font-family: 'FIVER-MULTLINE', sans-serif;
 }
 
 body {
     margin: 0;
-    display: flex;
     background-color: black;
+}
+
+.content-warpper {
+    display: flex;
 }
 
 .main-container {
     background-color: black;
     color: #cbb26a;
     text-align: center;
-    font-family: 'FIVER-MULTLINE', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,7 +58,6 @@ h1 {
     padding: 5px 10px;
     color: #cbb26a;
     /* Adjust padding as needed */
-    font-family: 'FIVER-MULTLINE', sans-serif;
     text-align: center;
     margin: 4px 2px;
     transition-duration: 0.4s;
@@ -92,7 +94,6 @@ h1 {
     position: sticky;
     top: 2%;
     height: fit-content;
-    font-family: 'FIVER-MULTLINE', sans-serif;
 }
 
 .chat-header {
@@ -328,7 +329,6 @@ h1 {
 .upload-header h1 {
     flex: 1;
     font-size: 24px;
-    font-family: 'FIVER-MULTLINE', sans-serif;
     text-align: left;
     margin: 0;
     color: black;
@@ -362,7 +362,6 @@ h1 {
 #upload-form textarea,
 #user-input {
     resize: none;
-    font-family: 'FIVER-MULTLINE', sans-serif;
     width: 100%;
     outline: none;
     font-size: 16px;
@@ -641,7 +640,6 @@ h1 {
     padding: clamp(2px, 2vw, 15px);
     transform: translateY(-50%);
     background-color: #00000091;
-    font-family: 'FIVER-MULTLINE', sans-serif;
     width: 100%;
 }
 

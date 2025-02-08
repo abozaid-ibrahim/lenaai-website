@@ -5,14 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LENA AI</title>
+    <link rel="icon" href="assets/icon.png">
 
     <!-- Font -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
 
     <!-- CSS files -->
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/efficiency_hub.css">
     <link rel="stylesheet" href="css/responsive.css">
 
     <!-- JS files -->
@@ -23,105 +27,179 @@
 </head>
 
 <body>
-    <div class="main-container">
-        <img src="assets/logo.png" alt="LENA AI Logo" width="25%">
-
-        <h1>Coming Soon</h1>
-
-
-        <div class="countdown" id="countdown"></div>
-
-        <div class="careers">
-            <h2>Careers</h2>
-
-            <div class="job-listing">
-                <p><strong>Python Developer</strong></p>
-                <p>What We’re Looking For:</p>
-                <ul>
-                    <li>1-4 years experience</li>
-                    <li>Python & FastAPI/Flask ✅</li>
-                    <li>LangChain / GPT-4 API experience ✅</li>
-                    <li>WhatsApp Business & Voice API (Vonage) integration ✅</li>
-                    <li>Cloud database experience (Firebase Firestore) ✅</li>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="header-title">AI Efficiency Hub</div>
+            <!-- Navigation -->
+            <nav class="navbar">
+                <ul class="nav-list" id="nav-list">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#">Client Dashboard</a></li>
+                    <li><a href="#">Job Opportunities</a></li>
                 </ul>
-                <button class="apply-button"  onclick="window.location.href='mailto:careers@lenaai.net'">Apply now</button>
-
-            </div>
-
-            <div class="job-listing">
-                <p><strong>LangChain Developer</strong></p>
-                <p>What We’re Looking For:</p>
-                <ul>
-                    <li>At least 6 months of hands-on experience with LangChain.</li>
-                    <li>Proficiency in RAG pipelines and working with knowledge bases like vector databases (e.g., Pinecone,
-                        Weaviate, or FAISS).
-                        Strong understanding of building and deploying AI Agents for tasks such as automation, chatbots, or
-                        data retrieval.</li>
-                    <li>Familiarity with Python and experience integrating APIs into LangChain workflows.</li>
-                    <li>Knowledge of vector databases and retrieval-augmented generation (RAG) ✅</li>
-                    <li>Knowledge of Large Language Models (LLMs) such as OpenAI GPT, Cohere, or similar.</li>
-                </ul>
-                <button class="apply-button"  onclick="window.location.href='mailto:careers@lenaai.net'">Apply now</button>
-            </div>
-
-            <p>Send your CV to <a href="mailto:careers@lenaai.net">careers@lenaai.net</a></p>
-        </div>
-    </div>
-
-    <!-- Chat-Bot -->
-
-    <div class="chatbot">
-        <div class="chat-header">
-            <i class="fa-brands fa-facebook-f" id="facebook-btn"></i>
-            <h2>
-                <i class="fa-solid fa-message"></i>
-                Chat With Us
-            </h2>
-            <i class="fa-solid fa-phone" id="call-btn"></i>
-            <div class="phone-field">
-                <input type="text" id="phone-no" placeholder="(+20) 147 1234 213">
-                <i class="fa-solid fa-phone"></i>
-                <i class="fa-solid fa-circle-xmark"></i>
+            </nav>
+            <button class="sign-in-btn">
+                <i class="bi bi-box-arrow-in-right"></i> Sign In
+            </button>
+            <div class="menu-toggle" id="menu-toggle">
+                <i class="bi bi-list"></i> <!-- Burger Icon -->
             </div>
         </div>
-        <div class="chat-engine">
-            <div class="current-engine">
-                <i class="fa-solid fa-microchip"></i>
-                <div class="engine-name">AI-Agent (Default)</div>
-                <div class="dropdown" id="dropdown-menu">
-                    <ul>
-                        <li class="engine-item">AI-Agent (Default)</li>
-                        <li class="engine-item">GPT-4 Turbo</li>
-                        <li class="engine-item">Custom Model</li>
+    </header>
+
+    <!-- Hero -->
+
+    <section class="hero">
+        <div class="hero-title">Make it AI: Efficient & Cost-Effective</div>
+        <div class="hero-subheader">Harness AI for smarter solutions with reduced costs.</div>
+        <div class="trial">
+            <button class="chat">Try our Chatbot</button>
+            <button class="demo">Request demo</button>
+        </div>
+    </section>
+
+    <!-- Video -->
+    <section class="vod">
+        <video id="ai-video">
+            <source src="assets/ai_vod.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <i class="fa-solid fa-circle-play play-btn" id="play-button"></i>
+    </section>
+
+    <!-- Efficiency hub -->
+    <section class="efficiency-hub">
+        <div class="hub-title">AI Efficiency Hub</div>
+        <div class="hub-subheader">Unlock the power of AI to boost productivity and streamline operations effortlessly.</div>
+        <div class="hub-grid">
+            <div class="grid-item">
+                <div class="item-content">
+                    <div class="item-title">Smart Automation</div>
+                    <ul class="item-list">
+                        <li>chatbot has access to your crm and reply 24/7 to your clients.</li>
+                        <li>automate replying with ai to the business whatsapp number.</li>
                     </ul>
+                    <button class="try-btn">Try Now</button>
+                </div>
+                <img src="assets/Image 84.png" alt="Smart Automation">
+            </div>
+
+            <div class="grid-item">
+                <img src="assets/Image 85.png" alt="Smart Automation">
+                <div class="item-content">
+                    <div class="item-title">Data Insights</div>
+                    <ul class="item-list">
+                        <li>customized profile for each client, to have better targetting.</li>
+                        <li>auto create marketing compains and reply on posts.</li>
+                    </ul>
+                    <button class="try-btn">Try Now</button>
                 </div>
             </div>
         </div>
-        <div id="messages">
-            <div class="message">Welcome to Lena Ai How can I help you today?</div>
-        </div>
-        <div class="chat-preview"></div>
-        <div class="input-field">
-            <form id="input-form">
-                <textarea id="user-input" placeholder="Type Something Here" autocomplete="off"></textarea>
-                <input type="file" id="file-field">
-            </form>
-            <i class="fa-solid fa-plus" id="attach-btn"></i>
-            <i class="fa-solid fa-paper-plane" id="submit-btn"></i>
-        </div>
-    </div>
+    </section>
 
-    <!-- Facebook Upload -->
-    <div class="upload-overlay">
-        <div class="fb-upload">
+    <section class="content-warpper">
+        <div class="main-container">
+            <img src="assets/logo.png" alt="LENA AI Logo" width="25%">
+    
+            <h1>Coming Soon</h1>
+    
+    
+            <div class="countdown" id="countdown"></div>
+    
+            <div class="careers">
+                <h2>Careers</h2>
+    
+                <div class="job-listing">
+                    <p><strong>Senior Python Developer</strong></p>
+                    <p>What We’re Looking For:</p>
+                    <ul>
+                        <li>Minimun 3 years of experience</li>
+                        <li>Python & FastAPI/Flask ✅</li>
+                        <li>LangChain / GPT-4 API experience ✅</li>
+                        <li>WhatsApp Business & Voice API (Vonage) integration ✅</li>
+                        <li>Cloud database experience (Firebase Firestore) ✅</li>
+                    </ul>
+                    <button class="apply-button"  onclick="window.location.href='mailto:abozaid@lenaai.net'">Apply now</button>
+    
+                </div>
+    
+                <div class="job-listing">
+                    <p><strong>LangChain Developer</strong></p>
+                    <p>What We’re Looking For:</p>
+                    <ul>
+                        <li>At least 6 months of hands-on experience with LangChain.</li>
+                        <li>Proficiency in RAG pipelines and working with knowledge bases like vector databases (e.g., Pinecone,
+                            Weaviate, or FAISS).
+                            Strong understanding of building and deploying AI Agents for tasks such as automation, chatbots, or
+                            data retrieval.</li>
+                        <li>Familiarity with Python and experience integrating APIs into LangChain workflows.</li>
+                        <li>Knowledge of vector databases and retrieval-augmented generation (RAG) ✅</li>
+                        <li>Knowledge of Large Language Models (LLMs) such as OpenAI GPT, Cohere, or similar.</li>
+                    </ul>
+                    <button class="apply-button"  onclick="window.location.href='mailto:abozaid@lenaai.net'">Apply now</button>
+                </div>
+    
+                <p>Send your CV to <a href="mailto:abozaid@lenaai.net">abozaid@lenaai.net</a></p>
+            </div>
         </div>
-    </div>
-
-    <!-- Gallery Popup -->
-    <div class="gallery-overlay">
-        <div class="gallery-content">
+    
+        <!-- Chat-Bot -->
+    
+        <div class="chatbot">
+            <div class="chat-header">
+                <i class="fa-brands fa-facebook-f" id="facebook-btn"></i>
+                <h2>
+                    <i class="fa-solid fa-message"></i>
+                    Chat With Us
+                </h2>
+                <i class="fa-solid fa-phone" id="call-btn"></i>
+                <div class="phone-field">
+                    <input type="text" id="phone-no" placeholder="(+20) 147 1234 213">
+                    <i class="fa-solid fa-phone"></i>
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+            </div>
+            <div class="chat-engine">
+                <div class="current-engine">
+                    <i class="fa-solid fa-microchip"></i>
+                    <div class="engine-name">AI-Agent (Default)</div>
+                    <div class="dropdown" id="dropdown-menu">
+                        <ul>
+                            <li class="engine-item">AI-Agent (Default)</li>
+                            <li class="engine-item">GPT-4 Turbo</li>
+                            <li class="engine-item">Custom Model</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="messages">
+                <div class="message">Welcome to Lena Ai How can I help you today?</div>
+            </div>
+            <div class="chat-preview"></div>
+            <div class="input-field">
+                <form id="input-form">
+                    <textarea id="user-input" placeholder="Type Something Here" autocomplete="off"></textarea>
+                    <input type="file" id="file-field">
+                </form>
+                <i class="fa-solid fa-plus" id="attach-btn"></i>
+                <i class="fa-solid fa-paper-plane" id="submit-btn"></i>
+            </div>
         </div>
-    </div>
+    
+        <!-- Facebook Upload -->
+        <div class="upload-overlay">
+            <div class="fb-upload">
+            </div>
+        </div>
+    
+        <!-- Gallery Popup -->
+        <div class="gallery-overlay">
+            <div class="gallery-content">
+            </div>
+        </div>
+    </section>
 </body>
 
 </html>

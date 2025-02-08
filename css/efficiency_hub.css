@@ -1,0 +1,258 @@
+/* Header */
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #cbb26a;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    width: 100%;
+    border-bottom: 1px solid #795d08;
+}
+
+.header-title {
+    font-size: clamp(1em, 5vw, 1.7em);
+    margin-right: 30px;
+    font-weight: bold;
+    color: #cbb26a;
+}
+
+.nav-list {
+    display: flex;
+}
+
+.nav-list li {
+    padding: 10px;
+    margin-right: 15px;
+    color: #cbb26a;
+}
+
+.nav-list li:hover {
+    cursor: pointer;
+    border-bottom: 3px solid #cbb26a;
+}
+
+.active {
+    font-weight: bold;
+    border-bottom: 3px solid #cbb26a;
+}
+
+.header-container button {
+    margin-left: auto;
+    padding: 7px 30px;
+    display: flex;
+    align-items: center;
+    border: 2px solid #cbb26a;
+    outline: none;
+    background-color: #cbb26a;
+    color: black;
+    border-radius: 16px;
+    font-weight: bold;
+}
+
+.header-container button:hover {
+    background-color: black;
+    color: #cbb26a;
+    cursor: pointer;
+}
+
+.header-container button .bi {
+    margin-right: 10px;
+    font-size: 1.5em;
+}
+
+/* Hero */
+
+.hero,
+.efficiency-hub {
+    text-align: center;
+    width: 50%;
+    margin: auto;
+    margin-top: 7rem;
+}
+
+.hero-title {
+    color: #cbb26a;
+    text-align: center;
+    font-weight: bold;
+    font-size: 5em;
+    font-family: "Archivo", serif;
+}
+
+.hero-subheader {
+    color: #cbb26a;
+    font-family: "Inter", serif;
+    font-size: 1.6em;
+    margin-top: 3.5rem;
+    letter-spacing: 1px;
+}
+
+.trial {
+    margin-top: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.trial button {
+    font-size: 1.4rem;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.trial button:hover {
+    cursor: pointer;
+}
+
+.trial .chat {
+    background-color: #cbb26a;
+    color: black;
+    border: 2px solid #cbb26a;
+}
+
+.trial .chat:hover {
+    color: #cbb26a;
+    background-color: black;
+}
+
+.trial .demo {
+    color: #cbb26a;
+    background-color: black;
+    border: 2px solid #cbb26a;
+}
+
+.trial .demo:hover {
+    color: black;
+    background-color: #cbb26a;
+}
+
+/* vod */
+.vod {
+    text-align: center;
+    margin-top: 5rem;
+    position: relative;
+}
+
+.vod video {
+    border-radius: 20px;
+    width: 80%;
+    border: 4px solid #cbb26a;
+}
+
+.play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 4rem;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.play-btn:hover {
+    opacity: 1;
+}
+
+.hide {
+    display: none;
+}
+
+/* efficiency hub */
+
+.efficiency-hub {
+    width: 100%;
+    padding: 0 5rem;
+}
+
+.hub-title {
+    color: #cbb26a;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2.7em;
+    font-family: "Archivo", serif;
+}
+
+.hub-subheader {
+    color: #cbb26a;
+    font-family: "Inter", serif;
+    font-size: 1.4em;
+    margin-top: 2rem;
+    letter-spacing: 1px;
+}
+
+.hub-grid {
+    margin: 4rem 0;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+}
+
+.grid-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5rem;
+    padding: 0 10rem;
+}
+
+.grid-item img {
+    border-radius: 16px;
+    height: auto;
+    max-width: 100%;
+}
+
+.item-content {
+    text-align: left;
+}
+
+.item-title,
+.item-list {
+    color: #cbb26a;
+}
+
+.item-title {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
+}
+
+.item-list {
+    list-style: disc;
+    text-align: left;
+    padding-left: 2rem;
+    font-size: 1.2rem;
+}
+
+.item-list li {
+    margin-bottom: 2rem;
+    width: 80%;
+}
+
+.try-btn {
+    padding: 15px 30px;
+    background-color: #cbb26a;
+    color: black;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 1px solid #cbb26a;
+    margin-left: 1.5rem;
+}
+
+.try-btn:hover {
+    cursor: pointer;
+    background: black;
+    color: #cbb26a;
+}
