@@ -40,11 +40,7 @@
     .gallery-content {
         width: 90%;
     }
-
-    .slider {
-        overflow-x: auto;
-    }
-
+    
     .slide img {
         min-height: 31vh;
     }
