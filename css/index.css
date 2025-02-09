@@ -84,16 +84,19 @@ h1 {
 /* Chatbot section */
 
 .chatbot {
-    width: 33%;
+    width: 25%;
     background-color: black;
     border: 3px solid #cbb26a;
     border-radius: 16px;
     margin: 15px;
     margin-left: 0;
     padding: 10px;
-    position: sticky;
-    top: 2%;
+    position: fixed;
+    top: 13%;
+    right: 0%;
     height: fit-content;
+    visibility: hidden;
+    z-index: 2;
 }
 
 .chat-header {
@@ -120,7 +123,7 @@ h1 {
 #messages {
     border: 1px solid #616060;
     border-radius: 16px;
-    height: 700px;
+    height: 500px;
     padding: 20px;
     overflow-y: auto;
     scrollbar-width: none;
@@ -284,6 +287,31 @@ h1 {
     background-color: #cbb26a;
     color: black;
     border-radius: 50%;
+}
+
+#popup {
+    position: fixed;
+    bottom: 1%;
+    right: -1.3%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    color: black;
+    padding: 1rem;
+    border-radius: 50%;
+    background-color: #cbb26a;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    z-index: 10;
+}
+
+#popup:hover {
+    cursor: pointer;
+    background-color: black;
+    color: #cbb26a;
+}
+
+.chat-active {
+    visibility: visible;
 }
 
 /* Facebook Upload Overlay */
@@ -491,14 +519,22 @@ h1 {
 
 .images {
     display: flex;
+    overflow: hidden;
     align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    cursor: grab;
+    user-select: none;
     gap: 5px;
     margin-bottom: 15px;
 }
 
 .chat-image {
+    flex-shrink: 0;
+    width: 90%;
     padding: 5px;
     border-radius: 10px;
+    cursor: grab;
 }
 
 .images:hover {
@@ -509,12 +545,16 @@ h1 {
 
 .chat-image img,
 .img-message img {
-    object-fit: contain;
+    object-fit: fill;
     display: block;
-    height: 70px;
+    height: 180px;
     width: 100%;
     border-radius: 10px;
     margin-bottom: 3px;
+}
+
+.image-active {
+    cursor: grabbing;
 }
 
 .react {
@@ -560,7 +600,7 @@ h1 {
 }
 
 .gallery-content {
-    width: 70%;
+    width: 85%;
 }
 
 .slider {
@@ -584,11 +624,11 @@ h1 {
 
 .slide img {
     display: block;
+    max-height: 80vh;
     width: 100%;
-    height: auto;
-    max-height: 65vh;
+    height: 100%;
     margin: auto;
-    object-fit: cover;
+    object-fit: fill;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
 }

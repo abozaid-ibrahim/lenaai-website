@@ -39,12 +39,30 @@ document.addEventListener("DOMContentLoaded", function () {
     const chatSubmit = document.getElementById("submit-btn");
     const inputForm = document.getElementById("input-form");
     let fileAttached = false;
+    let userPhoneNumber = "";
 
 
     function takeUserInput() {
         let inputField = document.getElementById("user-input");
         let userInput = inputField.value.trim();
         const messagesDiv = document.getElementById("messages");
+
+        if (!userPhoneNumber) {
+            if (/^\d{10,15}$/.test(userInput)) {
+                userPhoneNumber = userInput;
+            } else {
+                let message = document.createElement("div");
+                message.innerHTML = userInput;
+                message.classList.add("message", "sent");
+                messagesDiv.appendChild(message);
+                let requestPhoneNumber = document.createElement("div");
+                requestPhoneNumber.classList.add("message");
+                requestPhoneNumber.textContent = "Please provide a valid phone number.";
+                messagesDiv.appendChild(requestPhoneNumber);
+                return;
+            }
+        }
+
         let message = document.createElement("div");
         let typingIndicatorDiv = document.createElement("div");
 
@@ -80,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
             contentType: "application/json",
             data: JSON.stringify({
                 "query": userInput,
-                "phone_number": "01212121212"
+                "phone_number": userPhoneNumber
             }),
             success: function (response) {
                 let chatResponse = document.createElement("div");
@@ -98,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     responseImages.forEach(imageUrl => {
                         let image = document.createElement("div");
                         image.classList.add("chat-image");
-                        image.innerHTML = `<img src="${imageUrl}" alt="Property Image">`;
+                        image.innerHTML = `<img src="${imageUrl}" alt="Property Image" draggable="false">`;
                         imagesDiv.appendChild(image);
                     });
                 }
@@ -452,4 +470,62 @@ document.addEventListener("DOMContentLoaded", function () {
     menuToggle.addEventListener("click", function () {
         navList.classList.toggle("show"); // Toggle class to show/hide menu
     });
+
+    // Chatbot popup
+    const popUp = document.getElementById("popup");
+    const chatBot = document.querySelector(".chatbot");
+
+    popUp.addEventListener("click", function () {
+        chatBot.classList.toggle("chat-active");
+
+        if (popUp.classList.contains("fa-message")) {
+            popUp.classList.remove("fa-message");
+            popUp.classList.add("fa-square-xmark");
+        } else {
+            popUp.classList.remove("fa-square-xmark");
+            popUp.classList.add("fa-message");
+        }
+    })
+
+    // chat images drag
+    let wasDragging = false;
+
+    document.addEventListener("mousedown", function (e) {
+        const slider = document.querySelector(".images");
+        if (!slider || !slider.contains(e.target)) return;
+
+        let startX = e.clientX;
+        let scrollLeft = slider.scrollLeft;
+
+        slider.classList.add("image-active");
+
+        function handleMouseMove(e) {
+            wasDragging = true;
+            const x = e.clientX;
+            const walk = (x - startX) * 1;
+            slider.scrollLeft = scrollLeft - walk;
+        }
+
+        function stopScrolling() {
+            slider.classList.remove("image-active");
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", stopScrolling);
+
+            if (wasDragging) {
+                document.addEventListener("click", preventClick, true);
+                setTimeout(() => {
+                    document.removeEventListener("click", preventClick, true);
+                    wasDragging = false;
+                }, 0);
+            }
+        }
+
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", stopScrolling, { once: true });
+    });
+
+    function preventClick(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
 })
