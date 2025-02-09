@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
         messagesDiv.appendChild(typingIndicatorDiv);
 
         $.ajax({
-            url: "http://35.225.79.225/chat/",
+            url: "https://api.lenaai.net/chat/",
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({
