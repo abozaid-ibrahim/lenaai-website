@@ -11,7 +11,7 @@ body {
 }
 
 .content-warpper {
-    display: flex;
+    display: block;
 }
 
 .main-container {
@@ -92,7 +92,7 @@ h1 {
     margin-left: 0;
     padding: 10px;
     position: fixed;
-    top: 13%;
+    top: 19%;
     right: 0%;
     height: fit-content;
     visibility: hidden;
@@ -527,20 +527,22 @@ h1 {
     user-select: none;
     gap: 5px;
     margin-bottom: 15px;
+    border-radius: 10px;
 }
 
 .chat-image {
     flex-shrink: 0;
     width: 90%;
-    padding: 5px;
+    padding: 3px;
     border-radius: 10px;
     cursor: grab;
 }
 
-.images:hover {
+.chat-image:hover {
     cursor: pointer;
-    background-color: rgba(48, 58, 88, 0.849);
+    background-color: #cbb26a;
     border-radius: 10px;
+    opacity: .8;
 }
 
 .chat-image img,
@@ -550,31 +552,35 @@ h1 {
     height: 180px;
     width: 100%;
     border-radius: 10px;
-    margin-bottom: 3px;
 }
 
 .image-active {
     cursor: grabbing;
 }
 
-.react {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    gap: 15px;
-}
-
-.react .bi {
-    color: #cbb26a;
-    padding: 5px;
-    border-radius: 10px;
-    font-size: 14px;
-}
-
-.react .bi:hover {
-    cursor: pointer;
+.images .property-details {
+    padding-left: 1rem;
     background-color: #cbb26a;
-    color: black;
+    color: #000;
+}
+
+.images .property-details:hover {
+    color: #000;
+}
+
+.images .property-details h2 {
+    color: gold;
+    text-align: center;
+    margin: 5px 0;
+}
+
+.images .property-details p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.images .hidden-details {
+    display: none;
 }
 
 .img-message {
@@ -631,6 +637,14 @@ h1 {
     object-fit: fill;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
+}
+
+.slide .property-details {
+    height: 100%;
+    background-color: #000;
+    color: gold;
+    font-size: clamp(.7rem, 2vw, 1rem);
+    padding: clamp(.6rem, 10vw, 6rem);
 }
 
 #prev,

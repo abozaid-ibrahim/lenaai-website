@@ -48,10 +48,75 @@
         </div>
     </header>
 
+    <section class="content-warpper">
+        <!-- <div class="main-container">
+            <img src="assets/logo.png" alt="LENA AI Logo" width="25%">
+    
+            <h1>Coming Soon</h1>
+    
+    
+            <div class="countdown" id="countdown"></div>
+        </div> -->
+    
+        <!-- Chat-Bot -->
+    
+        <div class="chatbot">
+            <!-- <div class="chat-header">
+                <i class="fa-brands fa-facebook-f" id="facebook-btn"></i>
+                <h2>
+                    <i class="fa-solid fa-message"></i>
+                    Chat With Us
+                </h2>
+                <i class="fa-solid fa-phone" id="call-btn"></i>
+                <div class="phone-field">
+                    <input type="text" id="phone-no" placeholder="(+20) 147 1234 213">
+                    <i class="fa-solid fa-phone"></i>
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+            </div> -->
+            <div class="chat-engine">
+                <div class="current-engine">
+                    <i class="fa-solid fa-microchip"></i>
+                    <div class="engine-name">Lena AI (Default)</div>
+                    <div class="dropdown" id="dropdown-menu">
+                        <ul>
+                            <li class="engine-item">Lena AI (Default)</li>
+                            <li class="engine-item">Mamado Agent</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="messages">
+                <div class="message">Welcome to Lena Ai How can I help you today?</div>
+            </div>
+            <div class="chat-preview"></div>
+            <div class="input-field">
+                <form id="input-form">
+                    <textarea id="user-input" placeholder="Type Something Here" autocomplete="off"></textarea>
+                    <input type="file" id="file-field">
+                </form>
+                <i class="fa-solid fa-plus" id="attach-btn"></i>
+                <i class="fa-solid fa-paper-plane" id="submit-btn"></i>
+            </div>
+        </div>
+    
+        <!-- Facebook Upload -->
+        <div class="upload-overlay">
+            <div class="fb-upload">
+            </div>
+        </div>
+    
+        <!-- Gallery Popup -->
+        <div class="gallery-overlay">
+            <div class="gallery-content">
+            </div>
+        </div>
+    </section>
+
     <!-- Hero -->
 
     <section class="hero">
-        <div class="hero-title">Make it AI: Efficient & Cost-Effective</div>
+        <div class="hero-title">Make it AI<br>Efficient & Cost-Effective</div>
         <div class="hero-subheader">Harness AI for smarter solutions with reduced costs.</div>
         <div class="trial">
             <button class="chat">Try our Chatbot</button>
@@ -106,8 +171,20 @@
         <div class="jobs-grid">
             <div class="job-item">
                 <div class="job-details">
-                    <div class="job-title">Marketing Specialist</div>
-                    <div class="job-description">Join our marketing team to create impactful strategies.</div>
+                    <div class="job-title">Machine Learning Developer</div>
+                    <div class="job-description">
+                        <p>What We’re Looking For:</p>
+                        <ul>
+                            <li>At least 6 months of hands-on experience with LangChain.</li>
+                            <li>Proficiency in RAG pipelines and working with knowledge bases like vector databases (e.g., Pinecone,
+                                Weaviate, or FAISS).
+                                Strong understanding of building and deploying AI Agents for tasks such as automation, chatbots, or
+                                data retrieval.</li>
+                            <li>Familiarity with Python and experience integrating APIs into LangChain workflows.</li>
+                            <li>Knowledge of vector databases and retrieval-augmented generation (RAG)</li>
+                            <li>Knowledge of Large Language Models (LLMs) such as OpenAI GPT, Cohere, or similar.</li>
+                        </ul>
+                    </div>
                     <button class="apply-btn" onclick="window.location.href='mailto:abozaid@lenaai.net'">Apply Now</button>
                 </div>
                 <img src="assets/Image_136.png">
@@ -115,122 +192,20 @@
 
             <div class="job-item">
                 <div class="job-details">
-                    <div class="job-title">Graphic Designer</div>
-                    <div class="job-description">Be a part of our innovative design team.</div>
-                    <button class="apply-btn" onclick="window.location.href='mailto:abozaid@lenaai.net'">Apply Now</button>
-                </div>
-                <img src="assets/Image_137.png">
-            </div>
-
-            <div class="job-item">
-                <div class="job-details">
-                    <div class="job-title">Software Engineer</div>
-                    <div class="job-description">Develop cutting-edge software solutions with us.</div>
+                    <div class="job-title">Senior Python Developer</div>
+                    <div class="job-description">
+                        <p>What We’re Looking For:</p>
+                        <ul>
+                            <li>Minimun 3 years of experience</li>
+                            <li>Python & FastAPI/Flask</li>
+                            <li>LangChain / GPT-4 API experience</li>
+                            <li>WhatsApp Business & Voice API (Vonage) integration</li>
+                            <li>Cloud database experience (Firebase Firestore)</li>
+                        </ul>
+                    </div>
                     <button class="apply-btn" onclick="window.location.href='mailto:abozaid@lenaai.net'">Apply Now</button>
                 </div>
                 <img src="assets/Image_135.png">
-            </div>
-        </div>
-    </section>
-
-    <section class="content-warpper">
-        <div class="main-container">
-            <img src="assets/logo.png" alt="LENA AI Logo" width="25%">
-    
-            <h1>Coming Soon</h1>
-    
-    
-            <div class="countdown" id="countdown"></div>
-    
-            <div class="careers">
-                <h2>Careers</h2>
-    
-                <div class="job-listing">
-                    <p><strong>Senior Python Developer</strong></p>
-                    <p>What We’re Looking For:</p>
-                    <ul>
-                        <li>Minimun 3 years of experience</li>
-                        <li>Python & FastAPI/Flask ✅</li>
-                        <li>LangChain / GPT-4 API experience ✅</li>
-                        <li>WhatsApp Business & Voice API (Vonage) integration ✅</li>
-                        <li>Cloud database experience (Firebase Firestore) ✅</li>
-                    </ul>
-                    <button class="apply-button"  onclick="window.location.href='mailto:abozaid@lenaai.net'">Apply now</button>
-    
-                </div>
-    
-                <div class="job-listing">
-                    <p><strong>LangChain Developer</strong></p>
-                    <p>What We’re Looking For:</p>
-                    <ul>
-                        <li>At least 6 months of hands-on experience with LangChain.</li>
-                        <li>Proficiency in RAG pipelines and working with knowledge bases like vector databases (e.g., Pinecone,
-                            Weaviate, or FAISS).
-                            Strong understanding of building and deploying AI Agents for tasks such as automation, chatbots, or
-                            data retrieval.</li>
-                        <li>Familiarity with Python and experience integrating APIs into LangChain workflows.</li>
-                        <li>Knowledge of vector databases and retrieval-augmented generation (RAG) ✅</li>
-                        <li>Knowledge of Large Language Models (LLMs) such as OpenAI GPT, Cohere, or similar.</li>
-                    </ul>
-                    <button class="apply-button"  onclick="window.location.href='mailto:abozaid@lenaai.net'">Apply now</button>
-                </div>
-          
-                <p>Send your CV to <a href="mailto:abozaid@lenaai.net">abozaid@lenaai.net</a></p>
-            </div>
-        </div>
-    
-        <!-- Chat-Bot -->
-    
-        <div class="chatbot">
-            <div class="chat-header">
-                <i class="fa-brands fa-facebook-f" id="facebook-btn"></i>
-                <h2>
-                    <i class="fa-solid fa-message"></i>
-                    Chat With Us
-                </h2>
-                <i class="fa-solid fa-phone" id="call-btn"></i>
-                <div class="phone-field">
-                    <input type="text" id="phone-no" placeholder="(+20) 147 1234 213">
-                    <i class="fa-solid fa-phone"></i>
-                    <i class="fa-solid fa-circle-xmark"></i>
-                </div>
-            </div>
-            <div class="chat-engine">
-                <div class="current-engine">
-                    <i class="fa-solid fa-microchip"></i>
-                    <div class="engine-name">AI-Agent (Default)</div>
-                    <div class="dropdown" id="dropdown-menu">
-                        <ul>
-                            <li class="engine-item">AI-Agent (Default)</li>
-                            <li class="engine-item">GPT-4 Turbo</li>
-                            <li class="engine-item">Custom Model</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div id="messages">
-                <div class="message">Welcome to Lena Ai How can I help you today?</div>
-            </div>
-            <div class="chat-preview"></div>
-            <div class="input-field">
-                <form id="input-form">
-                    <textarea id="user-input" placeholder="Type Something Here" autocomplete="off"></textarea>
-                    <input type="file" id="file-field">
-                </form>
-                <i class="fa-solid fa-plus" id="attach-btn"></i>
-                <i class="fa-solid fa-paper-plane" id="submit-btn"></i>
-            </div>
-        </div>
-    
-        <!-- Facebook Upload -->
-        <div class="upload-overlay">
-            <div class="fb-upload">
-            </div>
-        </div>
-    
-        <!-- Gallery Popup -->
-        <div class="gallery-overlay">
-            <div class="gallery-content">
             </div>
         </div>
     </section>
