@@ -551,7 +551,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", stopScrolling, { once: true });
     });
-
+      
     function preventClick(e) {
         e.stopPropagation();
         e.preventDefault();
