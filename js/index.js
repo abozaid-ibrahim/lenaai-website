@@ -105,24 +105,48 @@ document.addEventListener("DOMContentLoaded", function () {
                 chatResponse.innerHTML = response.message;
                 chatResponse.classList.add("message");
 
+                messagesDiv.removeChild(typingIndicatorDiv);
+                messagesDiv.appendChild(chatResponse);
+
                 let imagesDiv;
 
                 if (response.properties && response.properties.length > 0) {
-                    responseProperties = response.properties[0];
-                    imagesDiv = document.createElement("div");
-                    imagesDiv.classList.add("images");
+                    response.properties.forEach((property) => {
+                        imagesDiv = document.createElement("div");
+                        imagesDiv.classList.add("images");
 
-                    responseImages = response.properties[0].images;
-                    responseImages.forEach(imageUrl => {
-                        let image = document.createElement("div");
-                        image.classList.add("chat-image");
-                        image.innerHTML = `<img src="${imageUrl}" alt="Property Image" draggable="false">`;
-                        imagesDiv.appendChild(image);
+                        let propertyImages = property.images;
+                        propertyImages.forEach(imageUrl => {
+                            let image = document.createElement("div");
+                            image.classList.add("chat-image");
+                            image.innerHTML = `<img src="${imageUrl}" alt="Property Image" draggable="false">`;
+                            imagesDiv.appendChild(image);
+                        });
+
+                        let detailsDiv = document.createElement("div");
+                        detailsDiv.classList.add("chat-image", "property-details");
+                        detailsDiv.innerHTML = `
+                            <h2>🏡 ${property.compound}</h2>
+                            <p><strong>📍 Location:</strong> ${property.city}, ${property.country}</p>
+                            <p><strong>🏠 Type:</strong> ${property.typeName} - ${property.buildingType}</p>
+                            <p><strong>📍 Zone:</strong> ${property.zone}</p>
+                            <p><strong>🛏 Rooms:</strong> ${property.roomsCount}</p>
+                            <p><strong>🏗 Finishing:</strong> ${property.finishing}, ${property.status}</p>
+                            <div class="hidden-details">
+                                <p><strong>🏗 Phase:</strong> ${property.phase}</p>
+                                <p><strong>📏 Land Area:</strong> ${property.landAreaSqMeters} m²</p>
+                                <p><strong>📐 Selling Area:</strong> ${property.sellingAreaSqMeters} m²</p>
+                                <p><strong>🌳 Garden Size:</strong> ${property.gardenSize} m²</p>
+                                <p><strong>📅 Delivery Date:</strong> ${property.deliveryDate}</p>
+                                <p><strong>💰 Price Plan (8 Years):</strong> ${property.plan8Years} EGP</p>
+                                <p><strong>💰 Price Plan (9 Years):</strong> ${property.plan9Years} EGP</p>
+                            </div>
+                        `;
+
+                        imagesDiv.appendChild(detailsDiv);
+                        messagesDiv.appendChild(imagesDiv);
                     });
                 }
-                messagesDiv.removeChild(typingIndicatorDiv);
-                messagesDiv.appendChild(chatResponse);
-                messagesDiv.appendChild(imagesDiv);
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             },
             error: function (xhr, status, error) {
@@ -176,119 +200,119 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-    // Call Section
-    const callBtn = document.getElementById("call-btn");
-    const phoneField = document.querySelector(".phone-field");
+    // // Call Section
+    // const callBtn = document.getElementById("call-btn");
+    // const phoneField = document.querySelector(".phone-field");
 
-    callBtn.addEventListener("click", function () {
-        phoneField.classList.toggle("active");
-        callBtn.classList.toggle("call-active");
-    });
+    // callBtn.addEventListener("click", function () {
+    //     phoneField.classList.toggle("active");
+    //     callBtn.classList.toggle("call-active");
+    // });
 
-    const closeBtn = document.querySelector(".fa-circle-xmark");
+    // const closeBtn = document.querySelector(".fa-circle-xmark");
 
-    closeBtn.addEventListener("click", function () {
-        phoneField.classList.remove("active");
-        callBtn.classList.remove("call-active");
-    });
+    // closeBtn.addEventListener("click", function () {
+    //     phoneField.classList.remove("active");
+    //     callBtn.classList.remove("call-active");
+    // });
 
-    // Facebook page posting
-    const facebookButton = document.getElementById("facebook-btn");
-    const uploadOverlay = document.querySelector(".upload-overlay");
-    const uploadDetails = document.querySelector(".fb-upload");
+    // // Facebook page posting
+    // const facebookButton = document.getElementById("facebook-btn");
+    // const uploadOverlay = document.querySelector(".upload-overlay");
+    // const uploadDetails = document.querySelector(".fb-upload");
 
-    facebookButton.addEventListener("click", function () {
-        uploadOverlay.style.display = "flex";
-        uploadDetails.innerHTML = `
-            <div class="upload-header">
-                <h1>Post on Facebook</h1>
-                <i class="fa-solid close-btn fa-circle-xmark"></i>
-            </div>
-            <div class="upload-data">
-            <div class="photo-preview"></div>
-                <form id="upload-form">
-                    <div class="content-container">
-                        <textarea placeholder="Post Content ..." id="post-content"></textarea>
-                        <i class="fa-solid fa-paperclip" id="bin-btn"></i>
-                    </div>
-                    <input type="file" id="post-photo">
-                    <input type="submit" value="Post" id="post-btn">
-                </form>
-            </div>`;
+    // facebookButton.addEventListener("click", function () {
+    //     uploadOverlay.style.display = "flex";
+    //     uploadDetails.innerHTML = `
+    //         <div class="upload-header">
+    //             <h1>Post on Facebook</h1>
+    //             <i class="fa-solid close-btn fa-circle-xmark"></i>
+    //         </div>
+    //         <div class="upload-data">
+    //         <div class="photo-preview"></div>
+    //             <form id="upload-form">
+    //                 <div class="content-container">
+    //                     <textarea placeholder="Post Content ..." id="post-content"></textarea>
+    //                     <i class="fa-solid fa-paperclip" id="bin-btn"></i>
+    //                 </div>
+    //                 <input type="file" id="post-photo">
+    //                 <input type="submit" value="Post" id="post-btn">
+    //             </form>
+    //         </div>`;
 
-        document.querySelector(".close-btn").addEventListener("click", function () {
-            uploadOverlay.style.display = "none";
-            uploadDetails.innerHTML = '';
-        });
+    //     document.querySelector(".close-btn").addEventListener("click", function () {
+    //         uploadOverlay.style.display = "none";
+    //         uploadDetails.innerHTML = '';
+    //     });
 
-        $("textarea").each(function () {
-            this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
-        }).on("input", function () {
-            this.style.height = 0;
-            this.style.height = (this.scrollHeight) + "px";
-        });
+    //     $("textarea").each(function () {
+    //         this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+    //     }).on("input", function () {
+    //         this.style.height = 0;
+    //         this.style.height = (this.scrollHeight) + "px";
+    //     });
 
-        const attachButton = document.getElementById("bin-btn");
-        const fileField = document.getElementById("post-photo");
-        const postButton = document.getElementById("post-btn");
-        let file;
+    //     const attachButton = document.getElementById("bin-btn");
+    //     const fileField = document.getElementById("post-photo");
+    //     const postButton = document.getElementById("post-btn");
+    //     let file;
 
-        attachButton.addEventListener("click", function () {
-            fileField.click();
-        });
+    //     attachButton.addEventListener("click", function () {
+    //         fileField.click();
+    //     });
 
-        fileField.addEventListener("change", function () {
-            file = fileField.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    $('.photo-preview').html(`<img src="${e.target.result}" alt="Photo Preview">`);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                $('.photo-preview').html('');
-            }
-        });
+    //     fileField.addEventListener("change", function () {
+    //         file = fileField.files[0];
+    //         if (file) {
+    //             const reader = new FileReader();
+    //             reader.onload = function (e) {
+    //                 $('.photo-preview').html(`<img src="${e.target.result}" alt="Photo Preview">`);
+    //             };
+    //             reader.readAsDataURL(file);
+    //         } else {
+    //             $('.photo-preview').html('');
+    //         }
+    //     });
 
-        async function uploadPhoto(file) {
-            const formData = new FormData();
-            formData.append("file", file);
+    //     async function uploadPhoto(file) {
+    //         const formData = new FormData();
+    //         formData.append("file", file);
 
-            const response = await fetch("http://localhost:8000/upload_photo", {
-                method: "POST",
-                body: formData
-            });
+    //         const response = await fetch("http://localhost:8000/upload_photo", {
+    //             method: "POST",
+    //             body: formData
+    //         });
 
-            const data = await response.json();
-            return data.photo_url; // Return the uploaded photo URL
-        }
+    //         const data = await response.json();
+    //         return data.photo_url; // Return the uploaded photo URL
+    //     }
 
-        postButton.addEventListener("click", async function (event) {
-            event.preventDefault();
+    //     postButton.addEventListener("click", async function (event) {
+    //         event.preventDefault();
 
-            const postContent = document.getElementById("post-content").value;
-            let photoUrl = null;
+    //         const postContent = document.getElementById("post-content").value;
+    //         let photoUrl = null;
 
-            if (file) {
-                photoUrl = await uploadPhoto(file); // Upload and get URL
-            }
+    //         if (file) {
+    //             photoUrl = await uploadPhoto(file); // Upload and get URL
+    //         }
 
-            $.ajax({
-                url: "http://localhost:8000/fb_post",
-                method: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    content: postContent,
-                    photo_url: photoUrl
-                }),
-                success: function (response) {
-                    console.log(response);
-                }
-            });
+    //         $.ajax({
+    //             url: "http://localhost:8000/fb_post",
+    //             method: "POST",
+    //             contentType: "application/json",
+    //             data: JSON.stringify({
+    //                 content: postContent,
+    //                 photo_url: photoUrl
+    //             }),
+    //             success: function (response) {
+    //                 console.log(response);
+    //             }
+    //         });
 
-            uploadOverlay.style.display = "none";
-        });
-    });
+    //         uploadOverlay.style.display = "none";
+    //     });
+    // });
 
     // Chat engine list
     const currentChatEngine = document.querySelector(".current-engine");
@@ -347,6 +371,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         `).join("");
         let imageTitle;
+
         if (responseProperties) {
             const compound = responseProperties.compound;
             const zone = responseProperties.zone;
@@ -356,6 +381,7 @@ document.addEventListener("DOMContentLoaded", function () {
             imageTitle = "Image Viewer"
         }
 
+        const propertyDetails = document.querySelector(".property-details");
         gallerycontent.innerHTML = `
             <div class="upload-header">
                 <h1>${imageTitle}</h1>
@@ -364,6 +390,9 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="slider">
                 <div class="slider-wrapper">
                     ${imageSlides}
+                    <div class="slide">
+                        <div class="property-details">${propertyDetails.innerHTML}</div>
+                    </div>
                 </div>
                 <div id="prev"><i class="fa-solid iconCall fa-chevron-left"></i></div>
                 <div id="next"><i class="fa-solid iconCall fa-chevron-right"></i></div>
@@ -464,11 +493,10 @@ document.addEventListener("DOMContentLoaded", function () {
         video.controls = false;
     });
 
-    const menuToggle = document.getElementById("menu-toggle");
-    const navList = document.getElementById("nav-list");
-
-    menuToggle.addEventListener("click", function () {
-        navList.classList.toggle("show"); // Toggle class to show/hide menu
+    $(document).ready(function () {
+        $("#menu-toggle").click(function () {
+            $("#nav-list").slideToggle(300);
+        });
     });
 
     // Chatbot popup
@@ -491,7 +519,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let wasDragging = false;
 
     document.addEventListener("mousedown", function (e) {
-        const slider = document.querySelector(".images");
+        const slider = e.target.closest(".images");
         if (!slider || !slider.contains(e.target)) return;
 
         let startX = e.clientX;
