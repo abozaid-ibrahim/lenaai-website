@@ -19,8 +19,22 @@ a {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
+.header-container a {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.header-container .logo {
+    width: auto;
+    object-fit: contain;
+    display: block;
+    max-height: 55px;
+    margin-right: 1rem;
+}
+
 .header-title {
-    font-size: clamp(1em, 5vw, 1.7em);
+    font-size: clamp(1em, 5vw, 1.5em);
     margin-right: 30px;
     font-weight: bold;
     color: #cbb26a;
@@ -34,6 +48,10 @@ a {
     padding: 10px;
     margin-right: 15px;
     color: #cbb26a;
+}
+
+.nav-list li:last-child {
+    display: none;
 }
 
 .nav-list li:hover {
