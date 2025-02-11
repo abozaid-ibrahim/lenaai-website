@@ -1,18 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // countdown section
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const endDate = new Date("2025-03-01T00:00:00"); // Set countdown to February 1, 2025
-        const distance = endDate - now;
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    // // countdown section
+    // function updateCountdown() {
+    //     const now = new Date().getTime();
+    //     const endDate = new Date("2025-03-01T00:00:00"); // Set countdown to February 1, 2025
+    //     const distance = endDate - now;
+    //     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    //     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    //     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    //     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }
+    //     document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    // }
 
-    setInterval(updateCountdown, 1000);
+    // setInterval(updateCountdown, 1000);
 
     $("textarea").each(function () {
         this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
@@ -124,22 +124,22 @@ document.addEventListener("DOMContentLoaded", function () {
                         });
 
                         let detailsDiv = document.createElement("div");
-                        detailsDiv.classList.add("chat-image", "property-details");
+                        detailsDiv.classList.add("property-details");
                         detailsDiv.innerHTML = `
-                            <h2>🏡 ${property.compound}</h2>
-                            <p><strong>📍 Location:</strong> ${property.city}, ${property.country}</p>
-                            <p><strong>🏠 Type:</strong> ${property.typeName} - ${property.buildingType}</p>
-                            <p><strong>📍 Zone:</strong> ${property.zone}</p>
-                            <p><strong>🛏 Rooms:</strong> ${property.roomsCount}</p>
-                            <p><strong>🏗 Finishing:</strong> ${property.finishing}, ${property.status}</p>
+                            <h2>${property.compound}</h2>
+                            <p><strong>Location:</strong> <span>${property.city}, ${property.country}</span></p>
+                            <p><strong>Type:</strong> <span>${property.typeName} - ${property.buildingType}</span></p>
+                            <p><strong>Zone:</strong> <span>${property.zone}</span></p>
+                            <p><strong>Rooms:</strong> <span>${property.roomsCount}</span></p>
+                            <p><strong>Finishing:</strong> <span>${property.finishing}, ${property.status}</span></p>
                             <div class="hidden-details">
-                                <p><strong>🏗 Phase:</strong> ${property.phase}</p>
-                                <p><strong>📏 Land Area:</strong> ${property.landAreaSqMeters} m²</p>
-                                <p><strong>📐 Selling Area:</strong> ${property.sellingAreaSqMeters} m²</p>
-                                <p><strong>🌳 Garden Size:</strong> ${property.gardenSize} m²</p>
-                                <p><strong>📅 Delivery Date:</strong> ${property.deliveryDate}</p>
-                                <p><strong>💰 Price Plan (8 Years):</strong> ${property.plan8Years} EGP</p>
-                                <p><strong>💰 Price Plan (9 Years):</strong> ${property.plan9Years} EGP</p>
+                                <p><strong>Phase:</strong> <span>${property.phase}</span></p>
+                                <p><strong>Land Area:</strong> <span>${property.landAreaSqMeters} m²</span></p>
+                                <p><strong>Selling Area:</strong> <span>${property.sellingAreaSqMeters} m²</span></p>
+                                <p><strong>Garden Size:</strong> <span>${property.gardenSize} m²</span></p>
+                                <p><strong>Delivery Date:</strong> <span>${property.deliveryDate}</span></p>
+                                <p><strong>Price Plan (8 Years):</strong> <span>${property.plan8Years} EGP</span></p>
+                                <p><strong>Price Plan (9 Years):</strong> <span>${property.plan9Years} EGP</span></p>
                             </div>
                         `;
 
@@ -390,15 +390,19 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="slider">
                 <div class="slider-wrapper">
                     ${imageSlides}
-                    <div class="slide">
-                        <div class="property-details">${propertyDetails.innerHTML}</div>
-                    </div>
                 </div>
+
                 <div id="prev"><i class="fa-solid iconCall fa-chevron-left"></i></div>
                 <div id="next"><i class="fa-solid iconCall fa-chevron-right"></i></div>
 
                 <i class="bi bi-hand-thumbs-up like"></i>
                 <i class="bi bi-hand-thumbs-down dislike"></i>
+
+                <div class="details-btn"><i class="bi bi-arrow-left-square"></i> More Details</div>
+                <div class="property-details">
+                    ${propertyDetails.innerHTML}
+                    <div class="arrange-btn">Arrange A View</div>
+                </div>
             </div>
         `;
 
@@ -475,6 +479,53 @@ document.addEventListener("DOMContentLoaded", function () {
                 dislike.replaceWith(disliked);
             });
         });
+
+        $(document).ready(function () {
+            let isOpen = false;
+            const detailsBtn = document.querySelector(".details-btn");
+            const arrowIcon = detailsBtn.querySelector("i");
+        
+            $(".details-btn").click(function () {
+                if (isOpen) {
+                    $(".slider .property-details").animate({ right: "-320px" }, 100);
+                    $(".details-btn").animate({ right: "0px" }, 100);
+                    arrowIcon.classList.remove("bi-arrow-right-square");
+                    arrowIcon.classList.add("bi-arrow-left-square"); 
+                } else {
+                    $(".slider .property-details").animate({ right: "0px" }, 100);
+
+                    if (window.innerHeight < 500) {
+                        $(".details-btn").animate({ right: "300px" }, 100)
+                    } else if (window.innerWidth > 1100) {
+                        $(".details-btn").animate({ right: "300px" }, 100);
+                    } else {
+                        $(".details-btn").animate({ right: "150px" }, 100);
+                    }
+
+                    arrowIcon.classList.remove("bi-arrow-left-square");
+                    arrowIcon.classList.add("bi-arrow-right-square");
+                }
+        
+                isOpen = !isOpen;
+            });
+        });
+
+        const arrangeBtn = document.querySelector(".arrange-btn");
+        const closeBtn = document.querySelector(".close-btn");
+        arrangeBtn.addEventListener("click", function () {
+            closeBtn.click();
+        })
+
+        function checkScreenWidth() {
+            if (window.innerWidth < 1100) {
+                prev.style.display = "none";
+                next.style.display = "none"
+            }
+        }
+        
+        checkScreenWidth();
+        
+        window.addEventListener("resize", checkScreenWidth);
     });
 
     const video = document.getElementById("ai-video");

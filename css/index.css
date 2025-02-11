@@ -559,24 +559,33 @@ h1 {
 }
 
 .images .property-details {
-    padding-left: 1rem;
-    background-color: #cbb26a;
-    color: #000;
-}
-
-.images .property-details:hover {
-    color: #000;
+    padding: .5rem 2rem;
+    background-color: black;
+    color: #cbb26a;
+    border-radius: 10px;
+    border: 1px solid #cbb26a;
+    display: flex;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    width: 100%;
 }
 
 .images .property-details h2 {
     color: gold;
     text-align: center;
     margin: 5px 0;
+    width: 100%;
+    font-size: 1.2em;
 }
 
 .images .property-details p {
     font-size: 14px;
     margin: 5px 0;
+    width: 100%;
+}
+
+.images .property-details span {
+    color: #fff;
 }
 
 .images .hidden-details {
@@ -639,12 +648,22 @@ h1 {
     border-bottom-left-radius: 10px;
 }
 
-.slide .property-details {
+.slider .property-details {
+    position: absolute;
+    top: 50%;
+    right: -320px;
+    width: 300px;
+    padding: 20px;
+    transform: translateY(-50%);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
     height: 100%;
-    background-color: #000;
-    color: gold;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
     font-size: clamp(.7rem, 2vw, 1rem);
-    padding: clamp(.6rem, 10vw, 6rem);
+    transition: right 0.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 #prev,
@@ -671,7 +690,9 @@ h1 {
     font-size: clamp(30px, 5vw, 54px);
 }
 
-.slider .bi {
+.slider .like,
+.slider .dislike,
+.details-btn {
     position: absolute;
     font-size: clamp(26px, 5vw, 35px);
     top: 10%;
@@ -681,9 +702,46 @@ h1 {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
-.slider .bi:hover {
+.slider .like:hover,
+.slider .dislike:hover {
     cursor: pointer;
     font-size: clamp(30px, 5vw, 40px);
+}
+
+.details-btn {
+    padding: 1rem 1.8rem;
+    font-size: 1.1em;
+    background-color: #000000b4;
+    top: 20%;
+    right: 0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    transition: right 0.5s ease-in-out;
+}
+
+.details-btn .bi {
+    margin-right: 5px;
+    font-size: 1.2rem;
+}
+
+.details-btn:hover,
+.arrange-btn:hover {
+    background-color: #000;
+    cursor: pointer;
+}
+
+.arrange-btn {
+    width: fit-content;
+    margin: 10px auto;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 1.2rem 3rem;
+    background-color: #000000b4;
+    border-radius: 10px;
+    color: #cbb26a;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    transition: background-color 0.3s ease-in-out;
 }
 
 .slider .content {

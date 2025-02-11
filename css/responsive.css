@@ -5,15 +5,15 @@
         justify-content: space-between;
     }
 
-    .header-container button {
-        padding: 10px;
+    .header-container .sign-in-btn {
+        display: none;
     }
 
     .nav-list {
         display: none;
         flex-direction: column;
         position: absolute;
-        top: 85px;
+        top: 90px;
         left: 50%;
         transform: translateX(-50%);
         width: 80%;
@@ -30,11 +30,18 @@
         margin-bottom: 15px;
     }
 
+    .nav-list li:last-child {
+        display: block;
+    }
+
     .nav-list button {
         display: block;
-        width: 0%;
         margin: auto;
         text-align: center;
+    }
+
+    .nav-list li:last-child:hover {
+        border: none;
     }
 
     .nav-list.show {
@@ -171,10 +178,6 @@
         width: 100%;
         flex: 1;
     }
-
-    .slide .property-details {
-        padding-left: 3rem;
-    }
 }
 
 @media (max-width: 1100px) {
@@ -202,11 +205,55 @@
     .job-description {
         font-size: .8rem;
     }
+
+    .slider-wrapper {
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .slider .property-details {
+        width: 150px;
+        padding: 0;
+        padding-left: 5px;
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+
+    .slider .property-details h2 {
+        margin: 5px 0;
+    }
+
+    .slider .property-details p {
+        margin: 0;
+        margin-bottom: 8px;
+    }
+
+    .details-btn {
+        font-size: .8em;
+        padding: .5rem;
+        top: 26%;
+    }
+
+    .details-btn .bi {
+        font-size: 1.1rem;
+    }
+
+    .arrange-btn {
+        font-size: 1em;
+        padding: 1rem;
+        top: 75%;
+    }
 }
 
 
 @media (max-width: 400px) {
     .chatbot {
         top: 7%;
+    }
+}
+
+@media screen and (orientation: landscape) and (max-height: 600px) {
+    .slider .property-details {
+        width: 300px;
     }
 }
