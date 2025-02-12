@@ -24,7 +24,7 @@
         border-radius: 16px;
     }
 
-    .nav-list li {
+    .nav-list a {
         width: fit-content;
         margin: auto;
         margin-bottom: 15px;
@@ -38,6 +38,7 @@
         display: block;
         margin: auto;
         text-align: center;
+        margin-bottom: 10px;
     }
 
     .nav-list li:last-child:hover {

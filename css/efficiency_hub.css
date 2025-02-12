@@ -44,7 +44,7 @@ a {
     display: flex;
 }
 
-.nav-list li {
+.nav-list a {
     padding: 10px;
     margin-right: 15px;
     color: #cbb26a;
@@ -54,12 +54,12 @@ a {
     display: none;
 }
 
-.nav-list li:hover {
+.nav-list a:hover {
     cursor: pointer;
     border-bottom: 3px solid #cbb26a;
 }
 
-.active {
+.active a {
     font-weight: bold;
     border-bottom: 3px solid #cbb26a;
 }
