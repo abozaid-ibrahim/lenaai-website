@@ -1,0 +1,123 @@
+/* Media queries */
+
+@media (max-width: 1200px) {
+    .header-container {
+        justify-content: space-between;
+    }
+
+    .header-container .sign-in-btn {
+        display: none;
+    }
+
+    .nav-list {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 90px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        text-align: center;
+        padding: 10px 0;
+        background-color: #2e2e2eec;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+    }
+
+    .nav-list a {
+        width: fit-content;
+        margin: auto;
+        margin-bottom: 15px;
+    }
+
+    .nav-list li:last-child {
+        display: block;
+    }
+
+    .nav-list button {
+        display: flex;
+        margin: auto;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .nav-list li:last-child:hover {
+        border: none;
+    }
+
+    .nav-list.show {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+        font-size: 24px;
+        cursor: pointer;
+        color: #cbb26a;
+        font-size: 2.5rem;
+        margin-left: 10px;
+    }
+
+    .filters,
+    .overview,
+    .data {
+        padding: 0 1rem;
+    }
+
+    .filters-container {
+        flex-direction: column;
+        padding-left: 0;
+    }
+
+    .overview {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .overview-container {
+        overflow-x: auto;
+    }
+
+    .sheet {
+        padding: 0;
+    }
+
+    .overview-titles li,
+    .data-titles li {
+        flex-shrink: 0;
+        min-width: fit-content;
+    }
+
+    .data-titles li {
+        margin-right: 0;
+    }
+
+    .data-titles li:last-child {
+        margin-right: 2rem;
+    }
+
+    .client li {
+        flex-shrink: 0;
+    }
+
+    .client .client-name {
+        max-width: 12ch;
+    }
+
+    .chat-history {
+        width: 90%;
+    }
+
+    .chart {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .chart-container {
+        display: flex;
+        flex-direction: column;
+        overflow-x: auto;
+        width: 100%;
+    }
+}

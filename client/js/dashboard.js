@@ -183,4 +183,34 @@ document.addEventListener("DOMContentLoaded", function () {
             $(".dropdown").slideUp();
         });
     });
+
+    clients.forEach((client) => {
+        client.addEventListener("click", function () {
+            const chatOverlay = document.querySelector(".chat-overlay");
+            const chatHistory = document.querySelector(".chat-history");
+
+            chatOverlay.style.display = "flex";
+            chatHistory.innerHTML = `
+            <div class="history-header">
+                <h1>Messages History</h1>
+                <i class="fa-solid close-btn fa-circle-xmark"></i>
+            </div>
+            <div class="chatbot">
+                <div id="messages">
+                    <div class="message">Welcome to Lena Ai How can I help you today?</div>
+                    <div class="message sent">Welcome to Lena Ai How can I help you today?</div>
+                    <div class="message">Welcome to Lena Ai How can I help you today?</div>
+                    <div class="message sent">Welcome to Lena Ai How can I help you today?</div>
+                    <div class="message">Welcome to Lena Ai How can I help you today?</div>
+                    <div class="message sent">Welcome to Lena Ai How can I help you today?</div>
+                    <div class="message">Welcome to Lena Ai How can I help you today?</div>
+                </div>
+            </div>`;
+
+            document.querySelector(".close-btn").addEventListener("click", function () {
+                chatOverlay.style.display = "none";
+                chatHistory.innerHTML = '';
+            });
+        });
+    });
 });
