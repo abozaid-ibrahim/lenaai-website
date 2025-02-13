@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="icon" href="../assets/icon.png">
+
+    <!-- Font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <!-- JS files -->
+    <script src="js/dashboard.js"></script>
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="../index.html"><img src="../assets/logo.png" alt="LENA AI Logo" class="logo"></a>
+            <div class="header-title">AI Efficiency Hub</div>
+            <!-- Navigation -->
+            <nav class="navbar">
+                <ul class="nav-list" id="nav-list">
+                    <li><a href="../index.html">Home</a></li>
+                    <li class="active"><a href="dashboard.html">Client Dashboard</a></li>
+                    <li><a href="#">Job Opportunities</a></li>
+                    <li class="sign-in-sm">
+                        <button>
+                            <i class="bi bi-box-arrow-in-right"></i> Sign In
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            <button class="sign-in-btn">
+                <i class="bi bi-box-arrow-in-right"></i> Sign In
+            </button>
+            <div class="menu-toggle" id="menu-toggle">
+                <i class="bi bi-list"></i> <!-- Burger Icon -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Clients filters -->
+    <section class="filters">
+        <div class="filters-header">Clients Filters</div>
+        <div class="filters-container">
+            <div class="recent">
+                <i class="bi bi-chat-left-text-fill"></i>
+                Recent Chats
+            </div>
+            <div class="action">
+                <i class="bi bi-exclamation-lg"></i>
+                Needs Action
+            </div>
+            <div class="switch-btn">
+                <label class="switch">
+                    <input type="checkbox" id="switch-status">
+                    <span class="slider"></span>
+                </label>
+                <div class="switch-title">Show Active Only</div>
+            </div>
+            <div class="search">
+                <i class="bi bi-search"></i>
+                <input type="text" id="search-bar" placeholder="Search for a client">
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients overview -->
+    <section class="overview">
+        <div class="main-container">
+            <div class="overview-header">Clients Overview</div>
+            <div class="overview-container">
+                <ul class="overview-titles">
+                    <li>Client Number</li>
+                    <li>Date</li>
+                    <li>Requirements</li>
+                    <li>Status</li>
+                    <li>Actions</li>
+                </ul>
+                <div class="clients-list">
+                    <ul class="client"
+                        data-date="2024-02-10"
+                        data-status="no-action"
+                    >
+                        <li><div class="action-indicator"></div></li>
+                        <li class="client-name">01234567891</li>
+                        <li>2024-02-10</li>
+                        <li class="requirements">
+                            Requirements
+                            <i class="bi bi-chevron-down"></i>
+                            <ul class="dropdown">
+                                <li>2 bedrooms</li>
+                                <li>villa</li>
+                                <li>Cairo</li>
+                            </ul>
+                        </li>
+                        <li class="need-action">No Action Needed</li>
+                        <li class="call-now">Call Now</li>
+                    </ul>
+                    <ul class="client"
+                        data-date="2023-12-25"
+                        data-status="action-needed"
+                    >
+                        <li><div class="action-indicator" style="background-color: red;"></div></li>
+                        <li class="client-name">02222222222</li>
+                        <li>2023-12-25</li>
+                        <li class="requirements">
+                            Requirements
+                            <i class="bi bi-chevron-down"></i>
+                            <ul class="dropdown">
+                                <li>2 bedrooms</li>
+                                <li>villa</li>
+                                <li>Cairo</li>
+                            </ul>
+                        </li>
+                        <li class="need-action">
+                            Action Needed
+                            <i class="bi bi-chevron-down"></i>
+                            <ul class="dropdown">
+                                <li>Call</li>
+                                <li>Arrange view</li>
+                            </ul>
+                        </li>
+                        <li class="call-now">Call Now</li>
+                    </ul>
+                    <ul class="client"
+                        data-date="2024-01-05"
+                        data-status="no-action"
+                    >
+                        <li><div class="action-indicator"></div></li>
+                        <li class="client-name">03333333333</li>
+                        <li>2024-01-05</li>
+                        <li class="requirements">
+                            Requirements
+                            <i class="bi bi-chevron-down"></i>
+                            <ul class="dropdown">
+                                <li>2 bedrooms</li>
+                                <li>villa</li>
+                                <li>Cairo</li>
+                            </ul>
+                        </li>
+                        <li class="need-action">No Action Needed</li>
+                        <li class="call-now">Call Now</li>
+                    </ul>
+                    <ul class="client"
+                        data-date="2025-01-05"
+                        data-status="action-needed"
+                    >
+                        <li><div class="action-indicator" style="background-color: red;"></div></li>
+                        <li class="client-name">01234567891</li>
+                        <li>2025-01-05</li>
+                        <li class="requirements">
+                            Requirements
+                            <i class="bi bi-chevron-down"></i>
+                            <ul class="dropdown">
+                                <li>2 bedrooms</li>
+                                <li>villa</li>
+                                <li>Cairo</li>
+                            </ul>
+                        </li>
+                        <li class="need-action">
+                            Action Needed
+                            <i class="bi bi-chevron-down"></i>
+                            <ul class="dropdown">
+                                <li>Call</li>
+                                <li>Arrange view</li>
+                            </ul>
+                        </li>
+                        <li class="call-now">Call Now</li>
+                    </ul>
+                </div>
+                <div class="not-found">No client exists with name/number </div>
+            </div>
+        </div>
+        <div class="chart">
+            <div class="chart-header">Statstics</div>
+            <div class="chart-container">
+                <canvas id="reqChart"></canvas>
+                <canvas id="actChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Sheets -->
+    <section class="data">
+        <div class="data-header">Data Sheets</div>
+        <div class="data-container">
+            <ul class="data-titles">
+                <li>Sheet Name</li>
+                <li>Actions</li>
+            </ul>
+            <ul class="sheet">
+                <li>An Excel Sheet Name Containing The Data</li>
+                <li class="campagin">Create Campaign</li>
+            </ul>
+            <ul class="sheet">
+                <li>An Excel Sheet Name Containing The Data</li>
+                <li class="campagin">Create Campaign</li>
+            </ul>
+            <ul class="sheet">
+                <li>An Excel Sheet Name Containing The Data</li>
+                <li class="campagin">Create Campaign</li>
+            </ul>
+            <ul class="sheet">
+                <li>An Excel Sheet Name Containing The Data</li>
+                <li class="campagin">Create Campaign</li>
+            </ul>
+            <ul class="sheet">
+                <li>An Excel Sheet Name Containing The Data</li>
+                <li class="campagin">Create Campaign</li>
+            </ul>
+        </div>
+    </section>
+    
+</body>
+</html>
