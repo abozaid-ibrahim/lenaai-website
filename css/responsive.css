@@ -35,7 +35,7 @@
     }
 
     .nav-list button {
-        display: block;
+        display: flex;
         margin: auto;
         text-align: center;
         margin-bottom: 10px;
