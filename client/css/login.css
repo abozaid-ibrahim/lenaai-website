@@ -1,0 +1,150 @@
+* {
+    box-sizing: border-box;
+    font-family: 'FIVER-MULTLINE', sans-serif;
+}
+
+body {
+    margin: 0;
+    background-color: black;
+}
+
+/* Header */
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #cbb26a;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    width: 100%;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.header-container a {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.header-container .logo {
+    width: auto;
+    object-fit: contain;
+    display: block;
+    max-height: 55px;
+    margin-right: 1rem;
+}
+
+.header-title {
+    font-size: clamp(1em, 5vw, 1.5em);
+    margin-right: 30px;
+    font-weight: bold;
+    color: #cbb26a;
+}
+
+.nav-list {
+    display: flex;
+}
+
+.nav-list a {
+    padding: 10px;
+    margin-right: 15px;
+    color: #cbb26a;
+}
+
+.nav-list li:last-child {
+    display: none;
+}
+
+.nav-list a:hover {
+    cursor: pointer;
+    border-bottom: 3px solid #cbb26a;
+}
+
+.active a {
+    font-weight: bold;
+    border-bottom: 3px solid #cbb26a;
+}
+
+.header-container button {
+    margin-left: auto;
+    padding: 7px 30px;
+    display: flex;
+    align-items: center;
+    border: 2px solid #cbb26a;
+    outline: none;
+    background-color: #cbb26a;
+    color: black;
+    border-radius: 16px;
+    font-weight: bold;
+}
+
+.header-container button:hover {
+    background-color: black;
+    color: #cbb26a;
+    cursor: pointer;
+}
+
+.header-container button .bi {
+    margin-right: 10px;
+    font-size: 1.5em;
+}
+
+/* Form container */
+
+.form-container {
+    width: 500px;
+    padding: 30px 30px;
+    background-color: #cbb26a;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    margin: 15rem auto;
+}
+
+h2 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    resize: none;
+    outline: none;
+    margin-bottom: 20px;
+}
+
+input[type="submit"] {
+    background-color: black;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    outline: none;
+}
+
+input[type="submit"]:hover {
+    background-color: #292929;
+    color: #cbb26a;
+}
+
+@media (max-width: 1200px) {
+    .form-container {
+        width: 100%;
+    }
+}

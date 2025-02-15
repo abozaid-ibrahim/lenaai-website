@@ -36,18 +36,22 @@
             <nav class="navbar">
                 <ul class="nav-list" id="nav-list">
                     <li class="active"><a href="index.html">Home</a></li>
-                    <li><a href="client/dashboard.html">Client Dashboard</a></li>
+                    <li><a href="client/login.html">Client Dashboard</a></li>
                     <li><a href="#">Job Opportunities</a></li>
                     <li class="sign-in-sm">
-                        <button>
-                            <i class="bi bi-box-arrow-in-right"></i> Sign In
-                        </button>
+                        <a href="client/login.html">
+                            <button>
+                                <i class="bi bi-box-arrow-in-right"></i> Sign In
+                            </button>
+                        </a>
                     </li>
                 </ul>
             </nav>
-            <button class="sign-in-btn">
-                <i class="bi bi-box-arrow-in-right"></i> Sign In
-            </button>
+            <a href="client/login.html" id="sign-in">
+                <button class="sign-in-btn">
+                    <i class="bi bi-box-arrow-in-right"></i> Sign In
+                </button>
+            </a>
             <div class="menu-toggle" id="menu-toggle">
                 <i class="bi bi-list"></i> <!-- Burger Icon -->
             </div>
@@ -74,10 +78,11 @@
             <div class="chat-engine">
                 <div class="current-engine">
                     <i class="fa-solid fa-microchip"></i>
-                    <div class="engine-name">Lena AI (Default)</div>
+                    <div class="engine-name">Chat-bot (Default)</div>
                     <div class="dropdown" id="dropdown-menu">
                         <ul>
-                            <li class="engine-item">Lena AI (Default)</li>
+                            <li class="engine-item">Chat-bot (Default)</li>
+                            <li class="engine-item">Lena Chatbot</li>
                             <li class="engine-item">Mamado Agent</li>
                         </ul>
                     </div>

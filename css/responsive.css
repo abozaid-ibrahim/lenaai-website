@@ -1,5 +1,12 @@
 /* Media queries */
 
+@media (min-width: 1201px) {
+    .nav-list {
+        display: flex !important;
+        flex-direction: row;
+    }
+}
+
 @media (max-width: 1200px) {
     .header-container {
         justify-content: space-between;

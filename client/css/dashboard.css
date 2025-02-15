@@ -318,7 +318,7 @@ input:checked+.slider:before {
 }
 
 .client-name {
-    max-width: 13.5ch;
+    width: 13.5ch;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -428,7 +428,8 @@ input:checked+.slider:before {
     padding: 2rem;
 }
 
-.chat-overlay {
+.chat-overlay,
+.req-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -444,7 +445,8 @@ input:checked+.slider:before {
     box-sizing: border-box;
 }
 
-.chat-history {
+.chat-history,
+.req-profile {
     background: #cbb26a;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     width: 30%;
@@ -482,7 +484,8 @@ input:checked+.slider:before {
     cursor: pointer;
 }
 
-.chatbot {
+.chatbot,
+.user-profile {
     background-color: black;
     padding: 10px;
     height: fit-content;
@@ -633,6 +636,78 @@ input:checked+.slider:before {
 .bi-check-circle,
 .bi-exclamation-diamond {
     font-size: 2rem;
+}
+
+.user-profile {
+    background-color: rgb(0, 0, 0);
+    padding: 10px;
+    height: fit-content;
+    z-index: 2;
+    text-align: center;
+}
+
+.user-image {
+    margin-bottom: 1rem;
+}
+
+.user-image img {
+    border-radius: 16px;
+    object-fit: cover;
+    max-height: 350px;
+    width: 100%;
+    display: block;
+}
+
+.user-info {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.probability {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 16px;
+    color: #fff;
+}
+
+.probability h3 {
+    margin: 0;
+    margin-bottom: 1rem;
+}
+
+.probability canvas {
+    width: 150px !important;
+    height: 150px !important;
+    margin: auto;
+}
+
+.req-list {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    color: #fff;
+    text-align: center;
+}
+
+.req-list li {
+    border: 3px solid #cbb26a;
+    /* box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); */
+    border-radius: 16px;
+    padding: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.req-list li:hover {
+    transform: scale(1.05);
+}
+
+.req-title {
+    color: #cbb26a;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 8px;
 }
 
 /* Data */
