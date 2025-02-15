@@ -1,5 +1,12 @@
 /* Media queries */
 
+@media (min-width: 1201px) {
+    .nav-list {
+        display: flex !important;
+        flex-direction: row;
+    }
+}
+
 @media (max-width: 1200px) {
     .header-container {
         justify-content: space-between;
@@ -119,5 +126,13 @@
         flex-direction: column;
         overflow-x: auto;
         width: 100%;
+    }
+
+    .req-profile {
+        width: 96%;
+    }
+
+    .user-info {
+        flex-direction: column;
     }
 }

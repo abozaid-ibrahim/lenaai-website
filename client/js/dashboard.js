@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const container = document.querySelector(".clients-list");
-    const clients = Array.from(container.children);
-
     // Header section
     $(document).ready(function () {
         $("#menu-toggle").click(function () {
@@ -59,158 +56,301 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Recent first filter
-    let descending = false;
-    const recentButton = document.querySelector(".recent");
-    recentButton.addEventListener("click", function() {
+    // Populate chat list
+    $.ajax({
+        url: "https://api.lenaai.net/chat-history/dreamhomes",
+        method: "GET",
+        dataType: "json",
+        success: function (response) {
+            const container = $(".clients-list");
     
-        clients.sort((a, b) => {
-            const dateA = new Date(a.getAttribute("data-date"));
-            const dateB = new Date(b.getAttribute("data-date"));
-            return descending ? dateA - dateB : dateB - dateA;
-        });
+            response.conversations.forEach((conversation) => {
+                const phoneNumber = Object.keys(conversation)[0];
+                const messages = conversation[phoneNumber];
+
+                let latestDate = "N/A";
+                if (messages.length > 0) {
+                    latestDate = messages
+                        .map(msg => new Date(msg.timestamp))
+                        .sort((a, b) => b - a)[0]
+                        .toISOString().split("T")[0];
+                }
     
-        container.innerHTML = "";
-        clients.forEach(client => container.appendChild(client));
+                container.append(`
+                    <ul class="client"
+                        data-date="${latestDate}"
+                        data-status="no-action"
+                        data-messages='${JSON.stringify(messages).replace(/'/g, "&apos;")}'
+                    >
+                        <li><i class="bi bi-check-circle"></i></li>
+                        <li class="client-name">${phoneNumber}</li>
+                        <li>${latestDate}</li>
+                        <li class="requirements">
+                            Requirements
+                            <ul class="dropdown">
+                                <li>2 bedrooms</li>
+                                <li>villa</li>
+                                <li>Cairo</li>
+                            </ul>
+                        </li>
+                        <li class="need-action">
+                            Action Needed
+                            <i class="bi bi-chevron-down"></i>
+                            <ul class="dropdown">
+                                <li>Call</li>
+                                <li>Arrange view</li>
+                            </ul>
+                        </li>
+                        <li class="call-now">Call Now</li>
+                    </ul>
+                `);
+            });
+            
+            const clients = Array.from(document.querySelectorAll(".client"));
 
-        descending = !descending;
-        if (descending === true) {
-            recentButton.classList.add("filter-active");
-        } else {
-            recentButton.classList.remove("filter-active");
-        }
-    });
+            // Recent first filter
+            let descending = false;
+            const recentButton = document.querySelector(".recent");
+            recentButton.addEventListener("click", function() {
+            
+                clients.sort((a, b) => {
+                    const dateA = new Date(a.getAttribute("data-date"));
+                    const dateB = new Date(b.getAttribute("data-date"));
+                    return descending ? dateA - dateB : dateB - dateA;
+                });
+            
+                container[0].innerHTML = "";
+                clients.forEach(client => container[0].appendChild(client));
 
-    // Action filter
-    let actionFilterActive = false;
-    const actionButton = document.querySelector(".action");
-    actionButton.addEventListener("click", function () {
-        if (!actionFilterActive) {
-            clients.forEach((client) => {
-                if (client.getAttribute("data-status") !== "action-needed") {
-                    client.style.display = "none";
+                descending = !descending;
+                if (descending === true) {
+                    recentButton.classList.add("filter-active");
+                } else {
+                    recentButton.classList.remove("filter-active");
                 }
             });
 
-            actionFilterActive = !actionFilterActive;
-        } else {
-            clients.forEach((client) => {
-                client.style.display = "flex";
+            // Action filter
+            let actionFilterActive = false;
+            const actionButton = document.querySelector(".action");
+            actionButton.addEventListener("click", function () {
+                if (!actionFilterActive) {
+                    clients.forEach((client) => {
+                        if (client.getAttribute("data-status") !== "action-needed") {
+                            client.style.display = "none";
+                        }
+                    });
+
+                    actionFilterActive = !actionFilterActive;
+                } else {
+                    clients.forEach((client) => {
+                        client.style.display = "flex";
+                    });
+
+                    actionFilterActive = !actionFilterActive;
+                }
+
+                if (actionFilterActive === true) {
+                    actionButton.classList.add("filter-active");
+                } else {
+                    actionButton.classList.remove("filter-active");
+                }
             });
 
-            actionFilterActive = !actionFilterActive;
-        }
-
-        if (actionFilterActive === true) {
-            actionButton.classList.add("filter-active");
-        } else {
-            actionButton.classList.remove("filter-active");
-        }
-    });
-
-    // Switch button for active
-    const switchButton = document.getElementById("switch-status");
-    switchButton.addEventListener("change", function () {
-        if (switchButton.checked) {
-            clients.forEach((client) => {
-                if (client.getAttribute("data-status") === "action-needed") {
-                    client.style.display = "none";
+            // Switch button for active
+            const switchButton = document.getElementById("switch-status");
+            switchButton.addEventListener("change", function () {
+                if (switchButton.checked) {
+                    clients.forEach((client) => {
+                        if (client.getAttribute("data-status") === "action-needed") {
+                            client.style.display = "none";
+                        }
+                    })
+                } else {
+                    clients.forEach(client => {
+                        client.style.display = "flex";
+                    });
                 }
+            });
+
+            // Search bar
+            const search = document.getElementById("search-bar");
+            const notFound = document.querySelector(".not-found");
+            const baseNotFoundText = notFound.textContent;
+            search.addEventListener("keyup", function () {
+                const input = search.value
+                let filter = input.toUpperCase();
+                let resultsCount = 0;
+
+                clients.forEach((client) => {
+                    const clientName = client.querySelector(".client-name").textContent;
+                    if (clientName.toUpperCase().indexOf(filter) > -1) {
+                        client.style.display = "flex";
+                        resultsCount++;
+                    } else {
+                        client.style.display = "none";
+                    }
+                })
+
+                if (resultsCount === 0) {
+                    notFound.textContent = baseNotFoundText + `"${input}"`
+                    notFound.style.display = "block";
+                } else {
+                    notFound.style.display = "none";
+                }
+            });
+
+            // Requirements
+            const requirements = document.querySelectorAll(".requirements");
+            requirements.forEach((requirement) => {
+                requirement.addEventListener("click", function (event) {
+                    event.stopPropagation();
+                    const clientName = event.target.parentElement.querySelector(".client-name").textContent;
+                    const reqOverlay = document.querySelector(".req-overlay");
+                    const reqProfile = document.querySelector(".req-profile");
+
+                    reqOverlay.style.display = "flex";
+                    reqProfile.innerHTML = `
+                    <div class="history-header">
+                        <h1>${clientName}'s requirements</h1>
+                        <i class="fa-solid close-btn fa-circle-xmark"></i>
+                    </div>
+                    <div class="user-profile">
+                        <div class="user-image">
+                            <img src="../assets/user-default.png">
+                        </div>
+                        <div class="user-info">
+                            <div class="probability">
+                                <h3>Purchase Probability</h3>
+                                <canvas id="probabilityChart"></canvas>
+                            </div>
+                            <ul class="req-list">
+                                <li>
+                                    <div class="req-title">Location</div>
+                                    <div class="req-value">Cairo</div>
+                                </li>
+                                <li>
+                                    <div class="req-title">Rooms</div>
+                                    <div class="req-value">2</div>
+                                </li>
+                                <li>
+                                    <div class="req-title">Floors</div>
+                                    <div class="req-value">0</div>
+                                </li>
+                                <li>
+                                    <div class="req-title">Type</div>
+                                    <div class="req-value">Villa</div>
+                                </li>
+                                <li>
+                                    <div class="req-title">Budget</div>
+                                    <div class="req-value">15 Million EGP</div>
+                                </li>
+                                <li>
+                                    <div class="req-title">Finished</div>
+                                    <div class="req-value">2029</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>`;
+
+                    const purchaseProbability = 65; // Example: 75%
+
+                    // Get the canvas element
+                    const ctx = document.getElementById('probabilityChart').getContext('2d');
+
+                    // Create the Doughnut Chart
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Probability', 'Remaining'],
+                            datasets: [{
+                                data: [purchaseProbability, 100 - purchaseProbability],
+                                backgroundColor: ['#cbb26a', '#ddd'],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: false,
+                            cutout: '70%',
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    enabled: true
+                                }
+                            }
+                        }
+                    });
+
+                    document.querySelector(".close-btn").addEventListener("click", function () {
+                        reqOverlay.style.display = "none";
+                        reqProfile.innerHTML = '';
+                    });
+                })
             })
-        } else {
-            clients.forEach(client => {
-                client.style.display = "flex";
+
+            // Dropdowns
+            $(document).ready(function() {
+                $(".need-action").click(function(event) {
+                    event.stopPropagation();
+            
+                    let dropdown = $(this).find(".dropdown");
+            
+                    $(".dropdown").not(dropdown).slideUp();
+            
+                    dropdown.stop(true, true).slideToggle();
+                });
+            
+                $(document).click(function() {
+                    $(".dropdown").slideUp();
+                });
             });
-        }
-    });
 
-    // Search bar
-    const search = document.getElementById("search-bar");
-    const notFound = document.querySelector(".not-found");
-    const baseNotFoundText = notFound.textContent;
-    search.addEventListener("keyup", function () {
-        const input = search.value
-        let filter = input.toUpperCase();
-        let resultsCount = 0;
+            // Messages History
+            clients.forEach((client) => {
+                client.addEventListener("click", function () {
+                    const chatOverlay = document.querySelector(".chat-overlay");
+                    const chatHistory = document.querySelector(".chat-history");
+                    const messages = client.getAttribute("data-messages");
+                    const parsedMessages = messages ? JSON.parse(messages) : [];
+                    parsedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-        clients.forEach((client) => {
-            const clientName = client.querySelector(".client-name").textContent;
-            if (clientName.toUpperCase().indexOf(filter) > -1) {
-                client.style.display = "flex";
-                resultsCount++;
-            } else {
-                client.style.display = "none";
-            }
-        })
+                    chatOverlay.style.display = "flex";
+                    chatHistory.innerHTML = `
+                    <div class="history-header">
+                        <h1>Messages History</h1>
+                        <i class="fa-solid close-btn fa-circle-xmark"></i>
+                    </div>
+                    <div class="chatbot">
+                        <div id="messages">
+                        </div>
+                    </div>`;
 
-        if (resultsCount === 0) {
-            notFound.textContent = baseNotFoundText + `"${input}"`
-            notFound.style.display = "block";
-        } else {
-            notFound.style.display = "none";
-        }
-    });
+                    const messagesDiv = document.getElementById("messages");
+                    parsedMessages.forEach((message) => {
+                        let userMessage = document.createElement("div");
+                        let botResponse = document.createElement("div");
 
-    // Dropdowns
-    $(document).ready(function() {
-        $(".requirements").click(function(event) {
-            event.stopPropagation();
-    
-            let dropdown = $(this).find(".dropdown");
-    
-            $(".dropdown").not(dropdown).slideUp();
-    
-            dropdown.stop(true, true).slideToggle();
-        });
-    
-        $(document).click(function() {
-            $(".dropdown").slideUp();
-        });
-    });
+                        userMessage.innerHTML = message.user_message
+                        botResponse.innerHTML = message.bot_response
 
-    $(document).ready(function() {
-        $(".need-action").click(function(event) {
-            event.stopPropagation();
-    
-            let dropdown = $(this).find(".dropdown");
-    
-            $(".dropdown").not(dropdown).slideUp();
-    
-            dropdown.stop(true, true).slideToggle();
-        });
-    
-        $(document).click(function() {
-            $(".dropdown").slideUp();
-        });
-    });
+                        userMessage.classList.add("message", "sent");
+                        botResponse.classList.add("message");
 
-    clients.forEach((client) => {
-        client.addEventListener("click", function () {
-            const chatOverlay = document.querySelector(".chat-overlay");
-            const chatHistory = document.querySelector(".chat-history");
+                        messagesDiv.appendChild(userMessage);
+                        messagesDiv.appendChild(botResponse);
+                    })
 
-            chatOverlay.style.display = "flex";
-            chatHistory.innerHTML = `
-            <div class="history-header">
-                <h1>Messages History</h1>
-                <i class="fa-solid close-btn fa-circle-xmark"></i>
-            </div>
-            <div class="chatbot">
-                <div id="messages">
-                    <div class="message">Welcome to Lena Ai How can I help you today?</div>
-                    <div class="message sent">Welcome to Lena Ai How can I help you today?</div>
-                    <div class="message">Welcome to Lena Ai How can I help you today?</div>
-                    <div class="message sent">Welcome to Lena Ai How can I help you today?</div>
-                    <div class="message">Welcome to Lena Ai How can I help you today?</div>
-                    <div class="message sent">Welcome to Lena Ai How can I help you today?</div>
-                    <div class="message">Welcome to Lena Ai How can I help you today?</div>
-                </div>
-            </div>`;
-
-            document.querySelector(".close-btn").addEventListener("click", function () {
-                chatOverlay.style.display = "none";
-                chatHistory.innerHTML = '';
+                    document.querySelector(".close-btn").addEventListener("click", function () {
+                        chatOverlay.style.display = "none";
+                        chatHistory.innerHTML = '';
+                    });
+                });
             });
-        });
+        },
+        error: function (error) {
+            console.error("Error fetching chat history:", error);
+        }
     });
 });

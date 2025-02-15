@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    let requestUrl = "chat";
     // // countdown section
     // function updateCountdown() {
     //     const now = new Date().getTime();
@@ -93,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
         messagesDiv.appendChild(typingIndicatorDiv);
 
         $.ajax({
-            url: "https://api.lenaai.net/chat/",
+            url: `https://api.lenaai.net/${requestUrl}/`,
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -345,6 +346,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (currentEngineName.textContent !== selectedEngineName) {
                 currentEngineName.textContent = selectedEngineName;
+                if (selectedEngineName === "Chat-bot (Default)") {
+                    requestUrl = "chat";
+                } else if (selectedEngineName === "Lena Chatbot") {
+                    requestUrl = "lena_chatbot"
+                } else {
+                    requestUrl = "mamado_chatbpt"
+                }
+
                 messagesDiv.innerHTML = `
                 <div class="message">
                     Welcome to Lena Ai How can I help you today?
