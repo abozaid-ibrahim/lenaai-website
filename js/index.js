@@ -1,5 +1,46 @@
 document.addEventListener("DOMContentLoaded", function () {
     let requestUrl = "chat";
+
+    // check authentication status
+    function checkLoginStatus() {
+        const token = localStorage.getItem("lenaai_access_token");
+        if (token) {
+            $.ajax({
+                url: "http://127.0.0.1:8000/users/me",
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                success: function(response) {
+                    $("#sign-in button")
+                        .html('<i class="bi bi-box-arrow-right"></i> Logout')
+                        .addClass("logout");
+
+                    $(".sign-in-sm button")
+                        .html('<i class="bi bi-box-arrow-right"></i> Logout')
+                        .addClass("logout");
+
+                    function logoutUser() {
+                        localStorage.removeItem("lenaai_access_token");
+                
+                        window.location.href = "./index.html";
+                    }
+                
+                    $("#sign-in, .sign-in-sm a").on("click", function(event) {
+                        event.preventDefault();
+                        logoutUser();
+                    });
+                },
+                error: function(xhr) {
+                    console.log("Token expired or invalid, user must log in again");
+                    localStorage.removeItem("lenaai_access_token");
+                }
+            });
+        }
+    }
+
+    checkLoginStatus();
+
     // // countdown section
     // function updateCountdown() {
     //     const now = new Date().getTime();

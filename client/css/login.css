@@ -102,49 +102,69 @@ a {
 /* Form container */
 
 .form-container {
-    width: 500px;
-    padding: 30px 30px;
-    background-color: #cbb26a;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-    margin: 15rem auto;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background-color: #111;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    text-align: center;
+    border: 2px solid #cbb26a;
+    margin: 13rem auto;
 }
 
 h2 {
-    text-align: center;
-    color: #fff;
+    font-size: 1.8rem;
     margin-bottom: 20px;
+    color: #cbb26a;
+    font-family: "Archivo", sans-serif;
 }
 
 input {
     width: 100%;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
+    padding: 14px;
+    border: 2px solid #cbb26a;
+    border-radius: 8px;
     font-size: 16px;
-    resize: none;
+    background-color: black;
+    color: white;
     outline: none;
-    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+    font-family: "Archivo", sans-serif;
+}
+
+input:focus {
+    border-color: white;
 }
 
 input[type="submit"] {
-    background-color: black;
+    width: 100%;
+    padding: 12px;
+    background-color: #cbb26a;
+    color: black;
     font-weight: bold;
     font-size: 1rem;
-    color: #fff;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    outline: none;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.3s ease;
+    font-family: "Archivo", sans-serif;
 }
 
 input[type="submit"]:hover {
-    background-color: #292929;
-    color: #cbb26a;
+    background-color: white;
+    color: black;
+    box-shadow: 0 0 10px rgba(203, 178, 106, 0.5);
+}
+
+.error {
+    color: rgb(219, 13, 13);
+    margin-bottom: 1rem;
 }
 
 @media (max-width: 1200px) {
     .form-container {
-        width: 100%;
+        width: 90%;
     }
 }
