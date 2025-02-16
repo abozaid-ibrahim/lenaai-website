@@ -1,4 +1,41 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Authorization
+    const token = localStorage.getItem("lenaai_access_token");
+    if (!token) {
+        window.location.href = "./login.html";
+    } else {
+        $.ajax({
+            url: "http://127.0.0.1:8000/users/me",
+            method: "GET",
+            headers: {"Authorization": "Bearer " + token},
+            success: function (response) {
+                $("body").css("visibility", "visible");
+                $("#sign-in")
+                    .html('<i class="bi bi-box-arrow-right"></i> Logout')
+                    .addClass("logout");
+
+                $(".sign-in-sm button")
+                    .html('<i class="bi bi-box-arrow-right"></i> Logout')
+                    .addClass("logout");
+
+                function logoutUser() {
+                    localStorage.removeItem("lenaai_access_token");
+            
+                    window.location.href = "../index.html";
+                }
+            
+                $("#sign-in, .sign-in-sm button").on("click", function(event) {
+                    event.preventDefault();
+                    logoutUser();
+                });
+            },
+            error: function(xhr) {
+                console.error("Error verifying token:", xhr.responseText);
+                window.location.href = "./login.html";
+            }
+        })
+    }
+
     // Header section
     $(document).ready(function () {
         $("#menu-toggle").click(function () {
