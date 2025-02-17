@@ -95,6 +95,8 @@ h1 {
     top: 19%;
     right: 0%;
     height: fit-content;
+    max-height: 70vh;
+    overflow-y: auto;
     visibility: hidden;
     z-index: 2;
 }

@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const token = localStorage.getItem("lenaai_access_token");
         if (token) {
             $.ajax({
-                url: "http://127.0.0.1:8000/users/me",
+                url: "https://api.lenaai.net/users/me",
                 type: "GET",
                 headers: {
                     "Authorization": "Bearer " + token
@@ -227,9 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
             file = fileField.files[0];
             if (file) {
                 const reader = new FileReader();
-                const messagesDiv = document.getElementById("messages");
 
-                messagesDiv.style.height = "450px";
                 reader.onload = function (e) {
                     $('.chat-preview').html(`<img src="${e.target.result}" alt="Chat Preview">`);
                 };

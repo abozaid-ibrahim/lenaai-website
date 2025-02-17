@@ -99,10 +99,6 @@
         margin-right: 0;
     }
 
-    .data-titles li:last-child {
-        margin-right: 2rem;
-    }
-
     .client li {
         flex-shrink: 0;
     }
@@ -134,5 +130,18 @@
 
     .user-info {
         flex-direction: column;
+    }
+
+    .data-titles {
+        flex-direction: column;
+    }
+
+    .data-titles li {
+        display: block;
+        text-align: center;
+    }
+
+    .data-container {
+        width: 95%;
     }
 }

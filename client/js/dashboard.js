@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "./login.html";
     } else {
         $.ajax({
-            url: "http://127.0.0.1:8000/users/me",
+            url: "https://api.lenaai.net/users/me",
             method: "GET",
             headers: {"Authorization": "Bearer " + token},
             success: function (response) {
@@ -390,4 +390,40 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error fetching chat history:", error);
         }
     });
+
+    // Data section
+    $(".data-title").click(function () {
+        $(this).next(".data-content").slideToggle();
+        $(this).find("i").toggleClass("fa-chevron-down fa-chevron-up");
+    });
+
+    $(".units-list li .unit-header").click(function () {
+        $(this).next(".unit-details").slideToggle();
+        $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");
+    });
+
+    const units = document.querySelectorAll(".unit");
+    const devs = document.querySelectorAll(".data-titles li");
+
+    if (devs.length > 0 && units.length > 0) {
+        devs.forEach((dev) => {
+            dev.addEventListener("click", function () {
+                devs.forEach((d) => d.classList.remove("dev-active"));
+                dev.classList.add("dev-active");
+                if (dev.textContent.trim() === "All") {
+                    units.forEach((unit) => {
+                        unit.style.display = "block";
+                    });
+                } else {
+                    units.forEach((unit) => {
+                        if (unit.getAttribute("data-dev") === dev.textContent.trim()) {
+                            unit.style.display = "block";
+                        } else {
+                            unit.style.display = "none";
+                        }
+                    });
+                }
+            });
+        });
+    }
 });

@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $(".error").html("");
 
         $.ajax({
-            url: "http://127.0.0.1:8000/login",
+            url: "https://api.lenaai.net/login",
             type: "POST",
             data: {
                 "username": username,
