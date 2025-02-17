@@ -262,7 +262,6 @@ input:checked+.slider:before {
 
 .overview-titles,
 .client,
-.data-titles,
 .sheet {
     color: #cbb26a;
     display: flex;
@@ -270,8 +269,7 @@ input:checked+.slider:before {
     border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.overview-titles li,
-.data-titles li {
+.overview-titles li {
     margin-right: 4rem;
     font-size: 1.2rem;
     font-weight: bold;
@@ -713,21 +711,125 @@ input:checked+.slider:before {
 
 /* Data */
 
-.data-titles li:last-child {
-    margin-left: auto;
-    margin-right: 4rem;
+.data-container {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 1.5rem;
 }
 
-.sheet {
+.data-tabs {
+    padding: 2rem;
+    padding-top: 0;
+}
+
+.data-titles {
+    color: #cbb26a;
+    display: flex;
+    gap: 20px;
+    justify-content: space-evenly;
+}
+
+.data-titles li {
+    border: 3px solid #cbb26a;
+    color: black;
     display: flex;
     align-items: center;
+    border-radius: 10px;
+    background-color: #cbb26a;
+    padding: .5rem 1rem;
+}
+
+.data-titles li:hover {
+    cursor: pointer;
+    background-color: #000;
+    color: #cbb26a;
+}
+
+.fa-caret-down {
+    margin-left: 10px;
+}
+
+.data-title {
+    display: flex;
     justify-content: space-between;
+    align-items: center;
+    color: #cbb26a;
+    padding: .8rem 3rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: box-shadow .4s ease-in-out;
 }
 
-.sheet li {
-    margin-right: 2rem;
+.data-title:hover {
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
-.sheet li:first-child {
-    margin-left: 2rem;
+.data-title .fa-chevron-down,
+.data-title .fa-chevron-up {
+    padding: .5rem .8rem;
+    border-radius: 50%;
+    background-color: #cbb26a;
+    color: black;
+}
+
+.data-content {
+    color: #cbb26a;
+    padding: 1rem 5rem;
+    display: none;
+}
+
+.units-list li {
+    background-color: #111;
+    color: #cbb26a;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 2px solid #cbb26a;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.units-list li:hover {
+    background-color: #cbb26a;
+    color: #000;
+    cursor: pointer;
+}
+
+.unit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.unit-header i {
+    transition: transform 0.3s ease;
+}
+
+.unit-details {
+    display: none;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #222;
+    border-radius: 10px;
+}
+
+.unit-details li {
+    color: #fff;
+    border: none;
+    background: transparent;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.unit-details li:hover {
+    cursor: default;
+    background-color: transparent;
+    color: #cbb26a;
+}
+
+.data-titles li.dev-active {
+    background-color: black;
+    color: #cbb26a;
 }
