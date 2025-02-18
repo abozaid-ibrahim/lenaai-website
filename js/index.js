@@ -6,11 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const token = localStorage.getItem("lenaai_access_token");
         if (token) {
             $.ajax({
-                url: "https://api.lenaai.net/users/me",
-                type: "GET",
-                headers: {
-                    "Authorization": "Bearer " + token
-                },
+                url: `https://api.lenaai.net/me?access_token=${token}`,
+                type: "POST",
                 success: function(response) {
                     $("#sign-in button")
                         .html('<i class="bi bi-box-arrow-right"></i> Logout')
