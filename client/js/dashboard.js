@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "./login.html";
     } else {
         $.ajax({
-            url: "https://api.lenaai.net/users/me",
-            method: "GET",
-            headers: {"Authorization": "Bearer " + token},
+            url: `https://api.lenaai.net/me?access_token=${token}`,
+            method: "POST",
+            contentType: "application/json",
             success: function (response) {
                 $("body").css("visibility", "visible");
                 $("#sign-in")
@@ -426,4 +426,34 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+
+    $(document).ready(function () {
+        let isOpen = false;
+        const detailsBtn = document.querySelector(".details-btn");
+        const arrowIcon = detailsBtn.querySelector("i");
+    
+        $(".details-btn").click(function () {
+            if (isOpen) {
+                $(".slider .property-details").animate({ right: "-320px" }, 100);
+                $(".details-btn").animate({ right: "0px" }, 100);
+                arrowIcon.classList.remove("fa-chevron-right");
+                arrowIcon.classList.add("fa-chevron-left"); 
+            } else {
+                $(".slider .property-details").animate({ right: "0px" }, 100);
+
+                if (window.innerHeight < 500) {
+                    $(".details-btn").animate({ right: "300px" }, 100)
+                } else if (window.innerWidth > 1100) {
+                    $(".details-btn").animate({ right: "300px" }, 100);
+                } else {
+                    $(".details-btn").animate({ right: "150px" }, 100);
+                }
+
+                arrowIcon.classList.remove("fa-chevron-left");
+                arrowIcon.classList.add("fa-chevron-right");
+            }
+    
+            isOpen = !isOpen;
+        });
+    });
 });
