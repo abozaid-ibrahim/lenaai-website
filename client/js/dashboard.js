@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
+    let clientId;
+
     // Authorization
     const token = localStorage.getItem("lenaai_access_token");
     if (!token) {
@@ -9,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
             method: "POST",
             contentType: "application/json",
             success: function (response) {
+                clientId = response.user_id;
                 $("body").css("visibility", "visible");
                 $("#sign-in")
                     .html('<i class="bi bi-box-arrow-right"></i> Logout')
@@ -28,6 +31,232 @@ document.addEventListener("DOMContentLoaded", function () {
                     event.preventDefault();
                     logoutUser();
                 });
+
+                $.ajax({
+                    url: `https://api.lenaai.net/units/Dream_House`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                        const groupedByCompound = response.reduce((group, item) => {
+                            const { compound } = item;
+                            if (!group[compound]) {
+                                group[compound] = [];
+                            }
+                            group[compound].push(item);
+                            return group;
+                        }, {});
+
+                        const dataSection = document.querySelector(".data");
+                        Object.keys(groupedByCompound).forEach((compoundName) => {
+                            const dataContainer = document.createElement("div");
+                            const dataTitle = document.createElement("div");
+                            const dataContent = document.createElement("div");
+                            const unitsList = document.createElement("ul");
+
+                            dataContainer.classList.add("data-container");
+                            dataTitle.classList.add("data-title");
+                            dataContent.classList.add("data-content");
+                            unitsList.classList.add("units-list");
+                            dataTitle.innerHTML = `${compoundName || "N/A"}<i class="fa-solid fa-chevron-up"></i>`;
+                            
+                            dataContent.appendChild(unitsList);
+                            dataContainer.appendChild(dataTitle);
+                            dataContainer.appendChild(dataContent);
+                            dataSection.appendChild(dataContainer);
+                            groupedByCompound[compoundName].forEach((unit) => {
+                                const unitElement = document.createElement("li");
+                                unitElement.classList.add("unit")
+                                unitElement.setAttribute("data-dev", unit.developer);
+                                unitElement.innerHTML = `
+                                <div class="unit-header">
+                                    <span class="unit-name">Unit ${unit.unitId}</span>
+                                    <div class="unit-btns">
+                                        <div class="edit-btn"><i class="fa-solid fa-pen-to-square"></i>Edit</div>
+                                        <div class="remove-btn"><i class="fa-solid fa-trash"></i>Delete</div>
+                                    </div>
+                                </div>
+                                <div class="unit-details">
+                                    <div class="slider">
+                                        <div class="slider-wrapper">
+                                            <div class="slide">
+                                                <img src="../assets/Image 85.png" alt="Chat Image">
+                                            </div>
+                                            <div class="slide">
+                                                <img src="../assets/Image 85.png" alt="Chat Image">
+                                            </div>
+                                        </div>
+                        
+                                        <div class="property-details">
+                                            <p><strong>Unit ID</strong>: ${unit.unitId || "N/A"}</p>
+                                            <p><strong>Compound</strong>: ${unit.compound || "N/A"}</p>
+                                            <p><strong>Building Type</strong>: ${unit.buildingType || "N/A"}</p>
+                                            <p><strong>Type</strong>: ${unit.typeName || "N/A"}</p>
+                                            <p><strong>City</strong>: ${unit.city || "N/A"}</p>
+                                            <p><strong>Developer</strong>: <span class="dev">${unit.developer || "N/A"}</span></p>
+                                            <p><strong>Paid</strong>: ${unit.paid || "N/A"}</p>
+                                            <p><strong>Offer</strong>: ${unit.offer || "N/A"} EGP</p>
+                                            <p><strong>Status</strong>: ${unit.status || "N/A"}</p>
+                                            <p><strong>Zone</strong>: ${unit.zone || "N/A"}</p>
+                                            <p><strong>Phase</strong>: ${unit.phase || "N/A"}</p>
+                                            <p><strong>Delivery Date</strong>: ${unit.deliveryDate || "N/A"}</p>
+                                            <p><strong>Floor</strong>: ${unit.floor || "N/A"}</p>
+                                            <p><strong>Rooms</strong>: ${unit.roomsCount || "N/A"}</p>
+                                            <p><strong>Land Area</strong>: ${unit.landAreaSqMeters || "N/A"}m²</p>
+                                            <p><strong>Selling Area</strong>: ${unit.sellingAreaSqMeters || "N/A"}m²</p>
+                                            <p><strong>Garden Size</strong>: ${unit.gardenSize || "N/A"}m²</p>
+                                            <p><strong>Finishing</strong>: ${unit.finishing || "N/A"}</p>
+                                            <p><strong>Payment Plan</strong>: ${unit.paymentPlan.price || "N/A"} in 
+                                                ${unit.paymentPlan.years || "N/A"}</p>
+                                        </div>
+                                    </div>
+
+                                    <div id="prev"><i class="fa-solid iconCall fa-chevron-left"></i></div>
+                                    <div id="next"><i class="fa-solid iconCall fa-chevron-right"></i></div>
+                                </div>`;
+
+                                unitsList.appendChild(unitElement);
+                            })
+                        })
+
+                        // Data section
+                        $(".data-title").click(function () {
+                            $(this).next(".data-content").slideToggle();
+                            $(this).find("i").toggleClass("fa-chevron-down fa-chevron-up");
+                        });
+
+                        $(".units-list li .unit-header").click(function () {
+                            $(this).next(".unit-details").slideToggle();
+                            $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");
+
+                            const unitDetails = $(this).next(".unit-details");
+                            const sliderWrapper = unitDetails.find(".slider-wrapper");
+                            const slides = sliderWrapper.find(".slide");
+                            const prev = unitDetails.find("#prev");
+                            const next = unitDetails.find("#next");
+                            let slideIndex = 0;
+
+                            showSlides(slideIndex);
+
+                            function plusSlides(num) {
+                                showSlides(slideIndex += num);
+                            }
+
+                            function showSlides(num) {
+                                slideIndex = (num + slides.length) % slides.length;
+                                if (slideIndex === 0) {
+                                    prev.css("display", "none")
+                                } else {
+                                    prev.css("display", "block")
+                                }
+
+                                if (slideIndex === slides.length - 1) {
+                                    next.css("display", "none")
+                                } else {
+                                    next.css("display", "block")
+                                }
+
+                                sliderWrapper.css("transform",`translateX(-${slideIndex * 100}%)`);
+                            }
+
+                            prev.click(function () {
+                                plusSlides(-1);
+                            });
+
+                            next.click(function () {
+                                plusSlides(1);
+                            });
+                        });
+
+                        const units = document.querySelectorAll(".unit");
+                        const devs = document.querySelectorAll(".data-titles li");
+
+                        function hideEmptyDataContainers() {
+                            document.querySelectorAll(".data-container").forEach((container) => {
+                                const unitsList = container.querySelector(".units-list");
+                                const units = unitsList.querySelectorAll(".unit");
+                        
+                                const allHidden = [...units].every(unit => unit.style.display === "none");
+                        
+                                if (allHidden) {
+                                    container.style.display = "none";
+                                } else {
+                                    container.style.display = "block";
+                                }
+                            });
+                        }
+
+                        if (devs.length > 0 && units.length > 0) {
+                            devs.forEach((dev) => {
+                                dev.addEventListener("click", function () {
+                                    devs.forEach((d) => d.classList.remove("dev-active"));
+                                    dev.classList.add("dev-active");
+                                    if (dev.textContent.trim() === "All") {
+                                        units.forEach((unit) => {
+                                            unit.style.display = "block";
+                                        });
+                                    } else {
+                                        units.forEach((unit) => {
+                                            if (unit.getAttribute("data-dev").includes(dev.textContent.trim())) {
+                                                unit.style.display = "block";
+                                            } else {
+                                                unit.style.display = "none";
+                                            }
+                                        });
+                                    }
+
+                                    hideEmptyDataContainers();
+                                });
+                            });
+                        }
+
+                        // Unit Edit
+                        const editButtons = document.querySelectorAll(".edit-btn");
+                        editButtons.forEach((editButton) => {
+                            editButton.addEventListener("click", function (event) {
+                                event.stopPropagation();
+
+                                const editOverlay = document.querySelector(".edit-overlay");
+                                const editPopup = document.querySelector(".edit-popup");
+                                const unit = this.closest(".unit");
+                                const unitName = unit.querySelector(".unit-header span").textContent;
+
+                                editOverlay.style.display = "flex";
+                                editPopup.innerHTML = `
+                                <div class="history-header">
+                                    <h1>Edit ${unitName}</h1>
+                                    <i class="fa-solid close-btn fa-circle-xmark"></i>
+                                </div>
+                                <div class="edit-content">
+                                    <ul class="edit-details">
+                                        <li>Type :<input type="text" placeholder="Apartment"></li>
+                                        <li>Compound :<input type="text" placeholder="Apartment"></li>
+                                        <li>City :<input type="text" placeholder="Apartment"></li>
+                                        <li>Developer :<input type="text" placeholder="Apartment"></li>
+                                        <li>Floor :<input type="number" placeholder="Apartment"></li>
+                                        <li>Rooms :<input type="number" placeholder="Apartment"></li>
+                                    </ul>
+                                    <div class="details-btns">
+                                        <div class="cancel">Cancel</div>
+                                        <div class="save">Save</div>
+                                    </div>
+                                </div>`;
+
+                                document.querySelector(".close-btn").addEventListener("click", function () {
+                                    editOverlay.style.display = "none";
+                                    editPopup.innerHTML = '';
+                                });
+
+                                document.querySelector(".cancel").addEventListener("click", function () {
+                                    editOverlay.style.display = "none";
+                                    editPopup.innerHTML = '';
+                                });
+                            });
+                        });
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText);
+                    }
+                })
             },
             error: function(xhr) {
                 console.error("Error verifying token:", xhr.responseText);
@@ -389,71 +618,5 @@ document.addEventListener("DOMContentLoaded", function () {
         error: function (error) {
             console.error("Error fetching chat history:", error);
         }
-    });
-
-    // Data section
-    $(".data-title").click(function () {
-        $(this).next(".data-content").slideToggle();
-        $(this).find("i").toggleClass("fa-chevron-down fa-chevron-up");
-    });
-
-    $(".units-list li .unit-header").click(function () {
-        $(this).next(".unit-details").slideToggle();
-        $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");
-    });
-
-    const units = document.querySelectorAll(".unit");
-    const devs = document.querySelectorAll(".data-titles li");
-
-    if (devs.length > 0 && units.length > 0) {
-        devs.forEach((dev) => {
-            dev.addEventListener("click", function () {
-                devs.forEach((d) => d.classList.remove("dev-active"));
-                dev.classList.add("dev-active");
-                if (dev.textContent.trim() === "All") {
-                    units.forEach((unit) => {
-                        unit.style.display = "block";
-                    });
-                } else {
-                    units.forEach((unit) => {
-                        if (unit.getAttribute("data-dev") === dev.textContent.trim()) {
-                            unit.style.display = "block";
-                        } else {
-                            unit.style.display = "none";
-                        }
-                    });
-                }
-            });
-        });
-    }
-
-    $(document).ready(function () {
-        let isOpen = false;
-        const detailsBtn = document.querySelector(".details-btn");
-        const arrowIcon = detailsBtn.querySelector("i");
-    
-        $(".details-btn").click(function () {
-            if (isOpen) {
-                $(".slider .property-details").animate({ right: "-320px" }, 100);
-                $(".details-btn").animate({ right: "0px" }, 100);
-                arrowIcon.classList.remove("fa-chevron-right");
-                arrowIcon.classList.add("fa-chevron-left"); 
-            } else {
-                $(".slider .property-details").animate({ right: "0px" }, 100);
-
-                if (window.innerHeight < 500) {
-                    $(".details-btn").animate({ right: "300px" }, 100)
-                } else if (window.innerWidth > 1100) {
-                    $(".details-btn").animate({ right: "300px" }, 100);
-                } else {
-                    $(".details-btn").animate({ right: "150px" }, 100);
-                }
-
-                arrowIcon.classList.remove("fa-chevron-left");
-                arrowIcon.classList.add("fa-chevron-right");
-            }
-    
-            isOpen = !isOpen;
-        });
     });
 });
