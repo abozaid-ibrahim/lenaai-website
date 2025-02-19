@@ -833,19 +833,26 @@ input:checked+.slider:before {
     background-color: black;
 }
 
+.edit-details {
+    max-height: 60vh;
+    overflow-y: auto;
+    border: 2px solid #cbb26a;
+    border-radius: 16px;
+}
+
 .edit-details li {
     color: #cbb26a;
     font-size: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
     font-weight: bold;
     padding: 10px;
+    width: 100%;
 }
 
 .edit-details li input {
-    width: 80%;
+    width: 63%;
     border: 2px solid #cbb26a;
     outline: none;
     padding: 10px;
@@ -866,6 +873,7 @@ input:checked+.slider:before {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    padding: 10px;
 }
 
 .cancel:hover {
@@ -877,5 +885,150 @@ input:checked+.slider:before {
 .save:hover {
     background-color: #008a22;
     color: #fff;
+    cursor: pointer;
+}
+
+.images {
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    cursor: grab;
+    user-select: none;
+    gap: 5px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+.current-images,
+.upload-images {
+    color: #cbb26a;
+    padding: 1rem;
+    font-family: "Archivo", serif;
+}
+
+.chat-image {
+    position: relative;
+    flex-shrink: 0;
+    width: 60%;
+    padding: 3px;
+    border-radius: 10px;
+    cursor: grab;
+}
+
+.del {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    color: #b80000;
+    border-radius: 10px;
+    padding: .5rem;
+    cursor: pointer;
+    width: fit-content;
+    overflow: hidden;
+    transition: background-color 0.3s ease-in-out;
+    position: absolute;
+    top: 8%;
+    right: 5%;
+}
+
+.del-text {
+    opacity: 0;
+    max-width: 0;
+    transition: max-width 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.del:hover {
+    background-color: #b80000;
+    color: #fff;
+}
+
+.del:hover .del-text {
+    opacity: 1;
+    max-width: 100px;
+    padding-left: 5px;
+}
+
+.chat-image:hover {
+    cursor: pointer;
+    background-color: #cbb26a;
+    border-radius: 10px;
+}
+
+.chat-image img {
+    object-fit: fill;
+    display: block;
+    height: 180px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.image-active {
+    cursor: grabbing;
+}
+
+.upload-images {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 16px;
+    border: 2px solid #cbb26a;
+    margin-bottom: 1rem;
+    margin: 1rem;
+}
+
+.upload-images h4 {
+    margin: 0;
+}
+
+.fa-plus {
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #cbb26a;
+    border: 2px solid #cbb26a;
+    color: #000;
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+.fa-plus:hover {
+    background-color: #000;
+    color: #cbb26a;
+}
+
+.upload-images input[type="file"] {
+    display: none;
+}
+
+.photo-preview {
+    padding: 1rem;
+    display: none;
+}
+
+.photo-preview img {
+    border-radius: 16px;
+    object-fit: contain;
+    height: auto;
+    width: 100%;
+    display: block;
+}
+
+.upload-btn {
+    color: #000;
+    background-color: #cbb26a;
+    border-radius: 16px;
+    padding: 1rem;
+    border: 2px solid #cbb26a;
+    font-weight: bold;
+    display: none;
+}
+
+.upload-btn:hover {
+    background-color: #000;
+    color: #cbb26a;
     cursor: pointer;
 }

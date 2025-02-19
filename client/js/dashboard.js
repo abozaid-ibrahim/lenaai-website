@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     let clientId;
+    let clientUserName;
 
     // Authorization
     const token = localStorage.getItem("lenaai_access_token");
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
             contentType: "application/json",
             success: function (response) {
                 clientId = response.user_id;
+                clientUserName = response.username;
                 $("body").css("visibility", "visible");
                 $("#sign-in")
                     .html('<i class="bi bi-box-arrow-right"></i> Logout')
@@ -90,7 +92,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <p><strong>Unit ID</strong>: ${unit.unitId || "N/A"}</p>
                                             <p><strong>Compound</strong>: ${unit.compound || "N/A"}</p>
                                             <p><strong>Building Type</strong>: ${unit.buildingType || "N/A"}</p>
-                                            <p><strong>Type</strong>: ${unit.typeName || "N/A"}</p>
+                                            <p><strong>Type Name</strong>: ${unit.typeName || "N/A"}</p>
+                                            <p><strong>Country</strong>: ${unit.country || "N/A"}</p>
                                             <p><strong>City</strong>: ${unit.city || "N/A"}</p>
                                             <p><strong>Developer</strong>: <span class="dev">${unit.developer || "N/A"}</span></p>
                                             <p><strong>Paid</strong>: ${unit.paid || "N/A"}</p>
@@ -100,13 +103,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <p><strong>Phase</strong>: ${unit.phase || "N/A"}</p>
                                             <p><strong>Delivery Date</strong>: ${unit.deliveryDate || "N/A"}</p>
                                             <p><strong>Floor</strong>: ${unit.floor || "N/A"}</p>
-                                            <p><strong>Rooms</strong>: ${unit.roomsCount || "N/A"}</p>
-                                            <p><strong>Land Area</strong>: ${unit.landAreaSqMeters || "N/A"}m²</p>
-                                            <p><strong>Selling Area</strong>: ${unit.sellingAreaSqMeters || "N/A"}m²</p>
+                                            <p><strong>Rooms Count</strong>: ${unit.roomsCount || "N/A"}</p>
+                                            <p><strong>Land Area Sq Meters</strong>: ${unit.landAreaSqMeters || "N/A"}m²</p>
+                                            <p><strong>Selling Area Sq Meters</strong>: ${unit.sellingAreaSqMeters || "N/A"}m²</p>
                                             <p><strong>Garden Size</strong>: ${unit.gardenSize || "N/A"}m²</p>
                                             <p><strong>Finishing</strong>: ${unit.finishing || "N/A"}</p>
-                                            <p><strong>Payment Plan</strong>: ${unit.paymentPlan.price || "N/A"} in 
-                                                ${unit.paymentPlan.years || "N/A"}</p>
+                                            <p><strong>Payment Plan Price</strong>: ${unit.paymentPlan.price || "N/A"}</p>
+                                            <p><strong>Payment Plan Years</strong>: ${unit.paymentPlan.years || "N/A"}</p>
+                                            <p><strong>Payment Plan Maintanance</strong>: ${unit.paymentPlan.maintanance || "N/A"}</p>
+                                            <p style="display: none;"><strong>Data Source</strong>: ${unit.dataSource || "N/A"}</p>
                                         </div>
                                     </div>
 
@@ -219,6 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 const editPopup = document.querySelector(".edit-popup");
                                 const unit = this.closest(".unit");
                                 const unitName = unit.querySelector(".unit-header span").textContent;
+                                const propertyDetails = unit.querySelector(".property-details");
 
                                 editOverlay.style.display = "flex";
                                 editPopup.innerHTML = `
@@ -228,18 +234,134 @@ document.addEventListener("DOMContentLoaded", function () {
                                 </div>
                                 <div class="edit-content">
                                     <ul class="edit-details">
-                                        <li>Type :<input type="text" placeholder="Apartment"></li>
-                                        <li>Compound :<input type="text" placeholder="Apartment"></li>
-                                        <li>City :<input type="text" placeholder="Apartment"></li>
-                                        <li>Developer :<input type="text" placeholder="Apartment"></li>
-                                        <li>Floor :<input type="number" placeholder="Apartment"></li>
-                                        <li>Rooms :<input type="number" placeholder="Apartment"></li>
                                     </ul>
                                     <div class="details-btns">
                                         <div class="cancel">Cancel</div>
                                         <div class="save">Save</div>
                                     </div>
                                 </div>`;
+
+                                const editDetails = document.querySelector(".edit-details");
+                                if (propertyDetails) {
+                                    propertyDetails.querySelectorAll("p").forEach((p) => {
+                                        const key = p.querySelector("strong")?.textContent.trim().replace(":", "");
+                                        const value = p.textContent.replace(key + ":", "").trim();
+                                        const detail = document.createElement("li");
+
+                                        detail.innerHTML = `<li>${key}<input type="text" value="${value}"></li>`;
+                                        editDetails.appendChild(detail);
+                                    });
+                                }
+
+                                document.querySelector(".edit-details").innerHTML += `
+                                <div class="current-images">
+                                    <h2>Current Images</h2>
+                                    <div class="images">
+                                        <div class="chat-image">
+                                            <img src="../assets/Image 85.png" alt="Chat Image" draggable="false">
+                                            <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
+                                        </div>
+                                        <div class="chat-image">
+                                            <img src="../assets/Image_135.png" alt="Chat Image" draggable="false">
+                                            <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="photo-preview"></div>
+                                <div class="upload-images">
+                                    <h4>Upload Images</h4>
+                                    <div class="upload-btn">Upload</div>
+                                    <input type="file">
+                                    <i class="fa-solid fa-plus"></i>
+                                </div>`;
+
+                                const fileField = document.querySelector(`.upload-images input[type="file"]`);
+                                const uploadButton = document.querySelector(".upload-btn");
+                                const attachButton = document.querySelector(".fa-plus");
+                                const deleteButtons = document.querySelectorAll(".del");
+
+                                deleteButtons.forEach((button) => {
+                                    button.addEventListener("click", function () {
+                                        this.closest(".chat-image").remove();
+                                    });
+                                });
+
+                                document.querySelector(".fa-plus").addEventListener("click", function () {
+                                    fileField.click();
+                                });
+        
+                                fileField.addEventListener("change", function () {
+                                    let file = fileField.files[0];
+                                    if (file) {
+                                        document.querySelector(".photo-preview").style.display = "block";
+                                        const reader = new FileReader();
+                                        reader.onload = function (e) {
+                                            $('.photo-preview').html(`<img src="${e.target.result}" alt="Photo Preview">`);
+                                        };
+                                        reader.readAsDataURL(file);
+                                    } else {
+                                        $('.photo-preview').html('');
+                                    }
+
+                                    attachButton.style.display = "none";
+                                    uploadButton.style.display = "block";
+                                });
+
+                                uploadButton.addEventListener("click", function () {
+                                    document.querySelector(".photo-preview").innerHTML = "";
+                                    document.querySelector(".photo-preview").style.display = "none";
+                                })
+
+                                function toCamelCase(str) {
+                                    return str
+                                        .toLowerCase()
+                                        .replace(/\s(.)/g, (match, char) => char.toUpperCase())
+                                        .replace(/\s/g, "")
+                                        .replace(/^([A-Z])/, (match) => match.toLowerCase())
+                                    }
+
+                                // chat images drag
+                                let wasDragging = false;
+
+                                document.addEventListener("mousedown", function (e) {
+                                    const slider = e.target.closest(".images");
+                                    if (!slider || !slider.contains(e.target)) return;
+
+                                    let startX = e.clientX;
+                                    let scrollLeft = slider.scrollLeft;
+
+                                    slider.classList.add("image-active");
+
+                                    function handleMouseMove(e) {
+                                        wasDragging = true;
+                                        const x = e.clientX;
+                                        const walk = (x - startX) * 1;
+                                        slider.scrollLeft = scrollLeft - walk;
+                                    }
+
+                                    function stopScrolling() {
+                                        slider.classList.remove("image-active");
+                                        document.removeEventListener("mousemove", handleMouseMove);
+                                        document.removeEventListener("mouseup", stopScrolling);
+
+                                        if (wasDragging) {
+                                            document.addEventListener("click", preventClick, true);
+                                            setTimeout(() => {
+                                                document.removeEventListener("click", preventClick, true);
+                                                wasDragging = false;
+                                            }, 0);
+                                        }
+                                    }
+
+                                    document.addEventListener("mousemove", handleMouseMove);
+                                    document.addEventListener("mouseup", stopScrolling, { once: true });
+                                });
+                                
+                                function preventClick(e) {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                }
+        
 
                                 document.querySelector(".close-btn").addEventListener("click", function () {
                                     editOverlay.style.display = "none";
@@ -249,6 +371,93 @@ document.addEventListener("DOMContentLoaded", function () {
                                 document.querySelector(".cancel").addEventListener("click", function () {
                                     editOverlay.style.display = "none";
                                     editPopup.innerHTML = '';
+                                });
+
+                                document.querySelector(".save").addEventListener("click", function () {
+                                    let unitObject = {
+                                        "clientName": clientUserName,
+                                        "clientId": clientId,
+                                        "country": "",
+                                        "city": "",
+                                        "compound": "",
+                                        "developer": "",
+                                        "paid": "",
+                                        "offer": 0,
+                                        "unitId": "",
+                                        "status": "",
+                                        "zone": "",
+                                        "phase": "",
+                                        "deliveryDate": "",
+                                        "typeName": "",
+                                        "buildingType": "",
+                                        "floor": 0,
+                                        "roomsCount": 0,
+                                        "landAreaSqMeters": 0,
+                                        "sellingAreaSqMeters": 0,
+                                        "gardenSize": 0,
+                                        "finishing": "",
+                                        "dataSource": "",
+                                        "paymentPlan": {
+                                            "years": 0,
+                                            "price": 0,
+                                            "maintanance": 0
+                                        },
+                                        "images": []
+                                    };
+                                    let paymentPlan = {};
+                                    let unitId;
+                                
+                                    document.querySelectorAll(".edit-details li").forEach((li) => {
+                                        const key = li.textContent.trim().split(":")[0].trim();
+                                        const input = li.querySelector("input")?.value.trim() || "N/A";
+
+                                        function enforceType(key, value) {
+                                            const numberFields = [
+                                                "offer",
+                                                "floor",
+                                                "roomsCount",
+                                                "landAreaSqMeters",
+                                                "sellingAreaSqMeters",
+                                                "gardenSize",
+                                                "price", "years", "maintenance"
+                                            ];
+                                        
+                                            if (numberFields.includes(key)) {
+                                                return isNaN(value) || value === "N/A" ? 0 : Number(value);
+                                            }
+                                            return value;
+                                        }
+                                
+                                        if (toCamelCase(key) === "unitId") {
+                                            unitId = input;
+                                            unitObject.unitId = input;
+                                        } else if (key.includes("Payment Plan")) {
+                                            const formattedKey = toCamelCase(key.replace("Payment Plan", ""));
+                                            paymentPlan[formattedKey] = enforceType(formattedKey, input);
+                                        } else {
+                                            const camelKey = toCamelCase(key);
+                                            if (camelKey in unitObject) {
+                                                unitObject[camelKey] = enforceType(camelKey, input);
+                                            }
+                                        }
+                                    });
+                                
+                                    unitObject["paymentPlan"] = paymentPlan;
+
+                                    editOverlay.style.display = "none";
+                                    editPopup.innerHTML = '';
+
+                                    console.log("data collected from the edit window", unitObject)
+
+                                    $.ajax({
+                                        url: `https://api.lenaai.net/update-unit/${unitId}`,
+                                        method: "POST",
+                                        contentType: "application/json",
+                                        data: JSON.stringify(unitObject),
+                                        success: function (response) {
+                                            console.log("API response", response);
+                                        }
+                                    })
                                 });
                             });
                         });
