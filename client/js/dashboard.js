@@ -25,11 +25,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 function logoutUser() {
                     localStorage.removeItem("lenaai_access_token");
-            
+
                     window.location.href = "../index.html";
                 }
-            
-                $("#sign-in, .sign-in-sm button").on("click", function(event) {
+
+                $("#sign-in, .sign-in-sm button").on("click", function (event) {
                     event.preventDefault();
                     logoutUser();
                 });
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             dataContent.classList.add("data-content");
                             unitsList.classList.add("units-list");
                             dataTitle.innerHTML = `${compoundName || "N/A"}<i class="fa-solid fa-chevron-up"></i>`;
-                            
+
                             dataContent.appendChild(unitsList);
                             dataContainer.appendChild(dataTitle);
                             dataContainer.appendChild(dataContent);
@@ -149,18 +149,18 @@ document.addEventListener("DOMContentLoaded", function () {
                             function showSlides(num) {
                                 slideIndex = (num + slides.length) % slides.length;
                                 if (slideIndex === 0) {
-                                    prev.css("display", "none")
+                                    prev.css("display", "none");
                                 } else {
-                                    prev.css("display", "block")
+                                    prev.css("display", "block");
                                 }
 
                                 if (slideIndex === slides.length - 1) {
-                                    next.css("display", "none")
+                                    next.css("display", "none");
                                 } else {
-                                    next.css("display", "block")
+                                    next.css("display", "block");
                                 }
 
-                                sliderWrapper.css("transform",`translateX(-${slideIndex * 100}%)`);
+                                sliderWrapper.css("transform", `translateX(-${slideIndex * 100}%)`);
                             }
 
                             prev.click(function () {
@@ -170,6 +170,17 @@ document.addEventListener("DOMContentLoaded", function () {
                             next.click(function () {
                                 plusSlides(1);
                             });
+
+                            function checkScreenWidth() {
+                                if (window.innerWidth < 1100) {
+                                    prev.css("display", "none");
+                                    next.css("display", "none");
+                                }
+                            }
+
+                            checkScreenWidth();
+
+                            window.addEventListener("resize", checkScreenWidth);
                         });
 
                         const units = document.querySelectorAll(".unit");
@@ -179,9 +190,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             document.querySelectorAll(".data-container").forEach((container) => {
                                 const unitsList = container.querySelector(".units-list");
                                 const units = unitsList.querySelectorAll(".unit");
-                        
+
                                 const allHidden = [...units].every(unit => unit.style.display === "none");
-                        
+
                                 if (allHidden) {
                                     container.style.display = "none";
                                 } else {
@@ -270,12 +281,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <div class="photo-preview"></div>
                                 <div class="upload-images">
                                     <h4>Upload Images</h4>
-                                    <div class="upload-btn">Upload</div>
+                                    <p><i class="fa-solid fa-cloud-arrow-up"></i><strong>Click to upload</strong> or drag and drop</p>
+                                    <div class="upload-btn"><i class="fa-solid fa-file-arrow-up"></i>Upload</div>
+                                    <div id="customAlert" class="alert"></div>
                                     <input type="file">
                                     <i class="fa-solid fa-plus"></i>
                                 </div>`;
 
                                 const fileField = document.querySelector(`.upload-images input[type="file"]`);
+                                const dropZone = document.querySelector(".upload-images");
                                 const uploadButton = document.querySelector(".upload-btn");
                                 const attachButton = document.querySelector(".fa-plus");
                                 const deleteButtons = document.querySelectorAll(".del");
@@ -286,30 +300,83 @@ document.addEventListener("DOMContentLoaded", function () {
                                     });
                                 });
 
-                                document.querySelector(".fa-plus").addEventListener("click", function () {
+                                attachButton.addEventListener("click", function () {
                                     fileField.click();
                                 });
-        
-                                fileField.addEventListener("change", function () {
-                                    let file = fileField.files[0];
+
+                                function showCustomAlert(message) {
+                                    const alertBox = document.getElementById("customAlert");
+                                    alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>${message}`;
+                                    alertBox.style.display = "block";
+                                    
+                                    setTimeout(() => {
+                                        alertBox.style.opacity = "0";
+                                        setTimeout(() => {
+                                            alertBox.style.display = "none";
+                                            alertBox.style.opacity = "1";
+                                        }, 500);
+                                    }, 3000);
+                                }
+
+                                function handleFiles(files) {
+                                    let file = files[0];
                                     if (file) {
-                                        document.querySelector(".photo-preview").style.display = "block";
-                                        const reader = new FileReader();
-                                        reader.onload = function (e) {
-                                            $('.photo-preview').html(`<img src="${e.target.result}" alt="Photo Preview">`);
-                                        };
-                                        reader.readAsDataURL(file);
+                                        const allowedTypes = ["image/png", "image/jpeg"];
+                                        if (!allowedTypes.includes(file.type)) {
+                                            showCustomAlert("Invalid file type! Please upload a JPG or PNG image.");
+                                            this.value = "";
+                                        } else {
+                                            document.querySelector(".photo-preview").style.display = "block";
+                                            const reader = new FileReader();
+                                            reader.onload = function (e) {
+                                                $('.photo-preview').html(`<img src="${e.target.result}" alt="Photo Preview">
+                                                    <i class="fa-solid fa-circle-xmark"></i>`);
+
+                                                document.querySelector(".photo-preview i").addEventListener("click", function () {
+                                                    fileField.value = "";
+                                                    document.querySelector(".photo-preview").innerHTML = "";
+                                                    document.querySelector(".photo-preview").style.display = "none";
+                                                    uploadButton.style.display = "none";
+                                                    attachButton.style.display = "block";
+                                                });
+                                            };
+                                            reader.readAsDataURL(file);
+                                            attachButton.style.display = "none";
+                                            uploadButton.style.display = "block";
+                                        }
                                     } else {
                                         $('.photo-preview').html('');
                                     }
+                                }
 
-                                    attachButton.style.display = "none";
-                                    uploadButton.style.display = "block";
+                                // Drag events
+                                dropZone.addEventListener("dragover", (e) => {
+                                    e.preventDefault();
+                                    dropZone.classList.add("dragover");
+                                });
+
+                                dropZone.addEventListener("dragleave", () => {
+                                    dropZone.classList.remove("dragover");
+                                });
+
+                                dropZone.addEventListener("drop", (e) => {
+                                    e.preventDefault();
+                                    dropZone.classList.remove("dragover");
+
+                                    let files = e.dataTransfer.files;
+                                    handleFiles(files);
+                                });
+
+                                fileField.addEventListener("change", function () {
+                                    handleFiles(this.files)
                                 });
 
                                 uploadButton.addEventListener("click", function () {
+                                    fileField.value = "";
                                     document.querySelector(".photo-preview").innerHTML = "";
                                     document.querySelector(".photo-preview").style.display = "none";
+                                    uploadButton.style.display = "none";
+                                    attachButton.style.display = "block";
                                 })
 
                                 function toCamelCase(str) {
@@ -318,7 +385,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         .replace(/\s(.)/g, (match, char) => char.toUpperCase())
                                         .replace(/\s/g, "")
                                         .replace(/^([A-Z])/, (match) => match.toLowerCase())
-                                    }
+                                }
 
                                 // chat images drag
                                 let wasDragging = false;
@@ -356,12 +423,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                     document.addEventListener("mousemove", handleMouseMove);
                                     document.addEventListener("mouseup", stopScrolling, { once: true });
                                 });
-                                
+
                                 function preventClick(e) {
                                     e.stopPropagation();
                                     e.preventDefault();
                                 }
-        
+
 
                                 document.querySelector(".close-btn").addEventListener("click", function () {
                                     editOverlay.style.display = "none";
@@ -375,8 +442,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 document.querySelector(".save").addEventListener("click", function () {
                                     let unitObject = {
-                                        "clientName": clientUserName,
-                                        "clientId": clientId,
+                                        "clientName": "Dream House",
+                                        "clientId": "Dream_House",
                                         "country": "",
                                         "city": "",
                                         "compound": "",
@@ -406,7 +473,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     };
                                     let paymentPlan = {};
                                     let unitId;
-                                
+
                                     document.querySelectorAll(".edit-details li").forEach((li) => {
                                         const key = li.textContent.trim().split(":")[0].trim();
                                         const input = li.querySelector("input")?.value.trim() || "N/A";
@@ -421,13 +488,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 "gardenSize",
                                                 "price", "years", "maintenance"
                                             ];
-                                        
-                                            if (numberFields.includes(key)) {
+
+                                            if (value.includes("EGP")) {
+                                                value = value.replace("EGP", "");
+                                            } else if (numberFields.includes(key)) {
                                                 return isNaN(value) || value === "N/A" ? 0 : Number(value);
                                             }
                                             return value;
                                         }
-                                
+
                                         if (toCamelCase(key) === "unitId") {
                                             unitId = input;
                                             unitObject.unitId = input;
@@ -441,7 +510,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             }
                                         }
                                     });
-                                
+
                                     unitObject["paymentPlan"] = paymentPlan;
 
                                     editOverlay.style.display = "none";
@@ -456,18 +525,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                         data: JSON.stringify(unitObject),
                                         success: function (response) {
                                             console.log("API response", response);
+                                            window.location.reload();
                                         }
                                     })
                                 });
                             });
                         });
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         console.error(xhr.responseText);
                     }
                 })
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error("Error verifying token:", xhr.responseText);
                 window.location.href = "./login.html";
             }
@@ -538,7 +608,7 @@ document.addEventListener("DOMContentLoaded", function () {
         dataType: "json",
         success: function (response) {
             const container = $(".clients-list");
-    
+
             response.conversations.forEach((conversation) => {
                 const phoneNumber = Object.keys(conversation)[0];
                 const messages = conversation[phoneNumber];
@@ -550,7 +620,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         .sort((a, b) => b - a)[0]
                         .toISOString().split("T")[0];
                 }
-    
+
                 container.append(`
                     <ul class="client"
                         data-date="${latestDate}"
@@ -569,31 +639,26 @@ document.addEventListener("DOMContentLoaded", function () {
                             </ul>
                         </li>
                         <li class="need-action">
-                            Action Needed
-                            <i class="bi bi-chevron-down"></i>
-                            <ul class="dropdown">
-                                <li>Call</li>
-                                <li>Arrange view</li>
-                            </ul>
+                            Messages: ${messages.length * 2}
                         </li>
                         <li class="call-now">Call Now</li>
                     </ul>
                 `);
             });
-            
+
             const clients = Array.from(document.querySelectorAll(".client"));
 
             // Recent first filter
             let descending = false;
             const recentButton = document.querySelector(".recent");
-            recentButton.addEventListener("click", function() {
-            
+            recentButton.addEventListener("click", function () {
+
                 clients.sort((a, b) => {
                     const dateA = new Date(a.getAttribute("data-date"));
                     const dateB = new Date(b.getAttribute("data-date"));
                     return descending ? dateA - dateB : dateB - dateA;
                 });
-            
+
                 container[0].innerHTML = "";
                 clients.forEach(client => container[0].appendChild(client));
 
@@ -648,8 +713,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 
-            // Search bar
-            const search = document.getElementById("search-bar");
+            // Client Search bar
+            const search = document.getElementById("client-search-bar");
             const notFound = document.querySelector(".not-found");
             const baseNotFoundText = notFound.textContent;
             search.addEventListener("keyup", function () {
@@ -764,23 +829,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                 })
             })
-
-            // Dropdowns
-            $(document).ready(function() {
-                $(".need-action").click(function(event) {
-                    event.stopPropagation();
-            
-                    let dropdown = $(this).find(".dropdown");
-            
-                    $(".dropdown").not(dropdown).slideUp();
-            
-                    dropdown.stop(true, true).slideToggle();
-                });
-            
-                $(document).click(function() {
-                    $(".dropdown").slideUp();
-                });
-            });
 
             // Messages History
             clients.forEach((client) => {

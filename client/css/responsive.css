@@ -142,6 +142,53 @@
     }
 
     .data-container {
-        width: 95%;
+        width: 100%;
+    }
+
+    .data-content {
+        padding: .5rem;
+    }
+
+    .unit-header {
+        flex-direction: column;
+    }
+
+    .unit-name {
+        margin-bottom: 1rem;
+    }
+
+    .units-list li {
+        padding: .5rem;
+    }
+
+    .slider .property-details {
+        width: 35%;
+        padding: 10px;
+    }
+
+    .data-title {
+        font-size: 1.2rem;
+        padding: .8rem 1rem;
+    }
+
+    .slider-wrapper {
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .edit-popup {
+        width: 100%;
+    }
+
+    .chat-image {
+        width: 90%;
+    }
+
+    .edit-content {
+        padding: .5rem;
+    }
+
+    .alert {
+        width: 80%;
     }
 }
