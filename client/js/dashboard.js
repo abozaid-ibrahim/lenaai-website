@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 $.ajax({
-                    url: `https://api.lenaai.net/units/Dream_House`,
+                    url: `https://api.lenaai.net/units/${clientId}`,
                     method: "GET",
                     dataType: "json",
                     success: function (response) {
@@ -49,6 +49,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         }, {});
 
                         const dataSection = document.querySelector(".data");
+                        let allUnitsImages = {};
+                        let unitImages;
+
                         Object.keys(groupedByCompound).forEach((compoundName) => {
                             const dataContainer = document.createElement("div");
                             const dataTitle = document.createElement("div");
@@ -69,6 +72,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                 const unitElement = document.createElement("li");
                                 unitElement.classList.add("unit")
                                 unitElement.setAttribute("data-dev", unit.developer);
+                                allUnitsImages[unit.unitId] = unit.images
+                                unitImages = unit.images
                                 unitElement.innerHTML = `
                                 <div class="unit-header">
                                     <span class="unit-name">Unit ${unit.unitId}</span>
@@ -80,12 +85,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <div class="unit-details">
                                     <div class="slider">
                                         <div class="slider-wrapper">
-                                            <div class="slide">
-                                                <img src="../assets/Image 85.png" alt="Chat Image">
-                                            </div>
-                                            <div class="slide">
-                                                <img src="../assets/Image 85.png" alt="Chat Image">
-                                            </div>
                                         </div>
                         
                                         <div class="property-details">
@@ -104,9 +103,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <p><strong>Delivery Date</strong>: ${unit.deliveryDate || "N/A"}</p>
                                             <p><strong>Floor</strong>: ${unit.floor || "N/A"}</p>
                                             <p><strong>Rooms Count</strong>: ${unit.roomsCount || "N/A"}</p>
-                                            <p><strong>Land Area Sq Meters</strong>: ${unit.landAreaSqMeters || "N/A"}m²</p>
-                                            <p><strong>Selling Area Sq Meters</strong>: ${unit.sellingAreaSqMeters || "N/A"}m²</p>
-                                            <p><strong>Garden Size</strong>: ${unit.gardenSize || "N/A"}m²</p>
+                                            <p><strong>Land Area</strong>: ${unit.landArea || "N/A"}</p>
+                                            <p><strong>Selling Area</strong>: ${unit.sellingArea || "N/A"}</p>
+                                            <p><strong>Garden Size</strong>: ${unit.gardenSize || "N/A"}</p>
                                             <p><strong>Finishing</strong>: ${unit.finishing || "N/A"}</p>
                                             <p><strong>Payment Plan Price</strong>: ${unit.paymentPlan.price || "N/A"}</p>
                                             <p><strong>Payment Plan Years</strong>: ${unit.paymentPlan.years || "N/A"}</p>
@@ -120,6 +119,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                 </div>`;
 
                                 unitsList.appendChild(unitElement);
+
+                                const sliderWrapper = unitElement.querySelector(".slider-wrapper");
+                                unitImages.forEach((image) => {
+                                    const slide = document.createElement("div");
+                                    slide.classList.add("slide");
+                                    slide.innerHTML = `<img src="${image.url}" alt="Unit Image">`;
+                                    sliderWrapper.appendChild(slide);
+                                });
                             })
                         })
 
@@ -226,6 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
 
                         // Unit Edit
+                        let originalUnitId;
                         const editButtons = document.querySelectorAll(".edit-btn");
                         editButtons.forEach((editButton) => {
                             editButton.addEventListener("click", function (event) {
@@ -259,8 +267,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                         const value = p.textContent.replace(key + ":", "").trim();
                                         const detail = document.createElement("li");
 
-                                        detail.innerHTML = `<li>${key}<input type="text" value="${value}"></li>`;
-                                        editDetails.appendChild(detail);
+                                        if (key === "Unit ID") {
+                                            originalUnitId = value;
+                                            detail.innerHTML = `<li>${key}<input type="text" value="${value}" disabled></li>`;
+                                            editDetails.appendChild(detail);
+                                        } else {
+                                            detail.innerHTML = `<li>${key}<input type="text" value="${value}"></li>`;
+                                            editDetails.appendChild(detail);
+                                        }
                                     });
                                 }
 
@@ -441,9 +455,21 @@ document.addEventListener("DOMContentLoaded", function () {
                                 });
 
                                 document.querySelector(".save").addEventListener("click", function () {
+                                    function getFormattedDateTime() {
+                                        let now = new Date();
+                                        let year = now.getFullYear();
+                                        let month = String(now.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+                                        let day = String(now.getDate()).padStart(2, "0");
+                                        let hours = String(now.getHours()).padStart(2, "0");
+                                        let minutes = String(now.getMinutes()).padStart(2, "0");
+                                        let seconds = String(now.getSeconds()).padStart(2, "0");
+                                    
+                                        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                                    }
+
                                     let unitObject = {
-                                        "clientName": "Dream House",
-                                        "clientId": "Dream_House",
+                                        "clientName": clientUserName,
+                                        "clientId": clientId,
                                         "country": "",
                                         "city": "",
                                         "compound": "",
@@ -459,8 +485,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                         "buildingType": "",
                                         "floor": 0,
                                         "roomsCount": 0,
-                                        "landAreaSqMeters": 0,
-                                        "sellingAreaSqMeters": 0,
+                                        "landArea": 0,
+                                        "sellingArea": 0,
                                         "gardenSize": 0,
                                         "finishing": "",
                                         "dataSource": "",
@@ -469,7 +495,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "price": 0,
                                             "maintanance": 0
                                         },
-                                        "images": []
+                                        "images": [],
+                                        "updatedAt": getFormattedDateTime()
                                     };
                                     let paymentPlan = {};
                                     let unitId;
@@ -483,8 +510,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 "offer",
                                                 "floor",
                                                 "roomsCount",
-                                                "landAreaSqMeters",
-                                                "sellingAreaSqMeters",
+                                                "landArea",
+                                                "sellingArea",
                                                 "gardenSize",
                                                 "price", "years", "maintenance"
                                             ];
@@ -500,6 +527,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         if (toCamelCase(key) === "unitId") {
                                             unitId = input;
                                             unitObject.unitId = input;
+                                            unitObject.images = allUnitsImages[originalUnitId]
                                         } else if (key.includes("Payment Plan")) {
                                             const formattedKey = toCamelCase(key.replace("Payment Plan", ""));
                                             paymentPlan[formattedKey] = enforceType(formattedKey, input);
@@ -603,7 +631,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Populate chat list
     $.ajax({
-        url: "https://api.lenaai.net/chat-history/dreamhomes",
+        url: `https://api.lenaai.net/conversations/${clientId}`,
         method: "GET",
         dataType: "json",
         success: function (response) {
