@@ -330,44 +330,6 @@ input:checked+.slider:before {
     position: relative;
 }
 
-.dropdown {
-    display: none;
-    position: absolute;
-    background: #cbb26a;
-    color: black;
-    border: 1px solid black;
-    border-radius: 16px;
-    padding: 5px;
-    list-style: none;
-    width: 100%;
-    z-index: 10;
-    text-align: center;
-}
-
-.need-action .dropdown {
-    left: 0%;
-    top: 100%;
-}
-
-.dropdown li:first-child {
-    margin: 0;
-}
-
-.dropdown li:last-child {
-    margin: 0;
-}
-
-.dropdown li {
-    margin: 0;
-    border-radius: 16px;
-}
-
-.dropdown li:hover {
-    cursor: default;
-    background-color: black;
-    color: #cbb26a;
-}
-
 .need-action {
     width: 14ch;
 }
@@ -702,7 +664,6 @@ input:checked+.slider:before {
 
 .unit-details {
     display: none;
-    padding: 3px;
     margin-top: 10px;
     background-color: #cbb26a;
     border-radius: 26px;
@@ -741,7 +702,7 @@ input:checked+.slider:before {
     width: 100%;
     height: 100%;
     margin: auto;
-    object-fit: fill;
+    object-fit: cover;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
 }
@@ -853,7 +814,8 @@ input:checked+.slider:before {
     width: 100%;
 }
 
-.edit-details li input {
+.edit-details li input,
+.edit-drop {
     width: 63%;
     border: 2px solid #cbb26a;
     outline: none;
@@ -862,6 +824,29 @@ input:checked+.slider:before {
     background-color: #222;
     color: #cbb26a;
     font-size: 1rem;
+}
+
+.edit-drop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.edit-drop:hover {
+    cursor: pointer;
+    color: #000;
+    background-color: #cbb26a;
+}
+
+.edit-details a {
+    word-wrap: break-word;
+    width: 63%;
+    padding: 10px;
+    color: #6c92e4;
+    font-size: 1rem;
+    text-decoration: underline;
+    text-align: left;
 }
 
 .cancel,
@@ -1005,7 +990,7 @@ input:checked+.slider:before {
     justify-content: space-between;
 }
 
-.fa-plus {
+.upload-images .fa-plus {
     padding: .5rem;
     border-radius: 50%;
     background-color: black;
@@ -1015,7 +1000,7 @@ input:checked+.slider:before {
     cursor: pointer;
 }
 
-.fa-plus:hover {
+.upload-images .fa-plus:hover {
     background-color: #cbb26a;
     color: black;
 }
@@ -1093,4 +1078,79 @@ input:checked+.slider:before {
 
 .upload-images.dragover {
     background: #3a497c85;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    background: #cbb26a;
+    color: black;
+    border: 1px solid black;
+    border-radius: 16px;
+    padding: 5px;
+    list-style: none;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    text-align: center;
+}
+
+.rotate-icon {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
+
+.edit-drop .dropdown {
+    left: 0%;
+    top: 100%;
+}
+
+.dropdown li {
+    margin: 0;
+    border-radius: 16px;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    display: block;
+}
+
+.dropdown li:hover {
+    cursor: default;
+    background-color: black;
+    color: #cbb26a;
+    cursor: pointer;
+}
+
+.add-btn {
+    margin-left: auto;
+    color: #cbb26a;
+    border: 2px solid #cbb26a;
+    border-radius: 16px;
+    width: fit-content;
+    padding: .6rem 1rem;
+    margin-top: 2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.add-btn:hover {
+    cursor: pointer;
+    background-color: #cbb26a;
+    color: black;
+}
+
+.add-btn i {
+    border: none;
+    padding: 0;
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.edit-content p {
+    color: #cbb26a;
+    font-size: 1.3rem;
+    text-align: center;
 }
