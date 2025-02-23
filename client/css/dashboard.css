@@ -258,8 +258,13 @@ input:checked+.slider:before {
 .overview-container,
 .data-container {
     border: 1px solid black;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
+}
+
+.overview-container {
+    height: 100%;
+    overflow-y: auto;
 }
 
 .overview-titles,
@@ -844,6 +849,7 @@ input:checked+.slider:before {
 
 .edit-content {
     background-color: black;
+    padding: 1rem;
 }
 
 .edit-details {
@@ -1212,4 +1218,30 @@ input:checked+.slider:before {
 .bi-chat-square-text-fill {
     font-size: 1.5rem;
     margin-left: 7px;
+}
+
+.whats-msg {
+    color: #cbb26a;
+    border: 2px solid #cbb26a;
+    border-radius: 16px;
+    margin-left: auto;
+    padding: .8rem;
+    font-weight: bold;
+}
+
+.whats-msg:hover {
+    background-color: #cbb26a;
+    color: black;
+    cursor: pointer;
+}
+
+#whats-input {
+    border: 2px solid #cbb26a;
+    border-radius: 16px;
+    outline: none;
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem 0;
+    background-color: #222;
+    color: #cbb26a;
 }
