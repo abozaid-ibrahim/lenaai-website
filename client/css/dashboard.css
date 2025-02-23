@@ -331,7 +331,17 @@ input:checked+.slider:before {
 }
 
 .need-action {
+    text-align: center;
     width: 14ch;
+}
+
+.messages-no {
+    padding: 5px;
+    border-radius: 50%;
+    border: 2px solid #cbb26a;
+    width: fit-content;
+    text-align: center;
+    margin: auto;
 }
 
 .requirements:hover {
@@ -405,12 +415,16 @@ input:checked+.slider:before {
 .edit-popup {
     background: #cbb26a;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    width: 30%;
+    width: 35%;
     height: auto;
     border-radius: 10px;
     margin: auto;
     position: relative;
     min-height: min-content;
+}
+
+.req-profile {
+    width: fit-content;
 }
 
 .history-header {
@@ -443,17 +457,54 @@ input:checked+.slider:before {
 .chatbot,
 .user-profile {
     background-color: black;
-    padding: 10px;
     height: fit-content;
     z-index: 2;
 }
 
 #messages {
-    border: 1px solid #616060;
-    border-radius: 16px;
     height: 400px;
-    padding: 20px;
+    padding: 10px;
     overflow-y: auto;
+}
+
+.input-field {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #cbb26a;
+    padding: 5px;
+    border-radius: 16px;
+    margin-top: 10px;
+    color: #cbb26a;
+}
+
+#input-form {
+    flex: 1;
+    margin-right: 15px;
+}
+
+#user-input {
+    border: none;
+    outline: none;
+    padding: 0;
+    padding-left: 10px;
+    padding-top: 8px;
+    background-color: transparent;
+    color: #cbb26a;
+    font-size: 1rem;
+    width: 100%;
+}
+
+#submit-btn {
+    padding: 10px;
+    background-color: transparent;
+    color: black;
+    background-color: #cbb26a;
+    border-radius: 50%;
+}
+
+#submit-btn:hover {
+    cursor: pointer;
+    background-color: #c9b884;
 }
 
 ::-webkit-scrollbar {
@@ -788,19 +839,16 @@ input:checked+.slider:before {
 }
 
 .edit-popup {
-    width: 40%;
+    width: 80%;
 }
 
 .edit-content {
-    padding: 1rem;
     background-color: black;
 }
 
 .edit-details {
-    max-height: 60vh;
+    max-height: 80vh;
     overflow-y: auto;
-    border: 2px solid #cbb26a;
-    border-radius: 16px;
 }
 
 .edit-details li {
@@ -810,8 +858,7 @@ input:checked+.slider:before {
     align-items: center;
     justify-content: space-between;
     font-weight: bold;
-    padding: 10px;
-    width: 100%;
+    padding: 10px 30px;
 }
 
 .edit-details li input,
@@ -902,7 +949,7 @@ input:checked+.slider:before {
 .chat-image {
     position: relative;
     flex-shrink: 0;
-    width: 75%;
+    width: 30%;
     padding: 3px;
     border-radius: 10px;
     cursor: grab;
@@ -1149,8 +1196,20 @@ input:checked+.slider:before {
     font-size: 1.2rem;
 }
 
-.edit-content p {
+.edit-content .before-del {
     color: #cbb26a;
     font-size: 1.3rem;
     text-align: center;
+    margin: 0;
+    padding: 2rem;
+}
+
+
+.delete-popup {
+    width: 30%;
+}
+
+.bi-chat-square-text-fill {
+    font-size: 1.5rem;
+    margin-left: 7px;
 }

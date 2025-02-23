@@ -184,8 +184,8 @@
         width: 90%;
     }
 
-    .edit-content {
-        padding: .5rem;
+    .edit-details li {
+        margin: 0;
     }
 
     .alert {

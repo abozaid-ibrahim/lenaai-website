@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <p><strong>City</strong>: ${unit.city || "N/A"}</p>
                                             <p><strong>Developer</strong>: <span class="dev">${unit.developer || "N/A"}</span></p>
                                             <p><strong>Paid</strong>: ${unit.paid || "N/A"}</p>
-                                            <p><strong>Offer</strong>: ${unit.offer || "N/A"} EGP</p>
+                                            <p><strong>Offer</strong>: ${unit.offer.toLocaleString() || "N/A"} EGP</p>
                                             <p><strong>Status</strong>: ${unit.status || "N/A"}</p>
                                             <p><strong>Zone</strong>: ${unit.zone || "N/A"}</p>
                                             <p><strong>Phase</strong>: ${unit.phase || "N/A"}</p>
@@ -262,6 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 const editOverlay = document.querySelector(".edit-overlay");
                                 const editPopup = document.querySelector(".edit-popup");
 
+                                editPopup.classList.add("delete-popup");
                                 editOverlay.style.display = "flex";
                                 editPopup.innerHTML = `
                                 <div class="history-header">
@@ -269,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <i class="fa-solid close-btn fa-circle-xmark"></i>
                                 </div>
                                 <div class="edit-content">
-                                    <p>Are you sure you want to delete this unit?</P>
+                                    <p class="before-del">Are you sure you want to delete this unit?</P>
                                     <div class="details-btns">
                                         <div class="cancel">Cancel</div>
                                         <div class="save">Yes</div>
@@ -277,16 +278,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                 </div>`;
 
                                 document.querySelector(".close-btn").addEventListener("click", function () {
+                                    editPopup.classList.remove("delete-popup");
                                     editOverlay.style.display = "none";
                                     editPopup.innerHTML = '';
                                 });
 
                                 document.querySelector(".cancel").addEventListener("click", function () {
+                                    editPopup.classList.remove("delete-popup");
                                     editOverlay.style.display = "none";
                                     editPopup.innerHTML = '';
                                 });
 
                                 document.querySelector(".save").addEventListener("click", function () {
+                                    editPopup.classList.remove("delete-popup");
                                     $.ajax({
                                         url: "https://api.lenaai.net/delete-unit",
                                         method: "DELETE",
@@ -304,284 +308,280 @@ document.addEventListener("DOMContentLoaded", function () {
                             })
                         })
 
-                        // Add Unit
-                        const addButton = document.querySelector(".add-btn");
-                        addButton.addEventListener("click", function () {
-                            const editOverlay = document.querySelector(".edit-overlay");
-                            const editPopup = document.querySelector(".edit-popup");
-                            const unit = document.querySelectorAll(".unit")[0];
-                            const propertyDetails = unit.querySelector(".property-details");
+                            // Add Unit
+                            const addButton = document.querySelector(".add-btn");
+                            addButton.addEventListener("click", function () {
+                                const editOverlay = document.querySelector(".edit-overlay");
+                                const editPopup = document.querySelector(".edit-popup");
+                                const unit = document.querySelectorAll(".unit")[0];
+                                const propertyDetails = unit.querySelector(".property-details");
 
-                            editOverlay.style.display = "flex";
-                            editPopup.innerHTML = `
-                            <div class="history-header">
-                                <h1>Add New unit</h1>
-                                <i class="fa-solid close-btn fa-circle-xmark"></i>
-                            </div>
-                            <div class="edit-content">
-                                <ul class="edit-details">
-                                </ul>
-                                <div class="details-btns">
-                                    <div class="cancel">Cancel</div>
-                                    <div class="save">Save</div>
+                                editOverlay.style.display = "flex";
+                                editPopup.innerHTML = `
+                                <div class="history-header">
+                                    <h1>Add New unit</h1>
+                                    <i class="fa-solid close-btn fa-circle-xmark"></i>
                                 </div>
-                            </div>`;
+                                <div class="edit-content">
+                                    <ul class="edit-details">
+                                    </ul>
+                                    <div class="details-btns">
+                                        <div class="cancel">Cancel</div>
+                                        <div class="save">Save</div>
+                                    </div>
+                                </div>`;
 
-                            const editDetails = document.querySelector(".edit-details");
-                            if (propertyDetails) {
-                                propertyDetails.querySelectorAll("p").forEach((p) => {
-                                    const key = p.querySelector("strong")?.textContent.trim().replace(":", "");
-                                    const detail = document.createElement("li");
+                                const editDetails = document.querySelector(".edit-details");
+                                if (propertyDetails) {
+                                    propertyDetails.querySelectorAll("p").forEach((p) => {
+                                        const key = p.querySelector("strong")?.textContent.trim().replace(":", "");
+                                        const detail = document.createElement("li");
 
-                                    if (key === "Unit ID") {
-                                        detail.innerHTML = `<li>${key}<input type="text"></li>`;
-                                        editDetails.appendChild(detail);
-                                    } else if (key === "Data Source") { 
-                                        detail.innerHTML = `<li>${key}<input type="text"></li>`;
-                                        editDetails.appendChild(detail);
-                                    } else if (key === "Compound") {
-                                        detail.innerHTML = `
-                                        <li class="compound">
+                                        if (key === "Unit ID") {
+                                            detail.innerHTML = `${key}<input type="text">`;
+                                        } else if (key === "Data Source") { 
+                                            detail.innerHTML = `${key}<input type="text">`;
+                                        } else if (key === "Compound") {
+                                            detail.classList.add("compound");
+                                            detail.innerHTML = `
                                             ${key}
                                             <div class="edit-drop">
                                                 <div class="value">${compoundsNamesList[0]}</div><i class="fa-solid fa-chevron-down"></i>
                                                 <ul class="dropdown">
                                                 </ul>
-                                            </div>
-                                        </li>`;
-                                        editDetails.appendChild(detail);
-                                        compoundsNamesList.forEach((name) => {
-                                            detail.querySelector(".dropdown").innerHTML += `<li>${name || "N/A"}</li>`
-                                        });
-                                    } else if (key === "Building Type") {
-                                        detail.innerHTML = `
-                                        <li class="building">
+                                            </div>`;
+                                            compoundsNamesList.forEach((name) => {
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${name || "N/A"}</li>`
+                                            });
+                                        } else if (key === "Building Type") {
+                                            detail.classList.add("building")
+                                            detail.innerHTML = `
                                             ${key}
                                             <div class="edit-drop">
                                                 <div class="value">${buildingTypes[0]}</div><i class="fa-solid fa-chevron-down"></i>
                                                 <ul class="dropdown">
                                                 </ul>
-                                            </div>
-                                        </li>`;
-                                        editDetails.appendChild(detail);
-                                        buildingTypes.forEach((type) => {
-                                            detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
-                                        });
-                                    } else {
-                                        detail.innerHTML = `<li>${key}<input type="text"></li>`;
-                                        editDetails.appendChild(detail);
-                                    }
-                                });
+                                            </div>`;
+                                            editDetails.appendChild(detail);
+                                            buildingTypes.forEach((type) => {
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
+                                            });
+                                        } else {
+                                            detail.innerHTML = `${key}<input type="text">`;
+                                        }
 
-                                $(document).ready(function() {
-                                    $(".edit-drop").click(function(event) {
-                                        event.stopPropagation();
-                                
-                                        let dropdown = $(this).find(".dropdown");
-                                
-                                        $(".dropdown").not(dropdown).slideUp();
-                                
-                                        dropdown.stop(true, true).slideToggle();
-                                        $(this).find("i").toggleClass("rotate-icon");
+                                        editDetails.appendChild(detail);
                                     });
-                                
+
+                                    $(document).ready(function() {
+                                        $(".edit-drop").click(function(event) {
+                                            event.stopPropagation();
+                                    
+                                            let dropdown = $(this).find(".dropdown");
+                                    
+                                            $(".dropdown").not(dropdown).slideUp();
+                                    
+                                            dropdown.stop(true, true).slideToggle();
+                                            $(this).find("i").toggleClass("rotate-icon");
+                                        });
+                                    
+                                        $(document).click(function() {
+                                            $(".dropdown").slideUp();
+                                        });
+                                    });
+
+                                    $(document).ready(function() {
+                                        $(".edit-drop li").click(function(event) {
+                                            event.stopPropagation();
+                                    
+                                            let selectedText = $(this).text();
+                                            let parentElement = $(this).closest(".building, .compound");
+                                            let valueElement = parentElement.find(".value");
+                                            valueElement.text(selectedText);
+                                            $(this).closest(".dropdown").slideUp();
+                                            parentElement.find("i").toggleClass("rotate-icon");
+                                        });
+                                    });
+
                                     $(document).click(function() {
                                         $(".dropdown").slideUp();
                                     });
-                                });
 
-                                $(document).ready(function() {
-                                    $(".edit-drop li").click(function(event) {
-                                        event.stopPropagation();
-                                
-                                        let selectedText = $(this).text();
-                                        let parentElement = $(this).closest(".building, .compound");
-                                        let valueElement = parentElement.find(".value");
-                                        valueElement.text(selectedText);
-                                        $(this).closest(".dropdown").slideUp();
-                                        parentElement.find("i").toggleClass("rotate-icon");
-                                    });
-                                });
-
-                                $(document).click(function() {
-                                    $(".dropdown").slideUp();
-                                });
-
-                                document.querySelector(".edit-details").innerHTML += `
-                                <div class="current-images">
-                                    <h2>Current Images</h2>
-                                    <div class="images">
-                                        <div class="chat-image">
-                                            <img src="../assets/Image 85.png" alt="Chat Image" draggable="false">
-                                            <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
-                                        </div>
-                                        <div class="chat-image">
-                                            <img src="../assets/Image_135.png" alt="Chat Image" draggable="false">
-                                            <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
+                                    document.querySelector(".edit-details").innerHTML += `
+                                    <div class="current-images">
+                                        <h2>Current Images</h2>
+                                        <div class="images">
+                                            <div class="chat-image">
+                                                <img src="../assets/Image 85.png" alt="Chat Image" draggable="false">
+                                                <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
+                                            </div>
+                                            <div class="chat-image">
+                                                <img src="../assets/Image_135.png" alt="Chat Image" draggable="false">
+                                                <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="photo-preview"></div>
-                                <div class="upload-images">
-                                    <h4>Upload Images</h4>
-                                    <p><i class="fa-solid fa-cloud-arrow-up"></i><strong>Click to upload</strong> or drag and drop</p>
-                                    <div class="upload-btn"><i class="fa-solid fa-file-arrow-up"></i>Upload</div>
-                                    <div id="customAlert" class="alert"></div>
-                                    <input type="file">
-                                    <i class="fa-solid fa-plus"></i>
-                                </div>`;
+                                    <div class="photo-preview"></div>
+                                    <div class="upload-images">
+                                        <h4>Upload Images</h4>
+                                        <p><i class="fa-solid fa-cloud-arrow-up"></i><strong>Click to upload</strong> or drag and drop</p>
+                                        <div class="upload-btn"><i class="fa-solid fa-file-arrow-up"></i>Upload</div>
+                                        <div id="customAlert" class="alert"></div>
+                                        <input type="file">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>`;
 
-                                const fileField = document.querySelector(`.upload-images input[type="file"]`);
-                                const dropZone = document.querySelector(".upload-images");
-                                const uploadButton = document.querySelector(".upload-btn");
-                                const attachButton = document.querySelector(".upload-images .fa-plus");
-                                const deleteButtons = document.querySelectorAll(".del");
+                                    const fileField = document.querySelector(`.upload-images input[type="file"]`);
+                                    const dropZone = document.querySelector(".upload-images");
+                                    const uploadButton = document.querySelector(".upload-btn");
+                                    const attachButton = document.querySelector(".upload-images .fa-plus");
+                                    const deleteButtons = document.querySelectorAll(".del");
 
-                                deleteButtons.forEach((button) => {
-                                    button.addEventListener("click", function () {
-                                        this.closest(".chat-image").remove();
+                                    deleteButtons.forEach((button) => {
+                                        button.addEventListener("click", function () {
+                                            this.closest(".chat-image").remove();
+                                        });
                                     });
-                                });
 
-                                attachButton.addEventListener("click", function () {
-                                    fileField.click();
-                                });
+                                    attachButton.addEventListener("click", function () {
+                                        fileField.click();
+                                    });
 
-                                function showCustomAlert(message) {
-                                    const alertBox = document.getElementById("customAlert");
-                                    alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>${message}`;
-                                    alertBox.style.display = "block";
-                                    
-                                    setTimeout(() => {
-                                        alertBox.style.opacity = "0";
+                                    function showCustomAlert(message) {
+                                        const alertBox = document.getElementById("customAlert");
+                                        alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>${message}`;
+                                        alertBox.style.display = "block";
+                                        
                                         setTimeout(() => {
-                                            alertBox.style.display = "none";
-                                            alertBox.style.opacity = "1";
-                                        }, 500);
-                                    }, 3000);
-                                }
-
-                                function handleFiles(files) {
-                                    let file = files[0];
-                                    if (file) {
-                                        const allowedTypes = ["image/png", "image/jpeg"];
-                                        if (!allowedTypes.includes(file.type)) {
-                                            showCustomAlert("Invalid file type! Please upload a JPG or PNG image.");
-                                            this.value = "";
-                                        } else {
-                                            document.querySelector(".photo-preview").style.display = "block";
-                                            const reader = new FileReader();
-                                            reader.onload = function (e) {
-                                                $('.photo-preview').html(`<img src="${e.target.result}" alt="Photo Preview">
-                                                    <i class="fa-solid fa-circle-xmark"></i>`);
-
-                                                document.querySelector(".photo-preview i").addEventListener("click", function () {
-                                                    fileField.value = "";
-                                                    document.querySelector(".photo-preview").innerHTML = "";
-                                                    document.querySelector(".photo-preview").style.display = "none";
-                                                    uploadButton.style.display = "none";
-                                                    attachButton.style.display = "block";
-                                                });
-                                            };
-                                            reader.readAsDataURL(file);
-                                            attachButton.style.display = "none";
-                                            uploadButton.style.display = "block";
-                                        }
-                                    } else {
-                                        $('.photo-preview').html('');
-                                    }
-                                }
-
-                                // Drag events
-                                dropZone.addEventListener("dragover", (e) => {
-                                    e.preventDefault();
-                                    dropZone.classList.add("dragover");
-                                });
-
-                                dropZone.addEventListener("dragleave", () => {
-                                    dropZone.classList.remove("dragover");
-                                });
-
-                                dropZone.addEventListener("drop", (e) => {
-                                    e.preventDefault();
-                                    dropZone.classList.remove("dragover");
-
-                                    let files = e.dataTransfer.files;
-                                    handleFiles(files);
-                                });
-
-                                fileField.addEventListener("change", function () {
-                                    handleFiles(this.files)
-                                });
-
-                                uploadButton.addEventListener("click", function () {
-                                    fileField.value = "";
-                                    document.querySelector(".photo-preview").innerHTML = "";
-                                    document.querySelector(".photo-preview").style.display = "none";
-                                    uploadButton.style.display = "none";
-                                    attachButton.style.display = "block";
-                                })
-
-                                function toCamelCase(str) {
-                                    return str
-                                        .toLowerCase()
-                                        .replace(/\s(.)/g, (match, char) => char.toUpperCase())
-                                        .replace(/\s/g, "")
-                                        .replace(/^([A-Z])/, (match) => match.toLowerCase())
-                                }
-
-                                // chat images drag
-                                let wasDragging = false;
-
-                                document.addEventListener("mousedown", function (e) {
-                                    const slider = e.target.closest(".images");
-                                    if (!slider || !slider.contains(e.target)) return;
-
-                                    let startX = e.clientX;
-                                    let scrollLeft = slider.scrollLeft;
-
-                                    slider.classList.add("image-active");
-
-                                    function handleMouseMove(e) {
-                                        wasDragging = true;
-                                        const x = e.clientX;
-                                        const walk = (x - startX) * 1;
-                                        slider.scrollLeft = scrollLeft - walk;
-                                    }
-
-                                    function stopScrolling() {
-                                        slider.classList.remove("image-active");
-                                        document.removeEventListener("mousemove", handleMouseMove);
-                                        document.removeEventListener("mouseup", stopScrolling);
-
-                                        if (wasDragging) {
-                                            document.addEventListener("click", preventClick, true);
+                                            alertBox.style.opacity = "0";
                                             setTimeout(() => {
-                                                document.removeEventListener("click", preventClick, true);
-                                                wasDragging = false;
-                                            }, 0);
+                                                alertBox.style.display = "none";
+                                                alertBox.style.opacity = "1";
+                                            }, 500);
+                                        }, 3000);
+                                    }
+
+                                    function handleFiles(files) {
+                                        let file = files[0];
+                                        if (file) {
+                                            const allowedTypes = ["image/png", "image/jpeg"];
+                                            if (!allowedTypes.includes(file.type)) {
+                                                showCustomAlert("Invalid file type! Please upload a JPG or PNG image.");
+                                                this.value = "";
+                                            } else {
+                                                document.querySelector(".photo-preview").style.display = "block";
+                                                const reader = new FileReader();
+                                                reader.onload = function (e) {
+                                                    $('.photo-preview').html(`<img src="${e.target.result}" alt="Photo Preview">
+                                                        <i class="fa-solid fa-circle-xmark"></i>`);
+
+                                                    document.querySelector(".photo-preview i").addEventListener("click", function () {
+                                                        fileField.value = "";
+                                                        document.querySelector(".photo-preview").innerHTML = "";
+                                                        document.querySelector(".photo-preview").style.display = "none";
+                                                        uploadButton.style.display = "none";
+                                                        attachButton.style.display = "block";
+                                                    });
+                                                };
+                                                reader.readAsDataURL(file);
+                                                attachButton.style.display = "none";
+                                                uploadButton.style.display = "flex";
+                                            }
+                                        } else {
+                                            $('.photo-preview').html('');
                                         }
                                     }
 
-                                    document.addEventListener("mousemove", handleMouseMove);
-                                    document.addEventListener("mouseup", stopScrolling, { once: true });
-                                });
+                                    // Drag events
+                                    dropZone.addEventListener("dragover", (e) => {
+                                        e.preventDefault();
+                                        dropZone.classList.add("dragover");
+                                    });
 
-                                function preventClick(e) {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                }
+                                    dropZone.addEventListener("dragleave", () => {
+                                        dropZone.classList.remove("dragover");
+                                    });
+
+                                    dropZone.addEventListener("drop", (e) => {
+                                        e.preventDefault();
+                                        dropZone.classList.remove("dragover");
+
+                                        let files = e.dataTransfer.files;
+                                        handleFiles(files);
+                                    });
+
+                                    fileField.addEventListener("change", function () {
+                                        handleFiles(this.files)
+                                    });
+
+                                    uploadButton.addEventListener("click", function () {
+                                        fileField.value = "";
+                                        document.querySelector(".photo-preview").innerHTML = "";
+                                        document.querySelector(".photo-preview").style.display = "none";
+                                        uploadButton.style.display = "none";
+                                        attachButton.style.display = "block";
+                                    })
+
+                                    function toCamelCase(str) {
+                                        return str
+                                            .toLowerCase()
+                                            .replace(/\s(.)/g, (match, char) => char.toUpperCase())
+                                            .replace(/\s/g, "")
+                                            .replace(/^([A-Z])/, (match) => match.toLowerCase())
+                                    }
+
+                                    // chat images drag
+                                    let wasDragging = false;
+
+                                    document.addEventListener("mousedown", function (e) {
+                                        const slider = e.target.closest(".images");
+                                        if (!slider || !slider.contains(e.target)) return;
+
+                                        let startX = e.clientX;
+                                        let scrollLeft = slider.scrollLeft;
+
+                                        slider.classList.add("image-active");
+
+                                        function handleMouseMove(e) {
+                                            wasDragging = true;
+                                            const x = e.clientX;
+                                            const walk = (x - startX) * 1;
+                                            slider.scrollLeft = scrollLeft - walk;
+                                        }
+
+                                        function stopScrolling() {
+                                            slider.classList.remove("image-active");
+                                            document.removeEventListener("mousemove", handleMouseMove);
+                                            document.removeEventListener("mouseup", stopScrolling);
+
+                                            if (wasDragging) {
+                                                document.addEventListener("click", preventClick, true);
+                                                setTimeout(() => {
+                                                    document.removeEventListener("click", preventClick, true);
+                                                    wasDragging = false;
+                                                }, 0);
+                                            }
+                                        }
+
+                                        document.addEventListener("mousemove", handleMouseMove);
+                                        document.addEventListener("mouseup", stopScrolling, { once: true });
+                                    });
+
+                                    function preventClick(e) {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                    }
 
 
-                                document.querySelector(".close-btn").addEventListener("click", function () {
-                                    editOverlay.style.display = "none";
-                                    editPopup.innerHTML = '';
-                                });
+                                    document.querySelector(".close-btn").addEventListener("click", function () {
+                                        editOverlay.style.display = "none";
+                                        editPopup.innerHTML = '';
+                                    });
 
-                                document.querySelector(".cancel").addEventListener("click", function () {
-                                    editOverlay.style.display = "none";
-                                    editPopup.innerHTML = '';
-                                });
+                                    document.querySelector(".cancel").addEventListener("click", function () {
+                                        editOverlay.style.display = "none";
+                                        editPopup.innerHTML = '';
+                                    });
 
                                 document.querySelector(".save").addEventListener("click", function () {
                                     function getFormattedDateTime() {
@@ -728,7 +728,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             ];
 
                                             if (value.includes("EGP")) {
-                                                value = value.replace("EGP", "");
+                                                value = parseInt(value.replace(/\s*EGP\s*/g, "").replace(/,/g, ""), 10);
                                             } else if (numberFields.includes(key)) {
                                                 return isNaN(value) || value === "N/A" ? 0 : Number(value);
                                             }
@@ -814,43 +814,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         if (key === "Unit ID") {
                                             originalUnitId = value;
-                                            detail.innerHTML = `<li>${key}<input type="text" value="${value}" disabled></li>`;
-                                            editDetails.appendChild(detail);
+                                            detail.innerHTML = `${key}<input type="text" value="${value}" disabled>`;
                                         } else if (key === "Data Source") { 
-                                            detail.innerHTML = `<li>${key}<a href="${value}" target="_blank" rel="noopener noreferrer">${value}</a>`;
-                                            editDetails.appendChild(detail);
+                                            detail.innerHTML = `${key}<a href="${value}" target="_blank" rel="noopener noreferrer">${value}</a>`;
                                         } else if (key === "Compound") {
+                                            detail.classList.add("compound");
                                             detail.innerHTML = `
-                                            <li class="compound">
-                                                ${key}
-                                                <div class="edit-drop">
-                                                    <div class="value">${value}</div><i class="fa-solid fa-chevron-down"></i>
-                                                    <ul class="dropdown">
-                                                    </ul>
-                                                </div>
-                                            </li>`;
-                                            editDetails.appendChild(detail);
+                                            ${key}
+                                            <div class="edit-drop">
+                                                <div class="value">${value}</div><i class="fa-solid fa-chevron-down"></i>
+                                                <ul class="dropdown">
+                                                </ul>
+                                            </div>`;
                                             compoundsNamesList.forEach((name) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${name || "N/A"}</li>`
                                             });
                                         } else if (key === "Building Type") {
+                                            detail.classList.add("building");
                                             detail.innerHTML = `
-                                            <li class="building">
-                                                ${key}
-                                                <div class="edit-drop">
-                                                    <div class="value">${value}</div><i class="fa-solid fa-chevron-down"></i>
-                                                    <ul class="dropdown">
-                                                    </ul>
-                                                </div>
-                                            </li>`;
-                                            editDetails.appendChild(detail);
+                                            ${key}
+                                            <div class="edit-drop">
+                                                <div class="value">${value}</div><i class="fa-solid fa-chevron-down"></i>
+                                                <ul class="dropdown">
+                                                </ul>
+                                            </div>`;
                                             buildingTypes.forEach((type) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
                                             });
                                         } else {
-                                            detail.innerHTML = `<li>${key}<input type="text" value="${value}"></li>`;
-                                            editDetails.appendChild(detail);
+                                            detail.innerHTML = `${key}<input type="text" value="${value}">`;
                                         }
+
+                                        editDetails.appendChild(detail);
                                     });
 
                                     $(document).ready(function() {
@@ -966,7 +961,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             };
                                             reader.readAsDataURL(file);
                                             attachButton.style.display = "none";
-                                            uploadButton.style.display = "block";
+                                            uploadButton.style.display = "flex";
                                         }
                                     } else {
                                         $('.photo-preview').html('');
@@ -1129,7 +1124,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             ];
 
                                             if (value.includes("EGP")) {
-                                                value = value.replace("EGP", "");
+                                                value = parseInt(value.replace(/\s*EGP\s*/g, "").replace(/,/g, ""), 10);
                                             } else if (numberFields.includes(key)) {
                                                 return isNaN(value) || value === "N/A" ? 0 : Number(value);
                                             }
@@ -1188,12 +1183,14 @@ document.addEventListener("DOMContentLoaded", function () {
                             dataType: "json",
                             success: function (response) {
                                 const container = $(".clients-list");
+                                let allPhoneNumbers = [];
                                 console.log(response)
 
                                 response.forEach((conversation) => {
                                     const phoneNumber = conversation.phone_number;
                                     const messages = conversation.messages;
 
+                                    allPhoneNumbers.push(phoneNumber);
                                     let latestDate = "N/A";
                                     if (messages.length > 0) {
                                         latestDate = messages
@@ -1220,11 +1217,36 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 </ul>
                                             </li>
                                             <li class="need-action">
-                                                Messages: ${messages.length * 2}
+                                                <div class="messages-no">${(messages.length * 2).toString().padStart(2, "0")}</div>
                                             </li>
                                             <li class="call-now">Call Now</li>
                                         </ul>
                                     `);
+                                });
+
+                                allPhoneNumbers.forEach((userNumber) => {
+                                    $.ajax({
+                                        url: `https://api.lenaai.net/user-actions/${userNumber}/${clientId}`,
+                                        method: "GET",
+                                        contentType: "json",
+                                        success: function(response) {
+                                            console.log(`action call success for user ${userNumber}`);
+                                            const callNow = document.querySelector(".call-now");
+                                            const client = callNow.parentElement;
+                                            client.setAttribute("data-status", "action-needed");
+                                            const actionMark = client.querySelector(".bi");
+                                            actionMark.classList.remove("bi-check-circle");
+                                            actionMark.classList.add("bi-exclamation-diamond");
+                                            if (response.action) {
+                                                callNow.textContent = response.action;
+                                            } else {
+                                                callNow.style.visibility = "hidden";
+                                            }
+                                        },
+                                        error: function(error) {
+                                            console.log(`Failed to call user actions for user ${userNumber}`, error);
+                                        }
+                                    });
                                 });
 
                                 const clients = Array.from(document.querySelectorAll(".client"));
@@ -1326,14 +1348,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                 requirements.forEach((requirement) => {
                                     requirement.addEventListener("click", function (event) {
                                         event.stopPropagation();
-                                        const clientName = event.target.parentElement.querySelector(".client-name").textContent;
+                                        const userNumber = event.target.parentElement.querySelector(".client-name").textContent;
                                         const reqOverlay = document.querySelector(".req-overlay");
                                         const reqProfile = document.querySelector(".req-profile");
 
                                         reqOverlay.style.display = "flex";
                                         reqProfile.innerHTML = `
                                         <div class="history-header">
-                                            <h1>${clientName}'s requirements</h1>
+                                            <h1>${userNumber}'s requirements</h1>
                                             <i class="fa-solid close-btn fa-circle-xmark"></i>
                                         </div>
                                         <div class="user-profile">
@@ -1346,34 +1368,29 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     <canvas id="probabilityChart"></canvas>
                                                 </div>
                                                 <ul class="req-list">
-                                                    <li>
-                                                        <div class="req-title">Location</div>
-                                                        <div class="req-value">Cairo</div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="req-title">Rooms</div>
-                                                        <div class="req-value">2</div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="req-title">Floors</div>
-                                                        <div class="req-value">0</div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="req-title">Type</div>
-                                                        <div class="req-value">Villa</div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="req-title">Budget</div>
-                                                        <div class="req-value">15 Million EGP</div>
-                                                    </li>
-                                                    <li>
-                                                        <div class="req-title">Finished</div>
-                                                        <div class="req-value">2029</div>
-                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>`;
 
+                                        $.ajax({
+                                            url: `https://api.lenaai.net/user-filters/${userNumber}/${clientId}`,
+                                            method: "GET",
+                                            contentType: "json",
+                                            success: function (response) {
+                                                console.log(`filter call success for user ${userNumber}`)
+                                                const requirementsList = document.querySelector(".req-list");
+                                                Object.keys(response).forEach((requirement) => {
+                                                    let listItem = document.createElement("li");
+                                                    listItem.innerHTML = `
+                                                    <div class="req-title">${requirement.replace("_", " ")}</div>
+                                                    <div class="req-value">${response[requirement]}</div>`;
+                                                    requirementsList.appendChild(listItem);
+                                                })
+                                            },
+                                            error: function(error) {
+                                                console.log(`Failed to call user filter for user ${userNumber}`, error);
+                                            }
+                                        })
                                         const purchaseProbability = 65; // Example: 75%
 
                                         // Get the canvas element
@@ -1429,7 +1446,40 @@ document.addEventListener("DOMContentLoaded", function () {
                                         <div class="chatbot">
                                             <div id="messages">
                                             </div>
+                                            <div class="input-field">
+                                                <form id="input-form">
+                                                    <input type="text" id="user-input" placeholder="Type Something Here" autocomplete="off">
+                                                </form>
+                                                <i class="fa-solid fa-paper-plane" id="submit-btn"></i>
+                                            </div>
                                         </div>`;
+
+                                        const chatSubmit = document.getElementById("submit-btn");
+                                        const inputForm = document.getElementById("input-form");
+                                        function takeUserInput() {
+                                            let inputField = document.getElementById("user-input");
+                                            let userInput = inputField.value.trim();
+                                            const messagesDiv = document.getElementById("messages");
+                                            let message = document.createElement("div");
+                                    
+                                    
+                                            if (userInput === "") return;
+                                            message.innerHTML = userInput;
+                                            message.classList.add("message");
+                                            messagesDiv.appendChild(message);
+                                    
+                                            inputField.value = "";
+                                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                                        }
+                                    
+                                        chatSubmit.addEventListener("click", function () {
+                                            takeUserInput();
+                                        });
+                                    
+                                        inputForm.addEventListener("submit", function (event) {
+                                            event.preventDefault();
+                                            takeUserInput();
+                                        });
 
                                         const messagesDiv = document.getElementById("messages");
                                         parsedMessages.forEach((message) => {
