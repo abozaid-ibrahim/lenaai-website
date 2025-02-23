@@ -817,7 +817,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             detail.innerHTML = `<li>${key}<input type="text" value="${value}" disabled></li>`;
                                             editDetails.appendChild(detail);
                                         } else if (key === "Data Source") { 
-                                            detail.innerHTML = `<li>${key}<a href="${value}">${value}</a>`;
+                                            detail.innerHTML = `<li>${key}<a href="${value}" target="_blank" rel="noopener noreferrer">${value}</a>`;
                                             editDetails.appendChild(detail);
                                         } else if (key === "Compound") {
                                             detail.innerHTML = `
