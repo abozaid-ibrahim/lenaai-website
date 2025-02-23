@@ -1576,4 +1576,39 @@ document.addEventListener("DOMContentLoaded", function () {
             maintainAspectRatio: false,  // Allow manual sizing
         }
     });
+
+    const whatsMessageButton = document.querySelector(".whats-msg");
+    whatsMessageButton.addEventListener("click", function () {
+        const editOverlay = document.querySelector(".edit-overlay");
+        const editPopup = document.querySelector(".edit-popup");
+
+        editPopup.classList.add("delete-popup");
+        editOverlay.style.display = "flex";
+        editPopup.innerHTML = `
+        <div class="history-header">
+            <h1>Send Whats message</h1>
+            <i class="fa-solid close-btn fa-circle-xmark"></i>
+        </div>
+        <div class="edit-content">
+            <div>
+                <input type="text" id="whats-input" placeholder="Type Something Here">
+            </div>
+            <div class="details-btns">
+                <div class="cancel">Cancel</div>
+                <div class="save">Send</div>
+            </div>
+        </div>`;
+
+        document.querySelector(".close-btn").addEventListener("click", function () {
+            editPopup.classList.remove("delete-popup");
+            editOverlay.style.display = "none";
+            editPopup.innerHTML = '';
+        });
+
+        document.querySelector(".cancel").addEventListener("click", function () {
+            editPopup.classList.remove("delete-popup");
+            editOverlay.style.display = "none";
+            editPopup.innerHTML = '';
+        });
+    })
 });
