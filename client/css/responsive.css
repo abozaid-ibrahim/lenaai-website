@@ -60,7 +60,7 @@
         display: block;
         font-size: 24px;
         cursor: pointer;
-        color: #cbb26a;
+        color: var(--secondary-color);
         font-size: 2.5rem;
         margin-left: 10px;
     }
@@ -89,18 +89,32 @@
         padding: 0;
     }
 
+    .overview-titles {
+        min-width: max-content;
+        flex-shrink: 0;
+    }
+
+    .overview-titles li:nth-child(5) {
+        text-align: left;
+    }
+
     .overview-titles li,
     .data-titles li {
         flex-shrink: 0;
-        min-width: fit-content;
+        min-width: max-content;
     }
 
     .data-titles li {
         margin-right: 0;
     }
 
+    .client {
+        min-width: max-content;
+    }
+
     .client li {
         flex-shrink: 0;
+        margin-right: 3.5rem;
     }
 
     .client .client-name {
@@ -149,6 +163,11 @@
         padding: .5rem;
     }
 
+    .add-btn {
+        margin: auto;
+        margin-top: 1rem;
+    }
+
     .unit-header {
         flex-direction: column;
     }
@@ -190,5 +209,9 @@
 
     .alert {
         width: 80%;
+    }
+
+    .whats-msg {
+        margin: auto;
     }
 }
