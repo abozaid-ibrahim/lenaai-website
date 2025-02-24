@@ -11,9 +11,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     <!-- CSS Files -->
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link id="theme-stylesheet" rel="stylesheet" href="css/dashboard-light.css">
     <link rel="stylesheet" href="css/responsive.css">
 
     <!-- JS files -->
@@ -30,7 +31,7 @@
     <!-- Header -->
     <header>
         <div class="header-container">
-            <a href="../index.html"><img src="../assets/logo.png" alt="LENA AI Logo" class="logo"></a>
+            <a href="../index.html" style="display: none;"><img src="../assets/logo.png" alt="LENA AI Logo" class="logo"></a>
             <div class="header-title">AI Efficiency Hub</div>
             <!-- Navigation -->
             <nav class="navbar">
@@ -56,6 +57,9 @@
 
     <!-- Clients filters -->
     <section class="filters">
+        <button id="theme-toggle">
+            <i class="bi bi-moon"></i> Dark Mode
+        </button>
         <div class="filters-header">Clients Filters</div>
         <div class="filters-container">
             <div class="recent">
@@ -78,6 +82,7 @@
                 <input type="text" id="client-search-bar" placeholder="Search for a client">
             </div>
             <div class="whats-msg">
+                <i class="fa-brands fa-whatsapp"></i>
                 Whats App Messages
             </div>
         </div>
@@ -90,7 +95,7 @@
             <div class="overview-container">
                 <ul class="overview-titles">
                     <li></li>
-                    <li>Client Number</li>
+                    <li>User Number</li>
                     <li>Date</li>
                     <li>Requirements</li>
                     <li><i class="bi bi-chat-square-text-fill"></i></li>

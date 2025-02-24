@@ -125,9 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <p><strong>Selling Area</strong>: ${unit.sellingArea || "N/A"}</p>
                                             <p><strong>Garden Size</strong>: ${unit.gardenSize || "N/A"}</p>
                                             <p><strong>Finishing</strong>: ${unit.finishing || "N/A"}</p>
-                                            <p><strong>Payment Plan Price</strong>: ${unit.paymentPlan.price || "N/A"}</p>
-                                            <p><strong>Payment Plan Years</strong>: ${unit.paymentPlan.years || "N/A"}</p>
-                                            <p><strong>Payment Plan Maintanance</strong>: ${unit.paymentPlan.maintanance || "N/A"}</p>
                                             <p style="display: none;"><strong>Data Source</strong>: ${unit.dataSource || "N/A"}</p>
                                         </div>
                                     </div>
@@ -291,6 +288,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 document.querySelector(".save").addEventListener("click", function () {
                                     editPopup.classList.remove("delete-popup");
+                                    editOverlay.style.display = "none";
+                                    editPopup.innerHTML = '';
                                     $.ajax({
                                         url: "https://api.lenaai.net/delete-unit",
                                         method: "DELETE",
@@ -1186,7 +1185,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 let allPhoneNumbers = [];
                                 console.log(response)
 
-                                response.forEach((conversation) => {
+                                response.forEach((conversation, i) => {
                                     const phoneNumber = conversation.phone_number;
                                     const messages = conversation.messages;
 
@@ -1222,6 +1221,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <li class="call-now">Call Now</li>
                                         </ul>
                                     `);
+
+                                    // if (i %2 === 0) {
+                                    //     container.children().last().css("background-color", "#F9FAFB");
+                                    // } else {
+                                    //     container.children().last().css("background-color", "#E5E7EB");
+                                    // }
                                 });
 
                                 allPhoneNumbers.forEach((userNumber) => {
@@ -1263,7 +1268,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                     });
 
                                     container[0].innerHTML = "";
-                                    clients.forEach(client => container[0].appendChild(client));
+                                    clients.forEach((client, i) => {
+                                        // if (i %2 === 0) {
+                                        //     client.style.backgroundColor = "#F9FAFB";
+                                        // } else {
+                                        //     client.style.backgroundColor = "#F3F4F6";
+                                        // }
+                                        container[0].appendChild(client)
+                                    });
 
                                     descending = !descending;
                                     if (descending === true) {
@@ -1278,10 +1290,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                 const actionButton = document.querySelector(".action");
                                 actionButton.addEventListener("click", function () {
                                     if (!actionFilterActive) {
-                                        clients.forEach((client) => {
+                                        clients.forEach((client, i) => {
                                             if (client.getAttribute("data-status") !== "action-needed") {
                                                 client.style.display = "none";
                                             }
+
+                                            // if (i %2 === 0) {
+                                            //     client.style.backgroundColor = "#F9FAFB";
+                                            // } else {
+                                            //     client.style.backgroundColor = "#F3F4F6";
+                                            // }
                                         });
 
                                         actionFilterActive = !actionFilterActive;
@@ -1543,7 +1561,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 {
                     label: 'Group B',
                     data: [50, 60, 80],
-                    backgroundColor: '#8b6f2c'
+                    backgroundColor: '#1E3A8A'
                 }
             ]
         },
@@ -1564,11 +1582,11 @@ document.addEventListener("DOMContentLoaded", function () {
             datasets: [{
                 label: 'Dataset 1',
                 data: [70, 50, 90, 60, 80],
-                borderColor: '#cbb26a',
+                borderColor: '#1E3A8A',
                 backgroundColor: 'transparent',
                 borderWidth: 2,
                 pointRadius: 5,
-                pointBackgroundColor: '#cbb26a'
+                pointBackgroundColor: '#1E3A8A'
             }]
         },
         options: {
@@ -1611,4 +1629,31 @@ document.addEventListener("DOMContentLoaded", function () {
             editPopup.innerHTML = '';
         });
     })
+
+    const themeToggle = document.getElementById("theme-toggle");
+    const themeStylesheet = document.getElementById("theme-stylesheet");
+    const themeIcon = themeToggle.querySelector("i");
+
+    const lightThemePath = "css/dashboard-light.css";
+    const darkThemePath = "css/dashboard-dark.css";
+
+    const savedTheme = localStorage.getItem("theme") || "light";
+    themeStylesheet.href = savedTheme === "dark" ? darkThemePath : lightThemePath;
+
+    function updateButton(theme) {
+        if (theme === "dark") {
+            themeToggle.innerHTML = `<i class="bi bi-sun"></i> Light Mode`;
+        } else {
+            themeToggle.innerHTML = `<i class="bi bi-moon"></i> Dark Mode`;
+        }
+    }
+
+    updateButton(savedTheme);
+
+    themeToggle.addEventListener("click", function () {
+        const isDark = themeStylesheet.href.includes("dashboard-light.css");
+        themeStylesheet.href = isDark ? darkThemePath : lightThemePath;
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        updateButton(isDark ? "dark" : "light");
+    });
 });
