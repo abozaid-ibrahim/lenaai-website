@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 url: `https://api.lenaai.net/me?access_token=${token}`,
                 type: "POST",
                 success: function(response) {
-                    $("#sign-in button")
+                    $("#sign-in")
                         .html('<i class="bi bi-box-arrow-right"></i> Logout')
                         .addClass("logout");
 
@@ -19,11 +19,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     function logoutUser() {
                         localStorage.removeItem("lenaai_access_token");
-                
-                        window.location.href = "./index.html";
+
+                        window.location.href = "../index.html";
                     }
-                
-                    $("#sign-in, .sign-in-sm a").on("click", function(event) {
+
+                    $("#sign-in, .sign-in-sm button").on("click", function (event) {
                         event.preventDefault();
                         logoutUser();
                     });
@@ -652,4 +652,35 @@ document.addEventListener("DOMContentLoaded", function () {
         e.stopPropagation();
         e.preventDefault();
     }
+
+    const themeToggle = document.getElementById("theme-toggle");
+    const themeStylesheet = document.getElementById("theme-stylesheet");
+    const themeStylesheetResponsive = document.getElementById("theme-stylesheet-resp");
+    const themeIcon = themeToggle.querySelector("i");
+
+    const lightThemePath = "css/efficiency_hub_light.css";
+    const darkThemePath = "css/efficiency_hub_dark.css";
+    const lightThemePathResponsive = "css/responsive_light.css";
+    const darkThemePathResponsive = "css/responsive_dark.css";
+
+    const savedTheme = localStorage.getItem("theme") || "light";
+    themeStylesheet.href = savedTheme === "dark" ? darkThemePath: lightThemePath;
+    themeStylesheetResponsive.href = savedTheme === "dark" ? darkThemePathResponsive: lightThemePathResponsive;
+
+    function updateButton(theme) {
+        if (theme === "dark") {
+            themeToggle.innerHTML = `<i class="bi bi-sun"></i>`;
+        } else {
+            themeToggle.innerHTML = `<i class="bi bi-moon"></i>`;
+        }
+    }
+
+    updateButton(savedTheme);
+
+    themeToggle.addEventListener("click", function () {
+        const isDark = themeStylesheet.href.includes("efficiency_hub_light.css");
+        themeStylesheet.href = isDark ? darkThemePath : lightThemePath;
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        updateButton(isDark ? "dark" : "light");
+    });
 })

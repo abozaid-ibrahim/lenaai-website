@@ -1204,9 +1204,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                             data-status="no-action"
                                             data-messages='${JSON.stringify(messages).replace(/'/g, "&apos;")}'
                                         >
-                                            <li><i class="bi bi-check-circle"></i></li>
                                             <li class="client-name">${phoneNumber}</li>
-                                            <li>${latestDate}</li>
+                                            <li class="client-date">${latestDate}</li>
                                             <li class="requirements">
                                                 Requirements
                                                 <ul class="dropdown">
@@ -1218,9 +1217,27 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <li class="need-action">
                                                 <div class="messages-no">${(messages.length * 2).toString().padStart(2, "0")}</div>
                                             </li>
-                                            <li class="call-now">Call Now</li>
+                                            <li class="call-now"><i class="bi bi-exclamation-diamond"></i>Action</li>
                                         </ul>
                                     `);
+
+                                    const appendedClient = container.children().last()[0];
+                                    const callNow = appendedClient.querySelector(".call-now");
+                                    $.ajax({
+                                        url: `https://api.lenaai.net/user-actions/01157745462/Dream_House`,
+                                        method: "GET",
+                                        contentType: "json",
+                                        success: function(response) {
+                                            if (response.action === "ScheduleCall") {
+                                                callNow.innerHTML = `<i class="fa-solid fa-phone"></i>Call Me`;
+                                            } else {
+                                                callNow.innerHTML = `<i class="bi bi-calendar-date-fill"></i>Office visit`;
+                                            }
+                                        },
+                                        error: function(error) {
+                                            console.log(`Failed to call user actions for user ${userNumber}`, error);
+                                        }
+                                    });
 
                                     // if (i %2 === 0) {
                                     //     container.children().last().css("background-color", "#F9FAFB");
@@ -1229,32 +1246,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                     // }
                                 });
 
-                                allPhoneNumbers.forEach((userNumber) => {
-                                    $.ajax({
-                                        url: `https://api.lenaai.net/user-actions/${userNumber}/${clientId}`,
-                                        method: "GET",
-                                        contentType: "json",
-                                        success: function(response) {
-                                            console.log(`action call success for user ${userNumber}`);
-                                            const callNow = document.querySelector(".call-now");
-                                            const client = callNow.parentElement;
-                                            client.setAttribute("data-status", "action-needed");
-                                            const actionMark = client.querySelector(".bi");
-                                            actionMark.classList.remove("bi-check-circle");
-                                            actionMark.classList.add("bi-exclamation-diamond");
-                                            if (response.action) {
-                                                callNow.textContent = response.action;
-                                            } else {
-                                                callNow.style.visibility = "hidden";
-                                            }
-                                        },
-                                        error: function(error) {
-                                            console.log(`Failed to call user actions for user ${userNumber}`, error);
-                                        }
-                                    });
-                                });
-
                                 const clients = Array.from(document.querySelectorAll(".client"));
+
+                                allPhoneNumbers.forEach((userNumber, i) => {
+                                });
 
                                 // Recent first filter
                                 let descending = false;
@@ -1459,6 +1454,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                         chatHistory.innerHTML = `
                                         <div class="history-header">
                                             <h1>Messages History</h1>
+                                            <div class="switch-btn">
+                                                <div class="switch-title" style="margin-right: 20px;">Manual</div>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="switch-status">
+                                                    <span class="slider"></span>
+                                                </label>
+                                                <div class="switch-title" style="margin-right: 20px;">AI</div>
+                                            </div>
                                             <i class="fa-solid close-btn fa-circle-xmark"></i>
                                         </div>
                                         <div class="chatbot">
@@ -1488,6 +1491,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                     
                                             inputField.value = "";
                                             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+                                            console.log(userInput)
+                                            $.ajax({
+                                                url: `https://api.lenaai.net/webhook/text`,
+                                                method: "POST",
+                                                contentType: "application/json",
+                                                data: JSON.stringify({
+                                                    "to_number": "201032788912",
+                                                    "message": userInput
+                                                }),
+                                                success: function (response) {
+                                                    console.log(response);
+                                                }
+                                            })
                                         }
                                     
                                         chatSubmit.addEventListener("click", function () {
@@ -1604,7 +1621,7 @@ document.addEventListener("DOMContentLoaded", function () {
         editOverlay.style.display = "flex";
         editPopup.innerHTML = `
         <div class="history-header">
-            <h1>Send Whats message</h1>
+            <h1>Send Cold Whats messages Patch</h1>
             <i class="fa-solid close-btn fa-circle-xmark"></i>
         </div>
         <div class="edit-content">
@@ -1642,9 +1659,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateButton(theme) {
         if (theme === "dark") {
-            themeToggle.innerHTML = `<i class="bi bi-sun"></i> Light Mode`;
+            themeToggle.innerHTML = `<i class="bi bi-sun"></i>`;
         } else {
-            themeToggle.innerHTML = `<i class="bi bi-moon"></i> Dark Mode`;
+            themeToggle.innerHTML = `<i class="bi bi-moon"></i>`;
         }
     }
 
