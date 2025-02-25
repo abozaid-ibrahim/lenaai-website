@@ -27,6 +27,10 @@ body {
     font-family: "Poppins", sans-serif;
 }
 
+i {
+    font-family: "Font Awesome 6 Free", "Bootstrap Icons", sans-serif;
+}
+
 /* Header */
 
 ul {
@@ -95,14 +99,14 @@ a {
 }
 
 .header-container button {
-    margin-left: auto;
+    margin-left: 15px;
     padding: 6px 18px;
     display: flex;
     align-items: center;
     border: none;
     outline: none;
     background-color: var(--secondary-color);
-    color: var(--primary-color);
+    color: var(--primary-color-hover);
     border-radius: 16px;
     font-size: 14px;
     line-height: 1.2;
@@ -123,6 +127,29 @@ a {
 
 .menu-toggle {
     display: none;
+}
+
+#theme-toggle {
+    padding: 6px 18px;
+    color: var(--text-color);
+    background-color: transparent;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--text-color);
+    margin-left: auto;
+}
+
+#theme-toggle:hover {
+    background-color: var(--alt-button-color-hover);
+    color: var(--primary-color-hover);
+    transform: scale(1.05);
+}
+
+#theme-toggle i {
+    font-size: 1.1rem;
 }
 
 /* Filters */
@@ -236,7 +263,8 @@ a {
     border-radius: 26px;
 }
 
-.filters .slider:before {
+.filters .slider:before,
+.history-header .slider:before {
     position: absolute;
     content: "";
     height: 18px;
@@ -250,6 +278,10 @@ a {
 
 input:checked+.slider {
     background-color: var(--secondary-color);
+}
+
+.history-header input:checked+.slider {
+    background-color: var(--primary-color-hover);
 }
 
 input:checked+.slider:before {
@@ -324,8 +356,8 @@ input:checked+.slider:before {
 }
 
 .overview-container {
-    height: 100%;
-    overflow-y: auto;
+    height: 550px;
+    overflow: auto;
 }
 
 .overview-titles {
@@ -333,6 +365,8 @@ input:checked+.slider:before {
     align-items: center;
     border-bottom: 2px solid #929394;
     background-color: var(--primary-color);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .client {
@@ -347,14 +381,18 @@ input:checked+.slider:before {
     color: var(--text-color);
 }
 
-.overview-titles li:nth-child(5) {
-    text-align: center;
+.overview-titles li:first-child {
+    margin-right: 3.5rem;
+}
+
+.overview-titles li:nth-child(4) {
+    text-align: left;
     width: 8ch;
 }
 
 .overview-titles li:last-child {
     margin-left: auto;
-    margin-right: 1rem;
+    margin-right: 2rem;
 }
 
 .clients-list {
@@ -370,7 +408,7 @@ input:checked+.slider:before {
 }
 
 .client:hover {
-    background-color: #bcbcbd !important;
+    background-color: #d5effa !important;
     cursor: pointer;
 }
 
@@ -385,7 +423,6 @@ input:checked+.slider:before {
     margin-left: auto;
     margin-right: 1rem;
     padding: 8px 14px;
-    font-weight: bold;
 }
 
 .client-name {
@@ -393,15 +430,30 @@ input:checked+.slider:before {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-family: "Archivo", serif;
 }
 
-.requirements {
+.client-date {
+    font-family: "Archivo", serif;
+}
+
+.requirements,
+.call-now {
     border: 2px solid var(--secondary-color);
     display: flex;
     align-items: center;
     border-radius: 10px;
     position: relative;
     color: var(--primary-color-hover);
+}
+
+.call-now i {
+    margin-right: 5px;
+}
+
+.bi-calendar-date-fill,
+.bi-exclamation-diamond {
+    font-size: 1.3rem;
 }
 
 .need-action {
@@ -423,23 +475,11 @@ input:checked+.slider:before {
     margin: auto;
 }
 
-.requirements:hover {
+.requirements:hover,
+.call-now:hover {
     background-color: var(--secondary-color);
     color: var(--alt-text-color);
     cursor: pointer;
-}
-
-.call-now {
-    color: var(--text-color);
-    background-color: var(--primary-color);
-    border-radius: 16px;
-    transition: background-color 0.3s ease;
-}
-
-.call-now:hover {
-    cursor: pointer;
-    background-color: var(--secondary-color);
-    color: var(--primary-color-hover);
 }
 
 .chart {
@@ -506,6 +546,7 @@ input:checked+.slider:before {
 }
 
 .history-header {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -620,12 +661,6 @@ input:checked+.slider:before {
 .sent {
     margin-left: auto;
     background-color: #D9D9D9;
-}
-
-.bi-check-circle,
-.bi-exclamation-diamond {
-    font-size: 2rem;
-    color: var(--icon-color);
 }
 
 .user-profile {
@@ -1315,29 +1350,4 @@ input:checked+.slider:before {
 .bi-chat-square-text-fill {
     font-size: 1.5rem;
     margin-left: 7px;
-}
-
-#theme-toggle {
-    padding: 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--text-color);
-    background-color: var(--primary-color);
-    border-radius: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.2s ease-in-out;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: none;
-}
-
-#theme-toggle:hover {
-    background-color: var(--secondary-color);
-    color: var(--alt-text-color);
-    transform: scale(1.05);
-}
-
-#theme-toggle i {
-    font-size: 1.2rem;
 }
