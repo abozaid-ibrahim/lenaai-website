@@ -484,10 +484,6 @@ input:checked+.slider:before {
     min-height: min-content;
 }
 
-.req-profile {
-    width: fit-content;
-}
-
 .history-header {
     position: relative;
     display: flex;
@@ -613,7 +609,6 @@ input:checked+.slider:before {
 .user-profile {
     background-color: rgb(0, 0, 0);
     padding: 10px;
-    height: fit-content;
     z-index: 2;
     text-align: center;
 }
@@ -658,21 +653,21 @@ input:checked+.slider:before {
 .req-list {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     color: #fff;
     text-align: center;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+    width: 50%;
 }
 
 .req-list li {
     border: 3px solid #cbb26a;
-    /* box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); */
     border-radius: 16px;
     padding: 10px;
     transition: transform 0.2s ease-in-out;
-}
-
-.req-list li:hover {
-    transform: scale(1.05);
+    height: fit-content;
 }
 
 .req-title {
