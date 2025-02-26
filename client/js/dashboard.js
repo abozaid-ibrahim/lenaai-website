@@ -115,6 +115,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <p><strong>Paid</strong>: ${unit.paid || "N/A"}</p>
                                             <p><strong>Offer</strong>: ${unit.offer.toLocaleString() || "N/A"} EGP</p>
                                             <p><strong>Status</strong>: ${unit.status || "N/A"}</p>
+                                            <p><strong>Down Payment</strong>: ${unit.downPayment || "N/A"}</p>
+                                            <p><strong>Payment Plans</strong>: ${unit.paymentPlans || "N/A"}</p>
+                                            <p><strong>Total Price</strong>: ${unit.totalPrice || "N/A"}</p>
                                             <p><strong>Zone</strong>: ${unit.zone || "N/A"}</p>
                                             <p><strong>Phase</strong>: ${unit.phase || "N/A"}</p>
                                             <p><strong>Delivery Date</strong>: ${unit.deliveryDate || "N/A"}</p>
@@ -294,7 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         url: "https://api.lenaai.net/delete-unit",
                                         method: "DELETE",
                                         headers: {
-                                            "unitId": `${unitId}`
+                                            "unitId": `${encodeURIComponent(unitId)}`
                                         },
                                         success: function (response) {
                                             window.location.reload();
@@ -618,6 +621,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                         "gardenSize": 0,
                                         "finishing": "",
                                         "dataSource": "",
+                                        "downPayment": 0,
+                                        "totalPrice": 0,
                                         "paymentPlan": {
                                             "years": 0,
                                             "price": 0,
@@ -723,6 +728,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 "landArea",
                                                 "sellingArea",
                                                 "gardenSize",
+                                                "downPayment",
+                                                "totalPrice",
                                                 "price", "years", "maintenance"
                                             ];
 
@@ -1094,6 +1101,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                         "gardenSize": 0,
                                         "finishing": "",
                                         "dataSource": "",
+                                        "downPayment": 0,
+                                        "totalPrice": 0,
                                         "paymentPlan": {
                                             "years": 0,
                                             "price": 0,
@@ -1119,6 +1128,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 "landArea",
                                                 "sellingArea",
                                                 "gardenSize",
+                                                "downPayment",
+                                                "totalPrice",
                                                 "price", "years", "maintenance"
                                             ];
 
@@ -1159,7 +1170,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     console.log("data collected from the edit window", unitObject)
 
                                     $.ajax({
-                                        url: `https://api.lenaai.net/update-unit/${unitId}`,
+                                        url: `https://api.lenaai.net/update-unit/`,
                                         method: "POST",
                                         headers: {
                                             "clientId": clientId,
@@ -1217,21 +1228,23 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <li class="need-action">
                                                 <div class="messages-no">${(messages.length * 2).toString().padStart(2, "0")}</div>
                                             </li>
-                                            <li class="call-now"><i class="bi bi-exclamation-diamond"></i>Action</li>
+                                            <li class="call-now"><i class="bi bi-check-circle"></i>No Action</li>
                                         </ul>
                                     `);
 
                                     const appendedClient = container.children().last()[0];
                                     const callNow = appendedClient.querySelector(".call-now");
                                     $.ajax({
-                                        url: `https://api.lenaai.net/user-actions/01157745462/Dream_House`,
+                                        url: `https://api.lenaai.net/user-actions/${phoneNumber}/${clientId}`,
                                         method: "GET",
                                         contentType: "json",
                                         success: function(response) {
                                             if (response.action === "ScheduleCall") {
                                                 callNow.innerHTML = `<i class="fa-solid fa-phone"></i>Call Me`;
-                                            } else {
+                                            } else if (response.action === "OfficeVisit") {
                                                 callNow.innerHTML = `<i class="bi bi-calendar-date-fill"></i>Office visit`;
+                                            } else {
+                                                return;
                                             }
                                         },
                                         error: function(error) {
@@ -1247,9 +1260,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                 });
 
                                 const clients = Array.from(document.querySelectorAll(".client"));
-
-                                allPhoneNumbers.forEach((userNumber, i) => {
-                                });
 
                                 // Recent first filter
                                 let descending = false;
@@ -1390,20 +1400,47 @@ document.addEventListener("DOMContentLoaded", function () {
                                             method: "GET",
                                             contentType: "json",
                                             success: function (response) {
-                                                console.log(`filter call success for user ${userNumber}`)
                                                 const requirementsList = document.querySelector(".req-list");
                                                 Object.keys(response).forEach((requirement) => {
+                                                    if (requirement.includes("id")) { 
+                                                        return; 
+                                                    }
+                                        
                                                     let listItem = document.createElement("li");
+                                                    let requirementTitle = requirement.charAt(0).toUpperCase() + requirement.slice(1).replaceAll("_", " ");
+                                                    let requirementValue = [];
+                                        
+                                                    if (requirement === "must_have_features") {
+                                                        if (Array.isArray(response[requirement])) {
+                                                            requirementValue = response[requirement].flatMap(obj =>
+                                                                Object.entries(obj).map(([key, value]) => `${key}: ${value}`)
+                                                            );
+                                                        } else {
+                                                            const featObject = response[requirement];
+                                                            Object.keys(featObject).forEach((feature) => {
+                                                                requirementValue.push(`${feature}: ${featObject[feature]}`);
+                                                            });
+                                                        }
+                                                        requirementValue = requirementValue.join(",<br>");
+                                                    } else {
+                                                        requirementValue = response[requirement];
+                                                        if (Array.isArray(requirementValue)) {
+                                                            requirementValue = requirementValue.join(",<br>");
+                                                        }
+                                                    }
+                                        
                                                     listItem.innerHTML = `
-                                                    <div class="req-title">${requirement.replace("_", " ")}</div>
-                                                    <div class="req-value">${response[requirement]}</div>`;
+                                                        <div class="req-title">${requirementTitle}</div>
+                                                        <div class="req-value">${requirementValue}</div>
+                                                    `;
+                                        
                                                     requirementsList.appendChild(listItem);
-                                                })
+                                                });
                                             },
                                             error: function(error) {
                                                 console.log(`Failed to call user filter for user ${userNumber}`, error);
                                             }
-                                        })
+                                        });                                    
                                         const purchaseProbability = 65; // Example: 75%
 
                                         // Get the canvas element
@@ -1446,6 +1483,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     client.addEventListener("click", function () {
                                         const chatOverlay = document.querySelector(".chat-overlay");
                                         const chatHistory = document.querySelector(".chat-history");
+                                        const userNumber = client.querySelector(".client-name").textContent;
                                         const messages = client.getAttribute("data-messages");
                                         const parsedMessages = messages ? JSON.parse(messages) : [];
                                         parsedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -1477,6 +1515,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         const chatSubmit = document.getElementById("submit-btn");
                                         const inputForm = document.getElementById("input-form");
+                                        const autoReply = document.querySelector(".chat-overlay #switch-status");
                                         function takeUserInput() {
                                             let inputField = document.getElementById("user-input");
                                             let userInput = inputField.value.trim();
@@ -1516,13 +1555,29 @@ document.addEventListener("DOMContentLoaded", function () {
                                             takeUserInput();
                                         });
 
+                                        autoReply.addEventListener("change", function () {
+                                            $.ajax({
+                                                url: `https://api.lenaai.net/lenaai-auto-reply`,
+                                                method: "POST",
+                                                contentType: "application/json",
+                                                data: JSON.stringify({
+                                                    "phone_number": userNumber,
+                                                    "client_id": clientId,
+                                                    "toggle_ai_auto_reply": autoReply.checked,
+                                                    "username": clientUserName
+                                                }),
+                                            })
+                                        });
+
                                         const messagesDiv = document.getElementById("messages");
                                         parsedMessages.forEach((message) => {
                                             let userMessage = document.createElement("div");
                                             let botResponse = document.createElement("div");
+                                            let cleanMessage = message.bot_response.split('"message":')[0].trim();
 
+                                            cleanMessage = cleanMessage.replace(/[,"]+$/, "").trim();
                                             userMessage.innerHTML = message.user_message
-                                            botResponse.innerHTML = message.bot_response
+                                            botResponse.innerHTML = cleanMessage
 
                                             userMessage.classList.add("message", "sent");
                                             botResponse.classList.add("message");
@@ -1534,6 +1589,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                         document.querySelector(".close-btn").addEventListener("click", function () {
                                             chatOverlay.style.display = "none";
                                             chatHistory.innerHTML = '';
+                                        });
+
+                                        $.ajax({
+                                            url: `https://api.lenaai.net/lenaai-auto-reply/${userNumber}/${clientId}`,
+                                            method: "GET",
+                                            dataType: "json",
+                                            success: function (response) {
+                                                const checkStatus = document.querySelector(".chat-overlay #switch-status");
+                                                if (checkStatus) {
+                                                    checkStatus.checked = response.toggle_ai_auto_reply === true;
+                                                } else {
+                                                    console.warn("Checkbox #switch-status not found.");
+                                                }
+                                            }
                                         });
                                     });
                                 });
