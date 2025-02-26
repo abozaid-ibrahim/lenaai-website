@@ -157,7 +157,7 @@ a {
 .efficiency-hub {
     text-align: center;
     padding: 4rem 2rem;
-    background: linear-gradient(to bottom, var(--sections-header-color) 80%, var(--primary-color-hover) 100%);
+    background: var(--secondary-color);
     color: var(--text-color);
 }
 
@@ -178,8 +178,8 @@ a {
 }
 
 .trial .chat {
-    background-color: var(--secondary-color);
-    color: var(--primary-color-hover);
+    background-color: var(--primary-color);
+    color: var(--text-color);
     padding: 0.8rem 1.2rem;
     border-radius: 12px;
     font-size: 1.4rem;
@@ -191,12 +191,12 @@ a {
 }
 
 .trial .chat:hover {
-    background-color: var(--secondary-color-hover);
+    background-color: var(--primary-color-hover);
     transform: scale(1.05);
 }
 
 .trial .demo {
-    background-color: transparent;
+    background-color: var(--secondary-color);
     color: var(--text-color);
     padding: 0.8rem 1.2rem;
     border-radius: 12px;
@@ -321,7 +321,7 @@ a {
 
 .item-title,
 .item-list {
-    color: #cbb26a;
+    color: var(--primary-color-hover);
 }
 
 .item-title {
@@ -343,7 +343,7 @@ a {
 
 .try-btn {
     padding: 12px 25px;
-    background-color: transparent;
+    background-color: var(--primary-color-hover);
     color: var(--text-color);
     border-radius: 10px;
     font-size: 1rem;
@@ -366,15 +366,15 @@ a {
 
 .vacancies {
     padding: 2rem 5%;
-    background-color: #121212;
+    background-color: var(--alt-button-color-hover);
 }
 
 .vacancies .hub-title {
-    color: #cbb26a;
+    color: var(--primary-color-hover);
 }
 
 .vacancies .hub-subheader {
-    color: #ddd;
+    color: var(--primary-color-hover);
 }
 
 .jobs-grid {
@@ -393,7 +393,7 @@ a {
     border-radius: 12px;
     border: 2px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
-    background-color: #1a1a1a;
+    background-color: var(--primary-color-hover);
 }
 
 .job-item img {
@@ -404,7 +404,7 @@ a {
 }
 
 .job-details {
-    color: #ddd;
+    color: var(--secondary-color);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -443,7 +443,7 @@ a {
     padding: 12px 24px;
     border-radius: 10px;
     border: 2px solid var(--text-color);
-    color: var(--text-color);
+    color: var(--secondary-color);
     background: transparent;
     font-weight: bold;
     transition: all 0.3s ease;
