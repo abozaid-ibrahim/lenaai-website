@@ -68,6 +68,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             "Loft",
                             "Bungalow"
                         ];
+                        const views = [
+                            "Lagoon",
+                            "Sea view",
+                            "Garden",
+                            "Street",
+                            "Open",
+                            "Park",
+                            "Other"
+                        ];
 
                         Object.keys(groupedByCompound).forEach((compoundName) => {
                             const dataContainer = document.createElement("div");
@@ -109,6 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <p><strong>Unit ID</strong>: ${unit.unitId || "N/A"}</p>
                                             <p><strong>Compound</strong>: ${unit.compound || "N/A"}</p>
                                             <p><strong>Building Type</strong>: ${unit.buildingType || "N/A"}</p>
+                                            <p><strong>View</strong>: ${views[0]}</p>
                                             <p><strong>Country</strong>: ${unit.country || "N/A"}</p>
                                             <p><strong>City</strong>: ${unit.city || "N/A"}</p>
                                             <p><strong>Developer</strong>: <span class="dev">${unit.developer || "N/A"}</span></p>
@@ -120,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <p><strong>Total Price</strong>: ${unit.totalPrice || "N/A"}</p>
                                             <p><strong>Zone</strong>: ${unit.zone || "N/A"}</p>
                                             <p><strong>Phase</strong>: ${unit.phase || "N/A"}</p>
+                                            <p><strong>Garage</strong>: 0</p>
                                             <p><strong>Delivery Date</strong>: ${unit.deliveryDate || "N/A"}</p>
                                             <p><strong>Floor</strong>: ${unit.floor || "N/A"}</p>
                                             <p><strong>Rooms Count</strong>: ${unit.roomsCount || "N/A"}</p>
@@ -366,6 +377,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                             </div>`;
                                             editDetails.appendChild(detail);
                                             buildingTypes.forEach((type) => {
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
+                                            });
+                                        } else if (key === "View") {
+                                            detail.classList.add("views")
+                                            detail.innerHTML = `
+                                            ${key}
+                                            <div class="edit-drop">
+                                                <div class="value">${views[0]}</div><i class="fa-solid fa-chevron-down"></i>
+                                                <ul class="dropdown">
+                                                </ul>
+                                            </div>`;
+                                            editDetails.appendChild(detail);
+                                            views.forEach((type) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
                                             });
                                         } else {
@@ -845,6 +869,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 </ul>
                                             </div>`;
                                             buildingTypes.forEach((type) => {
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
+                                            });
+                                        } else if (key === "View") {
+                                            detail.classList.add("views")
+                                            detail.innerHTML = `
+                                            ${key}
+                                            <div class="edit-drop">
+                                                <div class="value">${views[0]}</div><i class="fa-solid fa-chevron-down"></i>
+                                                <ul class="dropdown">
+                                                </ul>
+                                            </div>`;
+                                            editDetails.appendChild(detail);
+                                            views.forEach((type) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
                                             });
                                         } else {
