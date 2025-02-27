@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             dataTitle.classList.add("data-title");
                             dataContent.classList.add("data-content");
                             unitsList.classList.add("units-list");
-                            dataTitle.innerHTML = `${compoundName || "N/A"}<i class="fa-solid fa-chevron-up"></i>`;
+                            dataTitle.innerHTML = `${compoundName}<i class="fa-solid fa-chevron-up"></i>`;
 
                             dataContent.appendChild(unitsList);
                             dataContainer.appendChild(dataTitle);
@@ -115,31 +115,31 @@ document.addEventListener("DOMContentLoaded", function () {
                                         </div>
                         
                                         <div class="property-details">
-                                            <p><strong>Unit ID</strong>: ${unit.unitId || "N/A"}</p>
-                                            <p><strong>Compound</strong>: ${unit.compound || "N/A"}</p>
-                                            <p><strong>Building Type</strong>: ${unit.buildingType || "N/A"}</p>
-                                            <p><strong>View</strong>: ${unit.view || "N/A"}</p>
-                                            <p><strong>Country</strong>: ${unit.country || "N/A"}</p>
-                                            <p><strong>City</strong>: ${unit.city || "N/A"}</p>
-                                            <p><strong>Developer</strong>: <span class="dev">${unit.developer || "N/A"}</span></p>
-                                            <p><strong>Paid</strong>: ${unit.paid || "N/A"}</p>
-                                            <p><strong>Offer</strong>: ${unit.offer.toLocaleString() || "N/A"} EGP</p>
-                                            <p><strong>Status</strong>: ${unit.status || "N/A"}</p>
-                                            <p><strong>Down Payment</strong>: ${unit.downPayment.toLocaleString() || "N/A"} EGP</p>
-                                            <p><strong>Payment Plans</strong>: ${unit.paymentPlans || "N/A"}</p>
-                                            <p><strong>Total Price</strong>: ${unit.totalPrice.toLocaleString() || "N/A"} EGP</p>
-                                            <p><strong>Zone</strong>: ${unit.zone || "N/A"}</p>
-                                            <p><strong>Phase</strong>: ${unit.phase || "N/A"}</p>
-                                            <p><strong>Garage Area</strong>: ${unit.garageArea || "N/A"}</p>
-                                            <p><strong>Delivery Date</strong>: ${unit.deliveryDate || "N/A"}</p>
-                                            <p><strong>Floor</strong>: ${unit.floor || "N/A"}</p>
-                                            <p><strong>Rooms Count</strong>: ${unit.roomsCount || "N/A"}</p>
-                                            <p><strong>Bathroom Count</strong>: ${unit.bathroomCount || "N/A"}</p>
-                                            <p><strong>Land Area</strong>: ${unit.landArea || "N/A"}</p>
-                                            <p><strong>Selling Area</strong>: ${unit.sellingArea || "N/A"}</p>
-                                            <p><strong>Garden Size</strong>: ${unit.gardenSize || "N/A"}</p>
-                                            <p><strong>Finishing</strong>: ${unit.finishing || "N/A"}</p>
-                                            <p style="display: none;"><strong>Data Source</strong>: ${unit.dataSource || "N/A"}</p>
+                                            <p><strong>Unit ID</strong>: ${unit.unitId}</p>
+                                            <p><strong>Compound</strong>: ${unit.compound}</p>
+                                            <p><strong>Building Type</strong>: ${unit.buildingType}</p>
+                                            <p><strong>View</strong>: ${unit.view}</p>
+                                            <p><strong>Country</strong>: ${unit.country}</p>
+                                            <p><strong>City</strong>: ${unit.city}</p>
+                                            <p><strong>Developer</strong>: <span class="dev">${unit.developer}</span></p>
+                                            <p><strong>Paid</strong>: ${unit.paid} EGP</p>
+                                            <p><strong>Offer</strong>: ${unit.offer.toLocaleString()} EGP</p>
+                                            <p><strong>Status</strong>: ${unit.status}</p>
+                                            <p><strong>Down Payment</strong>: ${unit.downPayment.toLocaleString()} EGP</p>
+                                            <p><strong>Payment Plans</strong>: ${unit.paymentPlans}</p>
+                                            <p><strong>Total Price</strong>: ${unit.totalPrice.toLocaleString()} EGP</p>
+                                            <p><strong>Zone</strong>: ${unit.zone}</p>
+                                            <p><strong>Phase</strong>: ${unit.phase}</p>
+                                            <p><strong>Garage Area</strong>: ${unit.garageArea}</p>
+                                            <p><strong>Delivery Date</strong>: ${unit.deliveryDate}</p>
+                                            <p><strong>Floor</strong>: ${unit.floor}</p>
+                                            <p><strong>Rooms Count</strong>: ${unit.roomsCount}</p>
+                                            <p><strong>Bathroom Count</strong>: ${unit.bathroomCount}</p>
+                                            <p><strong>Land Area</strong>: ${unit.landArea}</p>
+                                            <p><strong>Selling Area</strong>: ${unit.sellingArea}</p>
+                                            <p><strong>Garden Size</strong>: ${unit.gardenSize}</p>
+                                            <p><strong>Finishing</strong>: ${unit.finishing}</p>
+                                            <p style="display: none;"><strong>Data Source</strong>: ${unit.dataSource}</p>
                                         </div>
                                     </div>
 
@@ -284,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <p class="before-del">Are you sure you want to delete this unit?</P>
                                     <div class="details-btns">
                                         <div class="cancel">Cancel</div>
-                                        <div class="save">Yes</div>
+                                        <div class="yes">Yes</div>
                                     </div>
                                 </div>`;
 
@@ -300,7 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     editPopup.innerHTML = '';
                                 });
 
-                                document.querySelector(".save").addEventListener("click", function () {
+                                document.querySelector(".yes").addEventListener("click", function () {
                                     editPopup.classList.remove("delete-popup");
                                     editOverlay.style.display = "none";
                                     editPopup.innerHTML = '';
@@ -339,7 +339,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <ul class="edit-details">
                                     </ul>
                                     <div class="details-btns">
-                                        <div class="cancel">Cancel</div>
                                         <div class="save">Save</div>
                                     </div>
                                 </div>`;
@@ -364,7 +363,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 </ul>
                                             </div>`;
                                             compoundsNamesList.forEach((name) => {
-                                                detail.querySelector(".dropdown").innerHTML += `<li>${name || "N/A"}</li>`
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${name}</li>`
                                             });
                                         } else if (key === "Delivery Date") {
                                             detail.classList.add("delivery-date");
@@ -386,7 +385,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 </ul>
                                             </div>`;
                                             buildingTypes.forEach((type) => {
-                                                detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                             });
                                         } else if (key === "View") {
                                             detail.classList.add("views")
@@ -398,14 +397,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 </ul>
                                             </div>`;
                                             views.forEach((type) => {
-                                                detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                             });
                                         } else {
                                             detail.innerHTML = `${key}<input type="text">`;
                                         }
 
                                         editDetails.appendChild(detail);                                        
-                                    });
+                                    });                                  
 
                                     const dateInput = document.querySelector(".delivery-date #cal");
                                     if (dateInput) {
@@ -649,10 +648,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                         editPopup.innerHTML = '';
                                     });
 
-                                    document.querySelector(".cancel").addEventListener("click", function () {
-                                        editOverlay.style.display = "none";
-                                        editPopup.innerHTML = '';
-                                    });
+                                    // document.querySelector(".cancel").addEventListener("click", function () {
+                                    //     editOverlay.style.display = "none";
+                                    //     editPopup.innerHTML = '';
+                                    // });
 
                                 document.querySelector(".save").addEventListener("click", function () {
                                     function getFormattedDateTime() {
@@ -788,7 +787,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                     document.querySelectorAll(".edit-details li").forEach((li) => {
                                         const key = li.textContent.trim().split(":")[0].trim();
-                                        const input = li.querySelector("input")?.value.trim() || "N/A";
+                                        const input = li.querySelector("input")?.value.trim();
 
                                         function enforceType(key, value) {
                                             const numberFields = [
@@ -813,6 +812,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                             return value;
                                         }
 
+                                        function formatNumber(value) {
+                                            if (/^\d{1,3}(,\d{3})*$/.test(value)) {
+                                                return value;
+                                            }
+                                        
+                                            return Number(value).toLocaleString();
+                                        }
+
                                         if (toCamelCase(key) === "unitId") {
                                             unitId = input;
                                             unitObject.unitId = input;
@@ -827,6 +834,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                         } else if (key.includes("Payment Plan")) {
                                             const formattedKey = toCamelCase(key.replace("Payment Plan", ""));
                                             paymentPlan[formattedKey] = enforceType(formattedKey, input);
+                                        } else if (key === "Paid") {
+                                            let value = input.replace("EGP", "").trim();
+                                            unitObject.paid = formatNumber(value);
                                         } else {
                                             const camelKey = toCamelCase(key);
                                             if (camelKey in unitObject) {
@@ -882,7 +892,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <ul class="edit-details">
                                     </ul>
                                     <div class="details-btns">
-                                        <div class="cancel">Cancel</div>
                                         <div class="save">Save</div>
                                     </div>
                                 </div>`;
@@ -909,7 +918,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 </ul>
                                             </div>`;
                                             compoundsNamesList.forEach((name) => {
-                                                detail.querySelector(".dropdown").innerHTML += `<li>${name || "N/A"}</li>`
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${name}</li>`
                                             });
                                         } else if (key === "Delivery Date") {
                                             detail.classList.add("delivery-date");
@@ -931,7 +940,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 </ul>
                                             </div>`;
                                             buildingTypes.forEach((type) => {
-                                                detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                             });
                                         } else if (key === "View") {
                                             detail.classList.add("views")
@@ -943,7 +952,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 </ul>
                                             </div>`;
                                             views.forEach((type) => {
-                                                detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                             });
                                         } else {
                                             detail.innerHTML = `${key}<input type="text" value="${value}">`;
@@ -1195,10 +1204,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                     editPopup.innerHTML = '';
                                 });
 
-                                document.querySelector(".cancel").addEventListener("click", function () {
-                                    editOverlay.style.display = "none";
-                                    editPopup.innerHTML = '';
-                                });
+                                // document.querySelector(".cancel").addEventListener("click", function () {
+                                //     editOverlay.style.display = "none";
+                                //     editPopup.innerHTML = '';
+                                // });
 
                                 document.querySelector(".save").addEventListener("click", function () {
                                     function getFormattedDateTime() {
@@ -1253,8 +1262,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                     document.querySelectorAll(".edit-details li").forEach((li) => {
                                         const key = li.textContent.trim().split(":")[0].trim();
-                                        const input = li.querySelector("input")?.value.trim() || "N/A";
-                                        const dataSrc = li.querySelector("a")?.getAttribute("href") || "N/A";
+                                        const input = li.querySelector("input")?.value.trim();
+                                        const dataSrc = li.querySelector("a")?.getAttribute("href");
 
                                         function enforceType(key, value) {
                                             const numberFields = [
@@ -1279,6 +1288,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                             return value;
                                         }
 
+                                        function formatNumber(value) {
+                                            if (/^\d{1,3}(,\d{3})*$/.test(value)) {
+                                                return value;
+                                            }
+                                        
+                                            return Number(value).toLocaleString();
+                                        }
+
                                         if (toCamelCase(key) === "unitId") {
                                             unitId = input;
                                             unitObject.unitId = input;
@@ -1296,6 +1313,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                         } else if (key.includes("Payment Plan")) {
                                             const formattedKey = toCamelCase(key.replace("Payment Plan", ""));
                                             paymentPlan[formattedKey] = enforceType(formattedKey, input);
+                                        } else if (key === "Paid") {
+                                            let value = input.replace("EGP", "").trim();
+                                            unitObject.paid = formatNumber(value);
                                         } else {
                                             const camelKey = toCamelCase(key);
                                             if (camelKey in unitObject) {
@@ -1526,12 +1546,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                         <div class="user-profile">
                                             <div class="user-image">
                                                 <img src="../assets/user-default.png">
-                                            </div>
-                                            <div class="user-info">
                                                 <div class="probability">
                                                     <h3>Purchase Probability</h3>
                                                     <canvas id="probabilityChart"></canvas>
                                                 </div>
+                                            </div>
+                                            <div class="user-info">
                                                 <ul class="req-list">
                                                 </ul>
                                             </div>
@@ -1840,7 +1860,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 <input type="text" id="whats-input" placeholder="Type Something Here">
             </div>
             <div class="details-btns">
-                <div class="cancel">Cancel</div>
                 <div class="save">Send</div>
             </div>
         </div>`;
@@ -1851,11 +1870,11 @@ document.addEventListener("DOMContentLoaded", function () {
             editPopup.innerHTML = '';
         });
 
-        document.querySelector(".cancel").addEventListener("click", function () {
-            editPopup.classList.remove("delete-popup");
-            editOverlay.style.display = "none";
-            editPopup.innerHTML = '';
-        });
+        // document.querySelector(".cancel").addEventListener("click", function () {
+        //     editPopup.classList.remove("delete-popup");
+        //     editOverlay.style.display = "none";
+        //     editPopup.innerHTML = '';
+        // });
     })
 
     const themeToggle = document.getElementById("theme-toggle");
