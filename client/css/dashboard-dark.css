@@ -1277,7 +1277,7 @@ input:checked+.slider:before {
 
 
 .delete-popup {
-    width: 30%;
+    width: 40%;
 }
 
 .bi-chat-square-text-fill {
@@ -1300,17 +1300,6 @@ input:checked+.slider:before {
     background-color: #cbb26a;
     color: black;
     cursor: pointer;
-}
-
-#whats-input {
-    border: 2px solid #cbb26a;
-    border-radius: 16px;
-    outline: none;
-    width: 100%;
-    padding: 1rem;
-    margin: 1rem 0;
-    background-color: #222;
-    color: #cbb26a;
 }
 
 .whats-msg i {
