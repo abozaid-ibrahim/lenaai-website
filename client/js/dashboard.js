@@ -118,19 +118,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <p><strong>Unit ID</strong>: ${unit.unitId || "N/A"}</p>
                                             <p><strong>Compound</strong>: ${unit.compound || "N/A"}</p>
                                             <p><strong>Building Type</strong>: ${unit.buildingType || "N/A"}</p>
-                                            <p><strong>View</strong>: ${views[0]}</p>
+                                            <p><strong>View</strong>: ${unit.view || "N/A"}</p>
                                             <p><strong>Country</strong>: ${unit.country || "N/A"}</p>
                                             <p><strong>City</strong>: ${unit.city || "N/A"}</p>
                                             <p><strong>Developer</strong>: <span class="dev">${unit.developer || "N/A"}</span></p>
                                             <p><strong>Paid</strong>: ${unit.paid || "N/A"}</p>
                                             <p><strong>Offer</strong>: ${unit.offer.toLocaleString() || "N/A"} EGP</p>
                                             <p><strong>Status</strong>: ${unit.status || "N/A"}</p>
-                                            <p><strong>Down Payment</strong>: ${unit.downPayment || "N/A"}</p>
+                                            <p><strong>Down Payment</strong>: ${unit.downPayment.toLocaleString() || "N/A"} EGP</p>
                                             <p><strong>Payment Plans</strong>: ${unit.paymentPlans || "N/A"}</p>
-                                            <p><strong>Total Price</strong>: ${unit.totalPrice || "N/A"}</p>
+                                            <p><strong>Total Price</strong>: ${unit.totalPrice.toLocaleString() || "N/A"} EGP</p>
                                             <p><strong>Zone</strong>: ${unit.zone || "N/A"}</p>
                                             <p><strong>Phase</strong>: ${unit.phase || "N/A"}</p>
-                                            <p><strong>Garage</strong>: 0</p>
+                                            <p><strong>Garage Area</strong>: ${unit.garageArea || "N/A"}</p>
                                             <p><strong>Delivery Date</strong>: ${unit.deliveryDate || "N/A"}</p>
                                             <p><strong>Floor</strong>: ${unit.floor || "N/A"}</p>
                                             <p><strong>Rooms Count</strong>: ${unit.roomsCount || "N/A"}</p>
@@ -366,6 +366,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                             compoundsNamesList.forEach((name) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${name || "N/A"}</li>`
                                             });
+                                        } else if (key === "Delivery Date") {
+                                            detail.classList.add("delivery-date");
+                                            detail.innerHTML = `
+                                            ${key}
+                                            <div class="date-picker">
+                                                <div class="value">Select Date</div>
+                                                <i class="fa-solid fa-calendar-days"></i>
+                                                <input type="date" id="cal">
+                                            </div>
+                                            `;
                                         } else if (key === "Building Type") {
                                             detail.classList.add("building")
                                             detail.innerHTML = `
@@ -375,7 +385,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 <ul class="dropdown">
                                                 </ul>
                                             </div>`;
-                                            editDetails.appendChild(detail);
                                             buildingTypes.forEach((type) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
                                             });
@@ -388,7 +397,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 <ul class="dropdown">
                                                 </ul>
                                             </div>`;
-                                            editDetails.appendChild(detail);
                                             views.forEach((type) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
                                             });
@@ -396,8 +404,45 @@ document.addEventListener("DOMContentLoaded", function () {
                                             detail.innerHTML = `${key}<input type="text">`;
                                         }
 
-                                        editDetails.appendChild(detail);
+                                        editDetails.appendChild(detail);                                        
                                     });
+
+                                    const dateInput = document.querySelector(".delivery-date #cal");
+                                    if (dateInput) {
+                                        const today = new Date().toISOString().split("T")[0];
+                                        dateInput.min = today;
+                                    }
+
+                                    let isDatePickerOpen = false;
+
+                                    function toggleDatePicker(event) {
+                                        const datePicker = event.target.closest(".date-picker");
+
+                                        if (!datePicker) return;
+
+                                        const input = datePicker.querySelector("input[type='date']");
+
+                                        if (input) {
+                                            if (isDatePickerOpen) {
+                                                input.blur();
+                                                isDatePickerOpen = false;
+                                            } else {
+                                                input.showPicker();
+                                                isDatePickerOpen = true;
+                                            }
+                                        }
+                                    }
+
+                                    document.querySelector(".edit-details").addEventListener("change", function (event) {
+                                        if (event.target.matches(".delivery-date #cal")) {
+                                            const parent = event.target.closest(".delivery-date");
+                                            if (parent) {
+                                                parent.querySelector(".value").textContent = event.target.value;
+                                            }
+                                        }
+                                    });
+
+                                    document.querySelector(".edit-details").addEventListener("click", toggleDatePicker);
 
                                     $(document).ready(function() {
                                         $(".edit-drop").click(function(event) {
@@ -421,7 +466,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             event.stopPropagation();
                                     
                                             let selectedText = $(this).text();
-                                            let parentElement = $(this).closest(".building, .compound");
+                                            let parentElement = $(this).closest(".building, .compound, .views");
                                             let valueElement = parentElement.find(".value");
                                             valueElement.text(selectedText);
                                             $(this).closest(".dropdown").slideUp();
@@ -635,6 +680,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                         "status": "",
                                         "zone": "",
                                         "phase": "",
+                                        "view": "",
+                                        "garageArea": "",
                                         "deliveryDate": "",
                                         "bathroomCount": 0,
                                         "buildingType": "",
@@ -754,6 +801,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 "gardenSize",
                                                 "downPayment",
                                                 "totalPrice",
+                                                "garageArea",
                                                 "price", "years", "maintenance"
                                             ];
 
@@ -772,6 +820,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                             unitObject.compound = li.querySelector(".value").textContent;
                                         } else if (li.classList.contains("building")) {
                                             unitObject.buildingType = li.querySelector(".value").textContent;
+                                        } else if (li.classList.contains("views")) {
+                                            unitObject.view = li.querySelector(".value").textContent;
+                                        } else if (li.classList.contains("delivery-date")) {
+                                            unitObject.deliveryDate = li.querySelector(".value").textContent;
                                         } else if (key.includes("Payment Plan")) {
                                             const formattedKey = toCamelCase(key.replace("Payment Plan", ""));
                                             paymentPlan[formattedKey] = enforceType(formattedKey, input);
@@ -859,6 +911,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                             compoundsNamesList.forEach((name) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${name || "N/A"}</li>`
                                             });
+                                        } else if (key === "Delivery Date") {
+                                            detail.classList.add("delivery-date");
+                                            detail.innerHTML = `
+                                            ${key}
+                                            <div class="date-picker">
+                                                <div class="value">${value}</div>
+                                                <i class="fa-solid fa-calendar-days"></i>
+                                                <input type="date" id="cal">
+                                            </div>
+                                            `;
                                         } else if (key === "Building Type") {
                                             detail.classList.add("building");
                                             detail.innerHTML = `
@@ -876,11 +938,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                             detail.innerHTML = `
                                             ${key}
                                             <div class="edit-drop">
-                                                <div class="value">${views[0]}</div><i class="fa-solid fa-chevron-down"></i>
+                                                <div class="value">${value}</div><i class="fa-solid fa-chevron-down"></i>
                                                 <ul class="dropdown">
                                                 </ul>
                                             </div>`;
-                                            editDetails.appendChild(detail);
                                             views.forEach((type) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${type || "N/A"}</li>`
                                             });
@@ -890,6 +951,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         editDetails.appendChild(detail);
                                     });
+
+                                    const dateInput = document.querySelector(".delivery-date #cal");
+                                    if (dateInput) {
+                                        const today = new Date().toISOString().split("T")[0];
+                                        dateInput.min = today;
+                                    }
+
+                                    let isDatePickerOpen = false;
+
+                                    function toggleDatePicker(event) {
+                                        const datePicker = event.target.closest(".date-picker");
+
+                                        if (!datePicker) return;
+
+                                        const input = datePicker.querySelector("input[type='date']");
+
+                                        if (input) {
+                                            if (isDatePickerOpen) {
+                                                input.blur();
+                                                isDatePickerOpen = false;
+                                            } else {
+                                                input.showPicker();
+                                                isDatePickerOpen = true;
+                                            }
+                                        }
+                                    }
+
+                                    document.querySelector(".edit-details").addEventListener("change", function (event) {
+                                        if (event.target.matches(".delivery-date #cal")) {
+                                            const parent = event.target.closest(".delivery-date");
+                                            if (parent) {
+                                                parent.querySelector(".value").textContent = event.target.value;
+                                            }
+                                        }
+                                    });
+
+                                    document.querySelector(".edit-details").addEventListener("click", toggleDatePicker);
 
                                     $(document).ready(function() {
                                         $(".edit-drop").click(function(event) {
@@ -913,7 +1011,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             event.stopPropagation();
                                     
                                             let selectedText = $(this).text();
-                                            let parentElement = $(this).closest(".building, .compound");
+                                            let parentElement = $(this).closest(".building, .compound, .views");
                                             let valueElement = parentElement.find(".value");
                                             valueElement.text(selectedText);
                                             $(this).closest(".dropdown").slideUp();
@@ -1128,6 +1226,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                         "status": "",
                                         "zone": "",
                                         "phase": "",
+                                        "view": "",
+                                        "garageArea": "",
                                         "deliveryDate": "",
                                         "bathroomCount": 0,
                                         "buildingType": "",
@@ -1167,6 +1267,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 "gardenSize",
                                                 "downPayment",
                                                 "totalPrice",
+                                                "garageArea",
                                                 "price", "years", "maintenance"
                                             ];
 
@@ -1188,6 +1289,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                             unitObject.compound = li.querySelector(".value").textContent;
                                         } else if (li.classList.contains("building")) {
                                             unitObject.buildingType = li.querySelector(".value").textContent;
+                                        } else if (li.classList.contains("views")) {
+                                            unitObject.view = li.querySelector(".value").textContent;
+                                        } else if (li.classList.contains("delivery-date")) {
+                                            unitObject.deliveryDate = li.querySelector(".value").textContent;
                                         } else if (key.includes("Payment Plan")) {
                                             const formattedKey = toCamelCase(key.replace("Payment Plan", ""));
                                             paymentPlan[formattedKey] = enforceType(formattedKey, input);

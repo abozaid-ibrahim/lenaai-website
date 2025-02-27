@@ -132,14 +132,16 @@ document.addEventListener("DOMContentLoaded", function () {
         messagesDiv.appendChild(typingIndicatorDiv);
 
         $.ajax({
-            url: `https://api.lenaai.net/${requestUrl}/`,
+            url: `https://api.lenaai.net/${requestUrl}`,
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({
                 "query": userInput,
-                "phone_number": userPhoneNumber
+                "phone_number": userPhoneNumber,
+                "client_id": "lenaai"
             }),
             success: function (response) {
+                console.log(response);
                 let chatResponse = document.createElement("div");
                 chatResponse.innerHTML = response.message;
                 chatResponse.classList.add("message");

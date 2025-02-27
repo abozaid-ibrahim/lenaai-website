@@ -919,23 +919,34 @@ input:checked+.slider:before {
     padding: 10px 30px;
 }
 
-.edit-details li input,
-.edit-drop {
+.edit-details li input[type="text"],
+.edit-drop,
+.date-picker {
     width: 63%;
-    border: 2px solid #cbb26a;
+    border: 2px solid var(--secondary-color);
     outline: none;
     padding: 10px;
     border-radius: 16px;
-    background-color: #222;
-    color: #cbb26a;
+    background-color: #3A3F47;
+    color: var(--text-color);
     font-size: 1rem;
 }
 
-.edit-drop {
+.edit-drop,
+.date-picker {
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
+}
+
+.date-picker input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }
 
 .edit-drop:hover {
