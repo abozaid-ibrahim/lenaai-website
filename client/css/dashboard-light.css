@@ -667,6 +667,7 @@ input:checked+.slider:before {
 
 .user-image {
     margin-bottom: 1rem;
+    position: relative;
 }
 
 .user-image img {
@@ -677,41 +678,39 @@ input:checked+.slider:before {
     display: block;
 }
 
-.user-info {
-    display: flex;
-    gap: 1rem;
-    justify-content: space-between;
-}
-
 .probability {
-    flex: 1;
+    position: absolute;
+    top: 2%;
+    right: 2%;
     text-align: center;
-    padding: 10px;
+    padding: 6px;
     border-radius: 16px;
     color: #fff;
+    background-color: #000000a8;
+    width: 25%;
 }
 
 .probability h3 {
     margin: 0;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
+    font-size: .8rem;
 }
 
 .probability canvas {
-    width: 150px !important;
-    height: 150px !important;
+    width: 80px !important;
+    height: 80px !important;
     margin: auto;
 }
 
 .req-list {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     color: #fff;
     text-align: center;
     max-height: 300px;
     overflow-y: auto;
     padding-right: 10px;
-    width: 50%;
 }
 
 .req-list li {
@@ -719,7 +718,6 @@ input:checked+.slider:before {
     border-radius: 16px;
     padding: 10px;
     transition: transform 0.2s ease-in-out;
-    height: fit-content;
 }
 
 .req-title {
@@ -1061,17 +1059,23 @@ input:checked+.slider:before {
 }
 
 .cancel,
-.save {
+.yes {
     padding: .8rem 2rem;
     border-radius: 16px;
 }
 
-.cancel {
+.save {
+    padding: .8rem 5rem;
+    border-radius: 8px;
+}
+
+.cancel,
+.save {
     background-color: var(--primary-color);
     color: var(--text-color);
 }
 
-.save {
+.yes {
     background-color: var(--secondary-color);
     color: var(--primary-color-hover);
 }
@@ -1089,6 +1093,7 @@ input:checked+.slider:before {
     cursor: pointer;
 }
 
+.yes:hover,
 .save:hover {
     background-color: var(--secondary-color-hover);
     color: var(--primary-color-hover);
