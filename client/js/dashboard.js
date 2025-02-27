@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <p><strong>Country</strong>: ${unit.country}</p>
                                             <p><strong>City</strong>: ${unit.city}</p>
                                             <p><strong>Developer</strong>: <span class="dev">${unit.developer}</span></p>
-                                            <p><strong>Paid</strong>: ${unit.paid}</p>
+                                            <p><strong>Paid</strong>: ${unit.paid} EGP</p>
                                             <p><strong>Offer</strong>: ${unit.offer.toLocaleString()} EGP</p>
                                             <p><strong>Status</strong>: ${unit.status}</p>
                                             <p><strong>Down Payment</strong>: ${unit.downPayment.toLocaleString()} EGP</p>
@@ -812,6 +812,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                             return value;
                                         }
 
+                                        function formatNumber(value) {
+                                            if (/^\d{1,3}(,\d{3})*$/.test(value)) {
+                                                return value;
+                                            }
+                                        
+                                            return Number(value).toLocaleString();
+                                        }
+
                                         if (toCamelCase(key) === "unitId") {
                                             unitId = input;
                                             unitObject.unitId = input;
@@ -826,6 +834,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                         } else if (key.includes("Payment Plan")) {
                                             const formattedKey = toCamelCase(key.replace("Payment Plan", ""));
                                             paymentPlan[formattedKey] = enforceType(formattedKey, input);
+                                        } else if (key === "Paid") {
+                                            let value = input.replace("EGP", "").trim();
+                                            unitObject.paid = formatNumber(value);
                                         } else {
                                             const camelKey = toCamelCase(key);
                                             if (camelKey in unitObject) {
@@ -1277,6 +1288,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                             return value;
                                         }
 
+                                        function formatNumber(value) {
+                                            if (/^\d{1,3}(,\d{3})*$/.test(value)) {
+                                                return value;
+                                            }
+                                        
+                                            return Number(value).toLocaleString();
+                                        }
+
                                         if (toCamelCase(key) === "unitId") {
                                             unitId = input;
                                             unitObject.unitId = input;
@@ -1294,6 +1313,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                         } else if (key.includes("Payment Plan")) {
                                             const formattedKey = toCamelCase(key.replace("Payment Plan", ""));
                                             paymentPlan[formattedKey] = enforceType(formattedKey, input);
+                                        } else if (key === "Paid") {
+                                            let value = input.replace("EGP", "").trim();
+                                            unitObject.paid = formatNumber(value);
                                         } else {
                                             const camelKey = toCamelCase(key);
                                             if (camelKey in unitObject) {
@@ -1838,7 +1860,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 <input type="text" id="whats-input" placeholder="Type Something Here">
             </div>
             <div class="details-btns">
-                <div class="cancel">Cancel</div>
                 <div class="save">Send</div>
             </div>
         </div>`;
@@ -1849,11 +1870,11 @@ document.addEventListener("DOMContentLoaded", function () {
             editPopup.innerHTML = '';
         });
 
-        document.querySelector(".cancel").addEventListener("click", function () {
-            editPopup.classList.remove("delete-popup");
-            editOverlay.style.display = "none";
-            editPopup.innerHTML = '';
-        });
+        // document.querySelector(".cancel").addEventListener("click", function () {
+        //     editPopup.classList.remove("delete-popup");
+        //     editOverlay.style.display = "none";
+        //     editPopup.innerHTML = '';
+        // });
     })
 
     const themeToggle = document.getElementById("theme-toggle");

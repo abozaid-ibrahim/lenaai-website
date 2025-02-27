@@ -112,6 +112,10 @@
         margin-right: 0;
     }
 
+    .main-container {
+        width: 100%;
+    }
+
     .client {
         min-width: max-content;
     }

@@ -337,6 +337,10 @@ input:checked+.slider:before {
     margin-right: 1rem;
 }
 
+.main-container {
+    width: 60%;
+}
+
 .clients-list {
     padding: 0 1rem;
 }
