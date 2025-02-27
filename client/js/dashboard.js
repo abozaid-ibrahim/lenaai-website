@@ -1856,9 +1856,16 @@ document.addEventListener("DOMContentLoaded", function () {
             <i class="fa-solid close-btn fa-circle-xmark"></i>
         </div>
         <div class="edit-content">
-            <div>
-                <input type="text" id="whats-input" placeholder="Type Something Here">
-            </div>
+            <ul class="edit-details">
+                <li>
+                    Spread Sheet
+                    <input type="text" id="spread-sheet" placeholder="Spread Sheet Link">
+                </li>
+                <li>
+                    Video Link
+                    <input type="text" id="video-link" placeholder="Video Link">
+                </il>
+            </ul>
             <div class="details-btns">
                 <div class="save">Send</div>
             </div>
@@ -1875,6 +1882,32 @@ document.addEventListener("DOMContentLoaded", function () {
         //     editOverlay.style.display = "none";
         //     editPopup.innerHTML = '';
         // });
+
+        document.querySelector(".save").addEventListener("click", function () {
+            const spreadSheetLink = document.querySelector(".edit-content #spread-sheet").value;
+            const videoLink = document.querySelector(".edit-content #video-link").value;
+            const requestData = {
+                "spreadsheet_url": spreadSheetLink,
+                "video_url": videoLink,
+                "sheet_name": "Sheet1",
+                "client_id": clientId
+            }
+            
+            $.ajax({
+                url: `https://api.lenaai.net/webhook/send-video-using-spreadsheet`,
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(requestData),
+                success: function (response) {
+                    console.log("Request success", response);
+                    editOverlay.style.display = "none";
+                    editPopup.innerHTML = '';
+                },
+                error: function (error) {
+                    console.log("Request failed", error);
+                }
+            });
+        });
     })
 
     const themeToggle = document.getElementById("theme-toggle");
