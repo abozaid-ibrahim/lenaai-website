@@ -1358,3 +1358,42 @@ input:checked+.slider:before {
     font-size: 1.5rem;
     margin-left: 7px;
 }
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease;
+}
+
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.spinner-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    width: 300px;
+}
+
+/* Success message */
+.success {
+    color: green;
+    font-size: 24px;
+}
+
+/* Error message */
+.error {
+    color: red;
+    font-size: 24px;
+}
