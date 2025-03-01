@@ -357,7 +357,7 @@ input:checked+.slider:before {
 }
 
 .main-container {
-    width: 60%;
+    width: 65%;
 }
 
 .client {
@@ -377,13 +377,12 @@ input:checked+.slider:before {
 }
 
 .overview-titles li:nth-child(4) {
-    text-align: left;
-    width: 8ch;
+    text-align: center;
+    width: 7ch;
 }
 
 .overview-titles li:last-child {
     margin-left: auto;
-    margin-right: 2rem;
 }
 
 .clients-list {
@@ -414,10 +413,11 @@ input:checked+.slider:before {
     margin-left: auto;
     margin-right: 1rem;
     padding: 8px 14px;
+    min-width: 10rem;
 }
 
 .client-name {
-    width: 13.5ch;
+    width: 14ch;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -433,6 +433,7 @@ input:checked+.slider:before {
     border: 2px solid var(--secondary-color);
     display: flex;
     align-items: center;
+    justify-content: center;
     border-radius: 10px;
     position: relative;
     color: var(--primary-color-hover);
@@ -566,6 +567,8 @@ input:checked+.slider:before {
     height: fit-content;
     z-index: 2;
     padding: .5rem;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 #messages {
@@ -983,6 +986,8 @@ input:checked+.slider:before {
     background-color: #23272A;
     padding: 1rem;
     box-shadow: var(--box-shadow);
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 .edit-details {

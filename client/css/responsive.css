@@ -102,6 +102,11 @@
         text-align: left;
     }
 
+    .overview-titles li:last-child {
+        padding-right: 2rem;
+        padding-left: 4.8rem;
+    }
+
     .overview-titles li,
     .data-titles li {
         flex-shrink: 0;

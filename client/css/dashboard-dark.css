@@ -334,7 +334,6 @@ input:checked+.slider:before {
 
 .overview-titles li:last-child {
     margin-left: auto;
-    margin-right: 1rem;
 }
 
 .main-container {
@@ -367,6 +366,7 @@ input:checked+.slider:before {
 .client li:last-child {
     margin-left: auto;
     margin-right: 1rem;
+    min-width: 10rem;
 }
 
 .client li .bi-chevron-down {
@@ -375,7 +375,7 @@ input:checked+.slider:before {
 }
 
 .client-name {
-    width: 13.5ch;
+    width: 14ch;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -386,6 +386,7 @@ input:checked+.slider:before {
     border: 1px solid #cbb26a;
     display: flex;
     align-items: center;
+    justify-content: center;
     border-radius: 10px;
     position: relative;
 }
@@ -521,6 +522,8 @@ input:checked+.slider:before {
     background-color: black;
     height: fit-content;
     z-index: 2;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 #messages {
@@ -904,6 +907,8 @@ input:checked+.slider:before {
 .edit-content {
     background-color: black;
     padding: 1rem;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 .edit-details {
