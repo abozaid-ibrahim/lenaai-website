@@ -370,7 +370,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             detail.innerHTML = `
                                             ${key}
                                             <div class="date-picker">
-                                                <div class="value">Select Date</div>
+                                                <div class="value">Select A Date</div>
                                                 <i class="fa-solid fa-calendar-days"></i>
                                                 <input type="date" id="cal">
                                             </div>
@@ -1356,6 +1356,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             success: function (response) {
                                 const container = $(".clients-list");
                                 let allPhoneNumbers = [];
+                                let allLeadScores = {};
                                 console.log(response)
 
                                 response.forEach((conversation, i) => {
@@ -1364,11 +1365,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                     allPhoneNumbers.push(phoneNumber);
                                     let latestDate = "N/A";
+                                    let latestDateOnly = "";
                                     if (messages.length > 0) {
-                                        latestDate = messages
+                                        const latestTimestamp = messages
                                             .map(msg => new Date(msg.timestamp))
-                                            .sort((a, b) => b - a)[0]
-                                            .toISOString().split("T")[0];
+                                            .sort((a, b) => b - a)[0];
+                                    
+                                        latestDate = latestTimestamp.toISOString();
+                                        latestDateOnly = latestTimestamp.toISOString().split("T")[0];
                                     }
 
                                     container.append(`
@@ -1378,7 +1382,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             data-messages='${JSON.stringify(messages).replace(/'/g, "&apos;")}'
                                         >
                                             <li class="client-name">${phoneNumber}</li>
-                                            <li class="client-date">${latestDate}</li>
+                                            <li class="client-date">${latestDateOnly}</li>
                                             <li class="requirements">
                                                 Requirements
                                                 <ul class="dropdown">
@@ -1390,23 +1394,61 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <li class="need-action">
                                                 <div class="messages-no">${(messages.length * 2).toString().padStart(2, "0")}</div>
                                             </li>
-                                            <li class="call-now"><i class="bi bi-check-circle"></i>No Action</li>
+                                            <li class="call-now"><i class="fa-regular fa-circle-check"></i>No Action</li>
                                         </ul>
                                     `);
 
                                     const appendedClient = container.children().last()[0];
                                     const callNow = appendedClient.querySelector(".call-now");
+                                    const borderByAction = {
+                                        "Make a call": {
+                                            "color": "green",
+                                            "icon": `<i class="fa-solid fa-phone"></i>`
+                                        },
+                                        "Office visit": {
+                                            "color": "green",
+                                            "icon": `<i class="fa-solid fa-calendar-days"></i>`
+                                        },
+                                        "Property view": {
+                                            "color": "green",
+                                            "icon": `<i class="fa-solid fa-house"></i>`
+                                        },
+                                        "Qualified lead": {
+                                            "color": "green",
+                                            "icon": `<i class="fa-solid fa-chart-pie"></i>`
+                                        },
+                                        "Not interested": {
+                                            "color": "grey",
+                                            "icon": `<i class="fa-solid fa-circle-xmark"></i>`
+                                        },
+                                        "Not qualified": {
+                                            "color": "black",
+                                            "icon": `<i class="fa-solid fa-circle-down"></i>`
+                                        },
+                                        "Follow up later": {
+                                            "color": "grey",
+                                            "icon": `<i class="fa-solid fa-circle-right"></i>`
+                                        },
+                                        "Missing requirement": {
+                                            "color": "yellow",
+                                            "icon": `<i class="fa-solid fa-file-pen"></i>`
+                                        },
+                                    };
                                     $.ajax({
                                         url: `https://api.lenaai.net/user-actions/${phoneNumber}/${clientId}`,
                                         method: "GET",
                                         contentType: "json",
                                         success: function(response) {
-                                            if (response.action === "ScheduleCall") {
-                                                callNow.innerHTML = `<i class="fa-solid fa-phone"></i>Call Me`;
-                                            } else if (response.action === "OfficeVisit") {
-                                                callNow.innerHTML = `<i class="bi bi-calendar-date-fill"></i>Office visit`;
+                                            console.log(response)
+                                            if (response.action) {
+                                                callNow.innerHTML = `${borderByAction[response.action].icon}${response.action}`;
+                                                allLeadScores[phoneNumber] = response.score;
+                                                callNow.style.backgroundColor = borderByAction[response.action].color;
+                                                callNow.style.color = "#fff";
+                                                callNow.style.border = borderByAction[response.action].color;
+                                                $(appendedClient).attr("data-status", "action-needed");
                                             } else {
-                                                return;
+                                                callNow.innerHTML = `<i class="fa-regular fa-circle-check"></i>No Action`;
                                             }
                                         },
                                         error: function(error) {
@@ -1572,7 +1614,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     let requirementTitle = requirement.charAt(0).toUpperCase() + requirement.slice(1).replaceAll("_", " ");
                                                     let requirementValue = [];
                                         
-                                                    if (requirement === "must_have_features") {
+                                                    if (requirement === "must_have_features" || requirement === "Financial Plans") {
                                                         if (Array.isArray(response[requirement])) {
                                                             requirementValue = response[requirement].flatMap(obj =>
                                                                 Object.entries(obj).map(([key, value]) => `${key}: ${value}`)
@@ -1603,7 +1645,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 console.log(`Failed to call user filter for user ${userNumber}`, error);
                                             }
                                         });                                    
-                                        const purchaseProbability = 65; // Example: 75%
+                                        const purchaseProbability = allLeadScores[userNumber] || 0; // Example: 75%
 
                                         // Get the canvas element
                                         const ctx = document.getElementById('probabilityChart').getContext('2d');
