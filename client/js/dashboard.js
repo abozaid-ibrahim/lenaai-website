@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         let allUnitsImages = {};
                         let unitImages;
                         let compoundsNamesList = [];
+                        const paymentPlansRegex = /^(\d+: \d+)(, \d+: \d+)*$/;
                         const buildingTypes = [
                             "Apartment",
                             "Villa",
@@ -443,6 +444,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                             views.forEach((type) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                             });
+                                        } else if (key === "Payment Plans"){
+                                            detail.innerHTML = `${key}<input type="text" id="formattedInput" placeholder="0: 5000000, 5: 10000000" autocomplete="off">`;
                                         } else {
                                             detail.innerHTML = `${key}<input type="text">`;
                                         }
@@ -475,6 +478,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                             }
                                         }
                                     }
+
+                                    editDetails.addEventListener("input", function(event) {
+                                        const target = event.target;
+                                        if (target.id === "formattedInput") {
+                                            if (paymentPlansRegex.test(target.value)) {
+                                                target.style.border = "2px solid #00d000";
+                                            } else {
+                                                target.style.border = "2px solid red";
+                                            }
+                                        }
+                                    });                                    
 
                                     document.querySelector(".edit-details").addEventListener("change", function (event) {
                                         if (event.target.matches(".delivery-date #cal")) {
@@ -887,6 +901,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                             $("#loadingOverlay").remove();
 
+                                            if (!paymentPlansRegex.test(unitObject.paymentPlans)) {
+                                                showCustomAlert("Invalid Payment Plans format. Use: 0: 5000000, 5: 10000000");
+                                                return;
+                                            }
+
                                             editContent.append(`
                                                 <div id="loadingOverlay" class="loading-overlay">
                                                     <div class="spinner-container">
@@ -1028,6 +1047,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 views.forEach((type) => {
                                                     detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                                 });
+                                            } else if (key === "Payment Plans"){
+                                                detail.innerHTML = `${key}<input type="text" value="${value}" id="formattedInput" autocomplete="off">`;
                                             } else {
                                                 detail.innerHTML = `${key}<input type="text" value="${value}">`;
                                             }
@@ -1060,6 +1081,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 }
                                             }
                                         }
+
+                                        editDetails.addEventListener("input", function(event) {
+                                            const target = event.target;
+                                            if (target.id === "formattedInput") {
+                                                if (paymentPlansRegex.test(target.value)) {
+                                                    target.style.border = "2px solid #00d000";
+                                                } else {
+                                                    target.style.border = "2px solid red";
+                                                }
+                                            }
+                                        });
 
                                         document.querySelector(".edit-details").addEventListener("change", function (event) {
                                             if (event.target.matches(".delivery-date #cal")) {
@@ -1396,6 +1428,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                             $("#loadingOverlay").remove();
 
+                                            if (!paymentPlansRegex.test(unitObject.paymentPlans)) {
+                                                showCustomAlert("Invalid Payment Plans format. Use: 0: 5000000, 5: 10000000");
+                                                return;
+                                            }
                                             editContent.append(`
                                                 <div id="loadingOverlay" class="loading-overlay">
                                                     <div class="spinner-container">
