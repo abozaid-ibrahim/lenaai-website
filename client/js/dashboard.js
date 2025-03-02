@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         let allUnitsImages = {};
                         let unitImages;
                         let compoundsNamesList = [];
+                        const paymentPlansRegex = /^(\d+: \d+)(, \d+: \d+)*$/;
                         const buildingTypes = [
                             "Apartment",
                             "Villa",
@@ -443,6 +444,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                             views.forEach((type) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                             });
+                                        } else if (key === "Payment Plans"){
+                                            detail.innerHTML = `${key}<input type="text" id="formattedInput" placeholder="0: 5000000, 5: 10000000" autocomplete="off">`;
                                         } else {
                                             detail.innerHTML = `${key}<input type="text">`;
                                         }
@@ -475,6 +478,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                             }
                                         }
                                     }
+
+                                    editDetails.addEventListener("input", function(event) {
+                                        const target = event.target;
+                                        if (target.id === "formattedInput") {
+                                            if (paymentPlansRegex.test(target.value)) {
+                                                target.style.border = "2px solid #00d000";
+                                            } else {
+                                                target.style.border = "2px solid red";
+                                            }
+                                        }
+                                    });                                    
 
                                     document.querySelector(".edit-details").addEventListener("change", function (event) {
                                         if (event.target.matches(".delivery-date #cal")) {
@@ -737,11 +751,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "dataSource": "",
                                             "downPayment": 0,
                                             "totalPrice": 0,
-                                            "paymentPlan": {
-                                                "years": 0,
-                                                "price": 0,
-                                                "maintanance": 0
-                                            },
+                                            "paymentPlans": "",
                                             "images": [
                                                 {
                                                     "fileType": "image",
@@ -826,7 +836,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                             ],
                                             "updatedAt": getFormattedDateTime()
                                         };
-                                        let paymentPlan = {};
                                         let unitId;
 
                                         document.querySelectorAll(".edit-details li").forEach((li) => {
@@ -844,8 +853,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     "gardenSize",
                                                     "downPayment",
                                                     "totalPrice",
-                                                    "garageArea",
-                                                    "price", "years", "maintenance"
+                                                    "garageArea"
                                                 ];
 
                                                 if (value.includes("EGP")) {
@@ -875,9 +883,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 unitObject.view = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("delivery-date")) {
                                                 unitObject.deliveryDate = li.querySelector(".value").textContent;
-                                            } else if (key.includes("Payment Plan")) {
-                                                const formattedKey = toCamelCase(key.replace("Payment Plan", ""));
-                                                paymentPlan[formattedKey] = enforceType(formattedKey, input);
                                             } else if (key === "Paid") {
                                                 let value = input.replace("EGP", "").trim();
                                                 unitObject.paid = formatNumber(value);
@@ -889,14 +894,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                             }
                                         });
 
-                                        unitObject["paymentPlan"] = paymentPlan;
-
                                         console.log("data collected from the edit window", unitObject)
 
                                         function startAjaxCall(unitObject) {
                                             const editContent = $(".edit-content");
 
                                             $("#loadingOverlay").remove();
+
+                                            if (!paymentPlansRegex.test(unitObject.paymentPlans)) {
+                                                showCustomAlert("Invalid Payment Plans format. Use: 0: 5000000, 5: 10000000");
+                                                return;
+                                            }
 
                                             editContent.append(`
                                                 <div id="loadingOverlay" class="loading-overlay">
@@ -1039,6 +1047,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 views.forEach((type) => {
                                                     detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                                 });
+                                            } else if (key === "Payment Plans"){
+                                                detail.innerHTML = `${key}<input type="text" value="${value}" id="formattedInput" autocomplete="off">`;
                                             } else {
                                                 detail.innerHTML = `${key}<input type="text" value="${value}">`;
                                             }
@@ -1071,6 +1081,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 }
                                             }
                                         }
+
+                                        editDetails.addEventListener("input", function(event) {
+                                            const target = event.target;
+                                            if (target.id === "formattedInput") {
+                                                if (paymentPlansRegex.test(target.value)) {
+                                                    target.style.border = "2px solid #00d000";
+                                                } else {
+                                                    target.style.border = "2px solid red";
+                                                }
+                                            }
+                                        });
 
                                         document.querySelector(".edit-details").addEventListener("change", function (event) {
                                             if (event.target.matches(".delivery-date #cal")) {
@@ -1334,15 +1355,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "dataSource": "",
                                             "downPayment": 0,
                                             "totalPrice": 0,
-                                            "paymentPlan": {
-                                                "years": 0,
-                                                "price": 0,
-                                                "maintanance": 0
-                                            },
+                                            "paymentPlans": "",
                                             "images": [],
                                             "updatedAt": getFormattedDateTime()
                                         };
-                                        let paymentPlan = {};
                                         let unitId;
 
                                         document.querySelectorAll(".edit-details li").forEach((li) => {
@@ -1361,8 +1377,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     "gardenSize",
                                                     "downPayment",
                                                     "totalPrice",
-                                                    "garageArea",
-                                                    "price", "years", "maintenance"
+                                                    "garageArea"
                                                 ];
 
                                                 if (value.includes("EGP")) {
@@ -1395,9 +1410,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 unitObject.view = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("delivery-date")) {
                                                 unitObject.deliveryDate = li.querySelector(".value").textContent;
-                                            } else if (key.includes("Payment Plan")) {
-                                                const formattedKey = toCamelCase(key.replace("Payment Plan", ""));
-                                                paymentPlan[formattedKey] = enforceType(formattedKey, input);
                                             } else if (key === "Paid") {
                                                 let value = input.replace("EGP", "").trim();
                                                 unitObject.paid = formatNumber(value);
@@ -1409,8 +1421,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                             }
                                         });
 
-                                        unitObject["paymentPlan"] = paymentPlan;
-
                                         console.log("data collected from the edit window", unitObject)
 
                                         function startAjaxCall(unitObject) {
@@ -1418,6 +1428,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                             $("#loadingOverlay").remove();
 
+                                            if (!paymentPlansRegex.test(unitObject.paymentPlans)) {
+                                                showCustomAlert("Invalid Payment Plans format. Use: 0: 5000000, 5: 10000000");
+                                                return;
+                                            }
                                             editContent.append(`
                                                 <div id="loadingOverlay" class="loading-overlay">
                                                     <div class="spinner-container">
@@ -1486,7 +1500,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                 const container = $(".clients-list");
                                 let allPhoneNumbers = [];
                                 let allLeadScores = {};
-                                console.log(response)
 
                                 response.forEach((conversation, i) => {
                                     const phoneNumber = conversation.phone_number;
@@ -1865,12 +1878,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                             console.log(userInput)
                                             $.ajax({
-                                                url: `https://api.lenaai.net/webhook/text`,
+                                                url: `https://api.lenaai.net/webhook/message/text`,
                                                 method: "POST",
                                                 contentType: "application/json",
                                                 data: JSON.stringify({
                                                     "to_number": "201032788912",
-                                                    "message": userInput
+                                                    "message": userInput,
+                                                    "client_id": clientId
                                                 }),
                                                 success: function (response) {
                                                     console.log(response);
