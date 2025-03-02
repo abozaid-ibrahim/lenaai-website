@@ -1397,3 +1397,45 @@ input:checked+.slider:before {
     color: red;
     font-size: 24px;
 }
+
+.seg-ctrl {
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    background-color: var(--body-color);
+    color: var(--primary-color-hover);
+    margin-right: 1rem;
+    box-shadow: var(--box-shadow);
+}
+
+.seg-opt-right,
+.seg-opt-left {
+    padding: .5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.seg-opt-right {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.seg-opt-left {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.seg-opt-right:hover,
+.seg-opt-left:hover {
+    background-color: var(--primary-color-hover);
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.seg-active {
+    background-color: var(--primary-color-hover);
+    color: #fff;
+}
+
+.seg-active:hover {
+    cursor: default;
+}
