@@ -76,7 +76,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                 if (!group[compound]) {
                                     group[compound] = [];
                                 }
-                                group[compound].push(item);
+                                if (!compoundsNamesList.includes(group[compound])) {
+                                    group[compound].push(item);
+                                }
                                 return group;
                             }, {});
 
@@ -1837,13 +1839,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                         chatHistory.innerHTML = `
                                         <div class="history-header">
                                             <h1>Messages History</h1>
-                                            <div class="switch-btn">
-                                                <div class="switch-title" style="margin-right: 20px;">Manual</div>
-                                                <label class="switch">
-                                                    <input type="checkbox" id="switch-status">
-                                                    <span class="slider"></span>
-                                                </label>
-                                                <div class="switch-title" style="margin-right: 20px;">AI</div>
+                                            <div class="seg-ctrl">
+                                                <div class="seg-opt-right" style="border-right: 2px solid #ccc;">Manual</div>
+                                                <div class="seg-opt-left">AI</div>
                                             </div>
                                             <i class="fa-solid close-btn fa-circle-xmark"></i>
                                         </div>
@@ -1860,7 +1858,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         const chatSubmit = document.getElementById("submit-btn");
                                         const inputForm = document.getElementById("input-form");
-                                        const autoReply = document.querySelector(".chat-overlay #switch-status");
                                         function takeUserInput() {
                                             let inputField = document.getElementById("user-input");
                                             let userInput = inputField.value.trim();
@@ -1901,7 +1898,21 @@ document.addEventListener("DOMContentLoaded", function () {
                                             takeUserInput();
                                         });
 
-                                        autoReply.addEventListener("change", function () {
+                                        document.querySelector(".seg-ctrl").addEventListener("click", function (event) {
+                                            const rightOption = document.querySelector(".seg-opt-right");
+                                            const leftOption = document.querySelector(".seg-opt-left");
+                                            let toggleAI = true;
+                                        
+                                            if (event.target.classList.contains("seg-opt-right")) {
+                                                rightOption.classList.add("seg-active");
+                                                leftOption.classList.remove("seg-active");
+                                                toggleAI = false;
+                                            } else if (event.target.classList.contains("seg-opt-left")) {
+                                                leftOption.classList.add("seg-active");
+                                                rightOption.classList.remove("seg-active");
+                                                toggleAI = true;
+                                            }
+
                                             $.ajax({
                                                 url: `https://api.lenaai.net/lenaai-auto-reply`,
                                                 method: "POST",
@@ -1909,11 +1920,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 data: JSON.stringify({
                                                     "phone_number": userNumber,
                                                     "client_id": clientId,
-                                                    "toggle_ai_auto_reply": autoReply.checked,
+                                                    "toggle_ai_auto_reply": toggleAI,
                                                     "username": clientUserName
                                                 }),
-                                            })
-                                        });
+                                                success: function (response) {
+                                                    console.log("API Response:", response);
+                                                },
+                                                error: function (error) {
+                                                    console.error("API Error:", error);
+                                                }
+                                            });
+                                        });                                        
 
                                         const messagesDiv = document.getElementById("messages");
                                         parsedMessages.forEach((message) => {
@@ -1942,12 +1959,21 @@ document.addEventListener("DOMContentLoaded", function () {
                                             method: "GET",
                                             dataType: "json",
                                             success: function (response) {
-                                                const checkStatus = document.querySelector(".chat-overlay #switch-status");
-                                                if (checkStatus) {
-                                                    checkStatus.checked = response.toggle_ai_auto_reply === true;
+                                                console.log("API Response:", response);
+                                    
+                                                const rightOption = document.querySelector(".seg-opt-right");
+                                                const leftOption = document.querySelector(".seg-opt-left");
+                                    
+                                                if (response.toggle_ai_auto_reply === true) {
+                                                    leftOption.classList.add("seg-active");
+                                                    rightOption.classList.remove("seg-active");
                                                 } else {
-                                                    console.warn("Checkbox #switch-status not found.");
+                                                    rightOption.classList.add("seg-active");
+                                                    leftOption.classList.remove("seg-active");
                                                 }
+                                            },
+                                            error: function (error) {
+                                                console.error("API Error:", error);
                                             }
                                         });
                                     });
