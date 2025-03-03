@@ -373,7 +373,7 @@ input:checked+.slider:before {
 }
 
 .overview-titles li:first-child {
-    margin-right: 3.5rem;
+    margin-right: 4.5rem;
 }
 
 .overview-titles li:nth-child(4) {
@@ -417,10 +417,10 @@ input:checked+.slider:before {
 }
 
 .client-name {
-    width: 14ch;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    width: 15ch;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
     font-family: "Archivo", serif;
 }
 
@@ -697,21 +697,20 @@ input:checked+.slider:before {
 }
 
 .req-list {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(2, 1fr);
-    color: #fff;
-    text-align: center;
+    display: block;
     max-height: 300px;
     overflow-y: auto;
-    padding-right: 10px;
 }
 
 .req-list li {
+    color: #fff;
+    width: calc(50% - 10px);
     border: 3px solid #cbb26a;
     border-radius: 16px;
     padding: 10px;
     transition: transform 0.2s ease-in-out;
+    box-sizing: border-box;
+    margin-bottom: 10px;
 }
 
 .req-title {
@@ -1172,7 +1171,7 @@ input:checked+.slider:before {
 }
 
 .chat-image img {
-    object-fit: fill;
+    object-fit: cover;
     display: block;
     height: 180px;
     width: 100%;
@@ -1259,8 +1258,8 @@ input:checked+.slider:before {
 }
 
 .upload-btn {
-    background-color: var(--secondary-color);
-    color: var(--primary-color-hover);
+    background-color: var(--primary-color);
+    color: var(--text-color);
     border-radius: 10px;
     padding: .8rem;
     display: none;
@@ -1273,6 +1272,7 @@ input:checked+.slider:before {
 
 .upload-btn:hover {
     background-color: #FDE68A;
+    color: var(--primary-color-hover);
     cursor: pointer;
 }
 
@@ -1336,7 +1336,8 @@ input:checked+.slider:before {
 
 .dropdown li:hover {
     cursor: default;
-    background: var(--alt-button-color-hover); /* Medium gray-blue */
+    background: var(--alt-button-color-hover);
+    /* Medium gray-blue */
     color: #1E3A8A;
     cursor: pointer;
 }

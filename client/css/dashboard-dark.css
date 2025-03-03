@@ -375,10 +375,11 @@ input:checked+.slider:before {
 }
 
 .client-name {
-    width: 14ch;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    width: 15ch;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    font-family: "Archivo", serif;
 }
 
 .requirements,
@@ -658,21 +659,20 @@ input:checked+.slider:before {
 }
 
 .req-list {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(2, 1fr);
-    color: #fff;
-    text-align: center;
+    display: block;
     max-height: 300px;
     overflow-y: auto;
-    padding-right: 10px;
 }
 
 .req-list li {
+    color: #fff;
+    width: calc(50% - 10px);
     border: 3px solid #cbb26a;
     border-radius: 16px;
     padding: 10px;
     transition: transform 0.2s ease-in-out;
+    box-sizing: border-box;
+    margin-bottom: 10px;
 }
 
 .req-title {
@@ -1074,7 +1074,7 @@ input:checked+.slider:before {
 }
 
 .chat-image img {
-    object-fit: fill;
+    object-fit: cover;
     display: block;
     height: 180px;
     width: 100%;

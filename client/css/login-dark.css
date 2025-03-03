@@ -1,3 +1,21 @@
+:root {
+    --body-color: #F9FAFB;
+    --primary-color-hover: #1B2838;
+    --primary-color: #1E3A8A;
+    --secondary-color: #cbb26a;
+    --secondary-color-hover: #FDE68A;
+    --text-color: #F9FAFB;
+    --alt-text-color: #333333;
+    --alt-button-color: #E5E7EB;
+    --alt-button-color-hover: #c1c2c4;
+    --active-page-color: #00C3FF;
+    --box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    --sections-header-color: #2C3E50;
+    --icon-color: #3A497C;
+    --del-button-color: #D00000;
+    --edit-button-color: #1E293B;
+}
+
 * {
     box-sizing: border-box;
     font-family: 'FIVER-MULTLINE', sans-serif;
@@ -76,7 +94,7 @@ a {
 }
 
 .header-container button {
-    margin-left: auto;
+    margin-left: 15px;
     padding: 7px 30px;
     display: flex;
     align-items: center;
@@ -97,6 +115,33 @@ a {
 .header-container button .bi {
     margin-right: 10px;
     font-size: 1.5em;
+}
+
+.menu-toggle {
+    display: none;
+}
+
+#theme-toggle {
+    padding: 6px 18px;
+    color: var(--secondary-color);
+    background-color: transparent;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--secondary-color);
+    margin-left: auto;
+}
+
+#theme-toggle:hover {
+    background-color: var(--secondary-color);
+    color: black;
+    transform: scale(1.05);
+}
+
+#theme-toggle i {
+    font-size: 1.2rem;
 }
 
 /* Form container */
