@@ -33,4 +33,31 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+
+    const themeToggle = document.getElementById("theme-toggle");
+    const themeStylesheet = document.getElementById("theme-stylesheet");
+    const themeIcon = themeToggle.querySelector("i");
+
+    const lightThemePath = "css/login-light.css";
+    const darkThemePath = "css/login-dark.css";
+
+    const savedTheme = localStorage.getItem("theme") || "light";
+    themeStylesheet.href = savedTheme === "dark" ? darkThemePath : lightThemePath;
+
+    function updateButton(theme) {
+        if (theme === "dark") {
+            themeToggle.innerHTML = `<i class="bi bi-sun"></i>`;
+        } else {
+            themeToggle.innerHTML = `<i class="bi bi-moon"></i>`;
+        }
+    }
+
+    updateButton(savedTheme);
+
+    themeToggle.addEventListener("click", function () {
+        const isDark = themeStylesheet.href.includes("login-light.css");
+        themeStylesheet.href = isDark ? darkThemePath : lightThemePath;
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        updateButton(isDark ? "dark" : "light");
+    });
 })

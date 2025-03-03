@@ -44,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     success: function (response) {
                         let allUnitsImages = {};
                         let unitImages;
-                        let compoundsNamesList = [];
                         const paymentPlansRegex = /^(\d+: \d+)(, \d+: \d+)*$/;
                         const buildingTypes = [
                             "Apartment",
@@ -70,6 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ];
 
                         function renderUnits(allUnts) {
+                            let compoundsNamesList = [];
                             document.querySelectorAll(".data-container").forEach(element => element.remove());
                             const groupedByCompound = allUnts.reduce((group, item) => {
                                 const { compound } = item;
@@ -1145,14 +1145,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <div class="current-images">
                                         <h2>Current Images</h2>
                                         <div class="images">
-                                            <div class="chat-image">
-                                                <img src="../assets/Image 85.png" alt="Chat Image" draggable="false">
-                                                <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
-                                            </div>
-                                            <div class="chat-image">
-                                                <img src="../assets/Image_135.png" alt="Chat Image" draggable="false">
-                                                <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="photo-preview"></div>
@@ -1170,7 +1162,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     const uploadButton = document.querySelector(".upload-btn");
                                     const attachButton = document.querySelector(".upload-images .fa-plus");
                                     const deleteButtons = document.querySelectorAll(".del");
+                                    const imagesDiv = document.querySelector(".images");
 
+                                    allUnitsImages[originalUnitId].forEach((image) => {
+                                        console.log(image)
+                                        imagesDiv.innerHTML += `
+                                            <div class="chat-image">
+                                                <img src="${image.url}" alt="Chat Image" draggable="false">
+                                                <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
+                                            </div>`;
+                                    })
+                                    
                                     deleteButtons.forEach((button) => {
                                         button.addEventListener("click", function () {
                                             this.closest(".chat-image").remove();
@@ -1200,7 +1202,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         if (file) {
                                             const allowedTypes = ["image/png", "image/jpeg"];
                                             if (!allowedTypes.includes(file.type)) {
-                                                showCustomAlert("Invalid file type! Please upload a JPG or PNG image.");
+                                                showCustomAlert("Invalid file type! Please upload a GIF, JPEG or PNG image and should not exceed 10MB.");
                                                 this.value = "";
                                             } else {
                                                 document.querySelector(".photo-preview").style.display = "block";
@@ -1249,12 +1251,32 @@ document.addEventListener("DOMContentLoaded", function () {
                                     });
 
                                     uploadButton.addEventListener("click", function () {
-                                        fileField.value = "";
+                                        // if (!fileField.files.length) {
+                                        //     showCustomAlert("Please select a file first.");
+                                        //     return;
+                                        // }
+                                        // const formData = new FormData();
+                                        // formData.append("file", fileField.files[0]);
+                                        // $.ajax({
+                                        //     url: "https://api.lenaai.net/images/",
+                                        //     method: "POST",
+                                        //     headers: {
+                                        //         "api-key": "public_7Nv03jWKtGPEM7xRbheAwsdVw8Y"
+                                        //     },
+                                        //     data: formData,
+                                        //     contentType: false,
+                                        //     processData: false,
+                                        //     success: function (response) {
+                                        //         console.log(response);
+                                        //     }
+                                        // })
+
                                         document.querySelector(".photo-preview").innerHTML = "";
                                         document.querySelector(".photo-preview").style.display = "none";
                                         uploadButton.style.display = "none";
                                         attachButton.style.display = "block";
-                                    })
+                                        fileField.value = "";
+                                    });
 
                                     function toCamelCase(str) {
                                         return str
@@ -1783,6 +1805,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                                     requirementsList.appendChild(listItem);
                                                 });
+
+                                                const grid = document.querySelector(".req-list");
+
+                                                new Masonry(grid, {
+                                                    itemSelector: "li",
+                                                    columnWidth: grid.querySelector("li"),
+                                                    gutter: 18,
+                                                    percentPosition: true,
+                                                });
                                             },
                                             error: function (error) {
                                                 console.log(`Failed to call user filter for user ${userNumber}`, error);
@@ -1934,6 +1965,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         const messagesDiv = document.getElementById("messages");
                                         parsedMessages.forEach((message) => {
+                                            if (message.bot_response === "" || message.user_message === "") {
+                                                return;
+                                            }
                                             let userMessage = document.createElement("div");
                                             let botResponse = document.createElement("div");
                                             let cleanMessage = message.bot_response.split('"message":')[0].trim();
