@@ -552,7 +552,7 @@ input:checked+.slider:before {
 }
 
 .history-header .fa-solid {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: black;
 }
 
@@ -1122,7 +1122,7 @@ input:checked+.slider:before {
 .chat-image {
     position: relative;
     flex-shrink: 0;
-    width: 30%;
+    width: 25%;
     padding: 3px;
     border-radius: 10px;
     cursor: grab;
@@ -1402,41 +1402,42 @@ input:checked+.slider:before {
 .seg-ctrl {
     display: flex;
     align-items: center;
-    border-radius: 20px;
-    background-color: var(--body-color);
-    color: var(--primary-color-hover);
+    gap: 5px;
+    border-radius: 12px;
+    color: var(--text-color);
     margin-right: 1rem;
-    box-shadow: var(--box-shadow);
+    padding: 0;
+    background-color: #ddd;
 }
 
 .seg-opt-right,
 .seg-opt-left {
-    padding: .5rem 1rem;
+    padding: .4rem 1rem;
     transition: all 0.3s ease;
+    color: #000;
 }
 
 .seg-opt-right {
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
+    border-radius: 12px;
 }
 
 .seg-opt-left {
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
+    border-radius: 12px;
+    padding: .4rem 1.4rem;
 }
 
 .seg-opt-right:hover,
 .seg-opt-left:hover {
-    background-color: var(--primary-color-hover);
-    color: var(--text-color);
+    background-color: #c9c9c9;
     cursor: pointer;
 }
 
 .seg-active {
-    background-color: var(--primary-color-hover);
-    color: #fff;
+    background-color: #fff;
+    box-shadow: var(--box-shadow);
 }
 
 .seg-active:hover {
+    background-color: #fff;
     cursor: default;
 }

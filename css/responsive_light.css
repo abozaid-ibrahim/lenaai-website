@@ -71,13 +71,15 @@
 
     .trial {
         gap: 2rem;
-        flex-wrap: nowrap;
+        flex-direction: row;
+        width: 100%;
+        top: 70%;
     }
 
     .trial .chat,
     .trial .demo {
-        font-size: 1rem;
-        padding: 15px;
+        font-size: .8rem;
+        padding: 10px;
     }
 
     .hub-grid {
@@ -88,7 +90,7 @@
         margin-bottom: 1rem;
     }
 
-    .grid-item img {
+    .grid-image {
         margin-bottom: 1rem;
         order: -1;
     }
@@ -162,17 +164,23 @@
         width: 100%;
     }
 
+    .hero .slide .content3 {
+        width: 100%;
+    }
+
     .vod-container {
         width: 100%;
     }
 
     .grid-item {
-        padding: 0;
+        padding: 10px;
         text-align: center;
         gap: 1rem;
+        flex-wrap: nowrap;
+        flex-direction: column;
     }
 
-    .grid-item img,
+    .grid-image,
     .item-content {
         flex: 1 1 100%;
         max-width: 100%;
@@ -247,6 +255,10 @@
     .slider .property-details p {
         margin: 0;
         margin-bottom: 8px;
+    }
+
+    .hero .dots {
+        display: none;
     }
 
     .details-btn {
