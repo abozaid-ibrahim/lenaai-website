@@ -29,6 +29,7 @@
         background-color: #2e2e2eec;
         border: 2px solid rgba(255, 255, 255, 0.2);
         border-radius: 16px;
+        z-index: 10;
     }
 
     .nav-list a {
@@ -69,9 +70,17 @@
         font-size: 2.5em;
     }
 
-    .trial button {
-        font-size: 1em;
-        padding: 15px;
+    .trial {
+        gap: 2rem;
+        flex-direction: row;
+        width: 100%;
+        top: 70%;
+    }
+
+    .trial .chat,
+    .trial .demo {
+        font-size: .8rem;
+        padding: 10px;
     }
 
     .hub-grid {
@@ -82,12 +91,9 @@
         margin-bottom: 1rem;
     }
 
-    .grid-item:first-child {
-        flex-direction: column-reverse;
-    }
-
-    .grid-item img {
+    .grid-image {
         margin-bottom: 1rem;
+        order: -1;
     }
 
     .item-title {
@@ -104,7 +110,7 @@
 
     .efficiency-hub {
         padding: 10px;
-        margin-top: 2rem;
+        padding: 2rem 10px;
     }
 
     .item-list li {
@@ -159,10 +165,26 @@
         width: 100%;
     }
 
+    .hero .slide .content3 {
+        width: 100%;
+    }
+
+    .vod-container {
+        width: 100%;
+    }
+
     .grid-item {
-        padding: 0;
-        flex-direction: column;
+        padding: 10px;
         text-align: center;
+        gap: 1rem;
+        flex-wrap: nowrap;
+        flex-direction: column;
+    }
+
+    .grid-image,
+    .item-content {
+        flex: 1 1 100%;
+        max-width: 100%;
     }
 
     .vacancies {
@@ -234,6 +256,10 @@
     .slider .property-details p {
         margin: 0;
         margin-bottom: 8px;
+    }
+
+    .hero .dots {
+        display: none;
     }
 
     .details-btn {

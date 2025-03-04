@@ -685,4 +685,73 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem("theme", isDark ? "dark" : "light");
         updateButton(isDark ? "dark" : "light");
     });
+
+    const slides = document.getElementsByClassName("slide");
+    const sliderWrapper = document.querySelector('.slider-wrapper');
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    const dots = Array.from(document.getElementsByClassName("slider-dot"));
+    let slideIndex = 0;
+
+    showSlides(slideIndex);
+
+    function plusSlides(num) {
+        showSlides(slideIndex += num);
+    }
+
+    function showSlides(num) {
+        slideIndex = (num + slides.length) % slides.length;
+        if (slideIndex === 0) {
+            prev.style.display = "none";
+        } else {
+            prev.style.display = "block";
+        }
+
+        if (slideIndex === slides.length - 1) {
+            next.style.display = "none";
+        } else {
+            next.style.display = "block";
+        }
+
+        dots.forEach(dot => dot.classList.remove("slider-dot-active"));
+        dots[slideIndex].classList.add("slider-dot-active");
+        sliderWrapper.style.transform = `translateX(-${slideIndex * 100}%)`;
+    }
+
+    prev.addEventListener("click", function () {
+        plusSlides(-1);
+    });
+
+    next.addEventListener("click", function () {
+        plusSlides(1);
+    });
+
+    dots.forEach((dot, i) => {
+        dot.addEventListener("click", function () {
+            showSlides(i);
+        });
+    });
+
+    function checkScreenWidth() {
+        if (window.innerWidth < 1100) {
+            prev.style.display = "none";
+            next.style.display = "none";
+        } else {
+            if (slideIndex === 0) {
+                prev.style.display = "none";
+            } else {
+                prev.style.display = "block";
+            }
+    
+            if (slideIndex === slides.length - 1) {
+                next.style.display = "none";
+            } else {
+                next.style.display = "block";
+            }
+        }
+    }
+
+    checkScreenWidth();
+
+    window.addEventListener("resize", checkScreenWidth);
 })

@@ -1161,23 +1161,37 @@ document.addEventListener("DOMContentLoaded", function () {
                                     const dropZone = document.querySelector(".upload-images");
                                     const uploadButton = document.querySelector(".upload-btn");
                                     const attachButton = document.querySelector(".upload-images .fa-plus");
-                                    const deleteButtons = document.querySelectorAll(".del");
                                     const imagesDiv = document.querySelector(".images");
 
                                     allUnitsImages[originalUnitId].forEach((image) => {
-                                        console.log(image)
                                         imagesDiv.innerHTML += `
                                             <div class="chat-image">
-                                                <img src="${image.url}" alt="Chat Image" draggable="false">
+                                                <img src="${image.url}" data-file-id="${image.fileId}" alt="Chat Image" draggable="false">
                                                 <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
-                                            </div>`;
-                                    })
-                                    
-                                    deleteButtons.forEach((button) => {
-                                        button.addEventListener("click", function () {
-                                            this.closest(".chat-image").remove();
+                                            </div>`
+                                        ;
+
+                                        const deleteButtons = document.querySelectorAll(".del");
+                                        deleteButtons.forEach((button) => {
+                                            button.addEventListener("click", function () {
+                                                let theImage = button.parentElement;
+                                                const imageUrl = theImage.querySelector("img").getAttribute("src");
+                                                const imageFileId = theImage.querySelector("img").getAttribute("data-file-id");
+                                                theImage.remove();
+                                                $.ajax({
+                                                    url: `https://api.lenaai.net/images/${imageFileId}`,
+                                                    method: "DELETE",
+                                                    success: function (response) {
+                                                        console.log("File deleted successfully:", response);
+                                                        allUnitsImages[originalUnitId] = allUnitsImages[originalUnitId].filter(item => item.url !== imageUrl);
+                                                    },
+                                                    error: function (xhr, status, error) {
+                                                        console.error("Error:", xhr.responseText);
+                                                    }
+                                                });
+                                            });
                                         });
-                                    });
+                                    })
 
                                     attachButton.addEventListener("click", function () {
                                         fileField.click();
@@ -1251,25 +1265,33 @@ document.addEventListener("DOMContentLoaded", function () {
                                     });
 
                                     uploadButton.addEventListener("click", function () {
-                                        // if (!fileField.files.length) {
-                                        //     showCustomAlert("Please select a file first.");
-                                        //     return;
-                                        // }
-                                        // const formData = new FormData();
-                                        // formData.append("file", fileField.files[0]);
-                                        // $.ajax({
-                                        //     url: "https://api.lenaai.net/images/",
-                                        //     method: "POST",
-                                        //     headers: {
-                                        //         "api-key": "public_7Nv03jWKtGPEM7xRbheAwsdVw8Y"
-                                        //     },
-                                        //     data: formData,
-                                        //     contentType: false,
-                                        //     processData: false,
-                                        //     success: function (response) {
-                                        //         console.log(response);
-                                        //     }
-                                        // })
+                                        if (!fileField.files.length) {
+                                            showCustomAlert("Please select a file first.");
+                                            return;
+                                        }
+                                        const formData = new FormData();
+                                        formData.append("file", fileField.files[0]);
+                                        $.ajax({
+                                            url: "https://api.lenaai.net/images/",
+                                            method: "POST",
+                                            data: formData,
+                                            contentType: false,
+                                            processData: false,
+                                            success: function (response) {
+                                                console.log("File uploaded successfully:", response);
+                                                allUnitsImages[originalUnitId].push(response);
+
+                                                const imagesDiv = document.querySelector(".current-images").querySelector(".images");
+                                                imagesDiv.innerHTML += `
+                                                <div class="chat-image">
+                                                    <img src="${response.url}" alt="Chat Image" draggable="false">
+                                                    <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
+                                                </div>`;
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.error("Error:", xhr.responseText);
+                                            }
+                                        });
 
                                         document.querySelector(".photo-preview").innerHTML = "";
                                         document.querySelector(".photo-preview").style.display = "none";
@@ -1871,7 +1893,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         <div class="history-header">
                                             <h1>Messages History</h1>
                                             <div class="seg-ctrl">
-                                                <div class="seg-opt-right" style="border-right: 2px solid #ccc;">Manual</div>
+                                                <div class="seg-opt-right">Manual</div>
                                                 <div class="seg-opt-left">AI</div>
                                             </div>
                                             <i class="fa-solid close-btn fa-circle-xmark"></i>
@@ -1965,7 +1987,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         const messagesDiv = document.getElementById("messages");
                                         parsedMessages.forEach((message) => {
-                                            if (message.bot_response === "" || message.user_message === "") {
+                                            if (message.bot_response === "" && message.user_message === "") {
                                                 return;
                                             }
                                             let userMessage = document.createElement("div");
@@ -1979,8 +2001,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                             userMessage.classList.add("message", "sent");
                                             botResponse.classList.add("message");
 
-                                            messagesDiv.appendChild(userMessage);
-                                            messagesDiv.appendChild(botResponse);
+                                            if (message.user_message !== "") {
+                                                messagesDiv.appendChild(userMessage);
+                                            }
+                                            if (message.bot_response !== "") {
+                                                messagesDiv.appendChild(botResponse);
+                                            }
                                         })
 
                                         document.querySelector(".close-btn").addEventListener("click", function () {

@@ -19,7 +19,7 @@
 /* Header */
 
 * {
-    font-family: 'FIVER-MULTLINE', sans-serif;
+    font-family: "Archivo", serif;
 }
 
 ul {
@@ -143,9 +143,6 @@ a {
 .hero,
 .efficiency-hub {
     text-align: center;
-    width: 58%;
-    margin: auto;
-    margin-top: 7rem;
 }
 
 .hero-title {
@@ -164,10 +161,14 @@ a {
 }
 
 .trial {
-    margin-top: 5rem;
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .trial button {
@@ -194,14 +195,95 @@ a {
 }
 
 .trial .demo {
-    color: #cbb26a;
-    background-color: black;
-    border: 2px solid #cbb26a;
+    background-color: transparent;
+    color: var(--text-color);
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border: 2px solid rgba(249, 250, 251, 0.8);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .trial .demo:hover {
     color: black;
     background-color: #cbb26a;
+}
+
+.hero .slider-wrapper {
+    max-height: 40rem;
+}
+
+.hero .slide::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.hero .slide img {
+    object-fit: cover;
+}
+
+.hero .slider #next,
+.hero .slider #prev {
+    font-size: 2.7rem;
+    transition: transform 0.3s ease;
+}
+
+.hero .slider #prev:hover,
+.hero .slider #next:hover {
+    color: var(--secondary-color);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.dots {
+    position: absolute;
+    bottom: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1.5rem;
+}
+
+.slider-dot {
+    cursor: pointer;
+    height: clamp(6px, 1vw, 10px);
+    width: clamp(14px, 2.5vw, 30px);
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+.slider-dot-active,
+.slider-dot:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.2);
+    transition: transform 0.3s ease, background-color 0.6s ease;
+}
+
+.slide .content3 {
+    text-transform: uppercase;
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    letter-spacing: 2px;
+    font-size: clamp(1.5rem, 5vw, 3.3rem);
+    color: var(--text-color);
+    border-radius: 16px;
+    text-align: center;
+    text-shadow: 2px 8px 6px rgba(0, 0, 0, 0.7);
+    z-index: 2;
+    width: 100%;
 }
 
 /* vod */
@@ -243,6 +325,10 @@ a {
 
 /* efficiency hub */
 
+.efficiency-hub {
+    margin-top: 3rem;
+}
+
 .efficiency-hub,
 .vacancies {
     width: 100%;
@@ -267,23 +353,57 @@ a {
 }
 
 .hub-grid {
-    margin: 4rem 0;
+    margin-top: 4rem;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
+    gap: 3rem;
 }
 
 .grid-item {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     justify-content: space-between;
-    margin-bottom: 5rem;
-    padding: 0 8rem;
+    gap: 3rem;
+    margin: 0 10%;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.grid-item:hover {
+    transform: scale(1.05);
+    background-color: var(--secondary-color);
+}
+
+.grid-item:hover .item-title,
+.grid-item:hover .item-list {
+    color: black;
+}
+
+.grid-image {
+    height: 100%;
+    max-width: 40%;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.item-content {
+    flex: 1 1 50%;
+    max-width: 40%;
 }
 
 .grid-item img {
-    border-radius: 16px;
-    height: auto;
-    max-width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease-in-out;
+    display: block;
+    width: 100%;
+    object-fit: cover;
+}
+
+.grid-item:hover img {
+    transform: scale(1.1);
 }
 
 .item-content {
@@ -314,20 +434,30 @@ a {
 }
 
 .try-btn {
-    padding: 15px 30px;
-    background-color: #cbb26a;
-    color: black;
+    padding: 12px 25px;
+    background-color: transparent;
+    color: var(--secondary-color);
     border-radius: 10px;
     font-size: 1rem;
     font-weight: bold;
-    border: 1px solid #cbb26a;
-    margin-left: 1.5rem;
+    border: none;
+    margin-top: 1rem;
+    transition: all .3s ease;
+    outline: none;
+    border: 2px solid var(--secondary-color);
+}
+
+.grid-item:hover .try-btn {
+    border-color: black;
+    color: black;
 }
 
 .try-btn:hover {
+    background-color: black;
+    color: var(--text-color) !important;
+    transform: scale(1.05);
     cursor: pointer;
-    background: black;
-    color: #cbb26a;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Vacancies */
@@ -338,51 +468,57 @@ a {
 
 .jobs-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.8rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
     margin: clamp(1rem, 5vw, 4rem) 1rem;
 }
 
 .job-item {
     display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.3rem;
-    border-radius: 10px;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 12px;
     border: 2px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+    background-color: black;
 }
 
 .job-item img {
-    width: 50%;
-    border-radius: 10px;
+    width: 45%;
+    border-radius: 12px;
     display: block;
     height: auto;
 }
 
 .job-details {
-    color: #cbb26a;
+    color: var(--secondary-color);
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     width: 50%;
+    height: 100%;
 }
 
 .job-title {
-    font-size: 1.5rem;
+    color: #cbb26a;
+    font-size: 1.6rem;
     font-weight: bold;
-    margin-bottom: .8rem;
+    margin-bottom: 1rem;
     font-family: "Archivo", serif;
 }
 
 .job-description {
     font-family: "Inter", serif;
     font-size: 1rem;
-    margin-bottom: 1rem;
+    line-height: 1.6;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 10px;
 }
 
 .job-description ul {
-    padding-left: 1rem;
+    padding-left: 1.2rem;
 }
 
 .job-description li {
