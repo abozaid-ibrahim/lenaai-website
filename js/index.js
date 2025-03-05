@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     let requestUrl = "chat";
+    const phoneNumberRegex = /^\d{10,15}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     // check authentication status
     function checkLoginStatus() {
@@ -87,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const messagesDiv = document.getElementById("messages");
 
         if (!userPhoneNumber) {
-            if (/^\d{10,15}$/.test(userInput)) {
+            if (phoneNumberRegex.test(userInput)) {
                 userPhoneNumber = userInput;
             } else {
                 let message = document.createElement("div");
@@ -138,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
             data: JSON.stringify({
                 "query": userInput,
                 "phone_number": userPhoneNumber,
-                "client_id": "lenaai"
+                "client_id": "ALL"
             }),
             success: function (response) {
                 console.log(response);
@@ -754,4 +756,84 @@ document.addEventListener("DOMContentLoaded", function () {
     checkScreenWidth();
 
     window.addEventListener("resize", checkScreenWidth);
+
+    const demoButton = document.querySelector(".trial .demo");
+    const demoOverlay = document.querySelector(".demo-overlay");
+    const demoPopUp = document.querySelector(".demo-popup");
+    demoButton.addEventListener("click", function () {
+        demoOverlay.style.display = "flex";
+        demoPopUp.innerHTML = `
+            <div class="demo-header">
+                <h1>Request Demo</h1>
+                <i class="fa-solid close-btn fa-circle-xmark"></i>
+            </div>
+            <div class="demo-content">
+                <p>Streamline your brokerage operations,
+                manage clients efficiently,
+                and close deals faster with our powerful platform.
+                Request a personalized demo today.</p>
+                <form id="demo-form">
+                    <div class="error-name"></div>
+                    <div class="form-half">
+                        <input type="text" id="first-name" placeholder="First Name" required>
+                        <input type="text" id="last-name" placeholder="Last Name" required>
+                    </div>
+                    <div class="error-phone"></div>
+                    <input type="text" id="phone" placeholder="Phone Number" required>
+                    <div class="error-email"></div>
+                    <input type"email" id="email" placeholder="Email Address" required>
+                    <input type="submit" id="demo-submit" value="Request Demo">
+                </form>
+            </div>
+        `;
+
+        document.querySelector(".close-btn").addEventListener("click", function () {
+            demoOverlay.style.display = "none";
+            demoPopUp.innerHTML = '';
+        });
+
+        document.querySelector("#demo-submit").addEventListener("click", function (event) {
+            event.preventDefault();
+            const errorName = document.querySelector("#demo-form .error-name");
+            const errorPhone = document.querySelector("#demo-form .error-phone");
+            const errorEmail = document.querySelector("#demo-form .error-email");
+            const firstName = document.querySelector("#first-name").value;
+            const lastName = document.querySelector("#last-name").value;
+            const fullName = firstName + " " + lastName;
+            const phone = document.querySelector("#phone").value;
+            const email = document.querySelector("#email").value;
+
+            errorPhone.style.display = "none";
+            errorPhone.innerHTML = '';
+            errorEmail.style.display = "none";
+            errorEmail.innerHTML = '';
+            errorName.style.display = "none";
+            errorName.innerHTML = '';
+
+            if(firstName === "" || lastName === "") {
+                errorName.style.display = "block";
+                errorName.innerHTML = `Provide Your First and Last Name`;
+            }
+
+            if (!phoneNumberRegex.test(phone)) {
+                errorPhone.style.display = "block";
+                errorPhone.innerHTML = `Invalid Phone Number, Please Enter A Valid Phone Number`;
+            }
+
+            if (!emailRegex.test(email)) {
+                errorEmail.style.display = "block";
+                errorEmail.innerHTML = `Invalid Email Address, Please Enter A Valid Email Address`;
+            }
+
+            const clientData = {
+                "name": fullName,
+                "phone": phone,
+                "email": email
+            }
+
+            console.log(clientData);
+            demoOverlay.style.display = "none";
+            demoPopUp.innerHTML = ``;
+        })
+    })
 })

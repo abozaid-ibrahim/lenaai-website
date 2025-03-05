@@ -128,21 +128,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 <p><strong>Country</strong>: ${unit.country}</p>
                                                 <p><strong>City</strong>: ${unit.city}</p>
                                                 <p><strong>Developer</strong>: <span class="dev">${unit.developer}</span></p>
-                                                <p><strong>Paid</strong>: ${unit.paid} EGP</p>
-                                                <p><strong>Offer</strong>: ${unit.offer.toLocaleString()} EGP</p>
-                                                <p><strong>Status</strong>: ${unit.status}</p>
                                                 <p><strong>Down Payment</strong>: ${unit.downPayment.toLocaleString()} EGP</p>
                                                 <p><strong>Payment Plans</strong>: ${unit.paymentPlans}</p>
                                                 <p><strong>Total Price</strong>: ${unit.totalPrice.toLocaleString()} EGP</p>
-                                                <p><strong>Zone</strong>: ${unit.zone}</p>
-                                                <p><strong>Phase</strong>: ${unit.phase}</p>
                                                 <p><strong>Garage Area</strong>: ${unit.garageArea}</p>
                                                 <p><strong>Delivery Date</strong>: ${unit.deliveryDate}</p>
                                                 <p><strong>Floor</strong>: ${unit.floor}</p>
                                                 <p><strong>Rooms Count</strong>: ${unit.roomsCount}</p>
                                                 <p><strong>Bathroom Count</strong>: ${unit.bathroomCount}</p>
                                                 <p><strong>Land Area</strong>: ${unit.landArea}</p>
-                                                <p><strong>Selling Area</strong>: ${unit.sellingArea}</p>
                                                 <p><strong>Garden Size</strong>: ${unit.gardenSize}</p>
                                                 <p><strong>Finishing</strong>: ${unit.finishing}</p>
                                                 <p style="display: none;"><strong>Data Source</strong>: ${unit.dataSource}</p>
@@ -733,12 +727,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "city": "",
                                             "compound": "",
                                             "developer": "",
-                                            "paid": "",
-                                            "offer": 0,
                                             "unitId": "",
-                                            "status": "",
-                                            "zone": "",
-                                            "phase": "",
                                             "view": "",
                                             "garageArea": "",
                                             "deliveryDate": "",
@@ -747,7 +736,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "floor": 0,
                                             "roomsCount": 0,
                                             "landArea": 0,
-                                            "sellingArea": 0,
                                             "gardenSize": 0,
                                             "finishing": "",
                                             "dataSource": "",
@@ -846,12 +834,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                             function enforceType(key, value) {
                                                 const numberFields = [
-                                                    "offer",
                                                     "floor",
                                                     "roomsCount",
                                                     "bathroomCount",
                                                     "landArea",
-                                                    "sellingArea",
                                                     "gardenSize",
                                                     "downPayment",
                                                     "totalPrice",
@@ -885,9 +871,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 unitObject.view = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("delivery-date")) {
                                                 unitObject.deliveryDate = li.querySelector(".value").textContent;
-                                            } else if (key === "Paid") {
-                                                let value = input.replace("EGP", "").trim();
-                                                unitObject.paid = formatNumber(value);
                                             } else {
                                                 const camelKey = toCamelCase(key);
                                                 if (camelKey in unitObject) {
@@ -1381,12 +1364,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "city": "",
                                             "compound": "",
                                             "developer": "",
-                                            "paid": "",
-                                            "offer": 0,
                                             "unitId": "",
-                                            "status": "",
-                                            "zone": "",
-                                            "phase": "",
                                             "view": "",
                                             "garageArea": "",
                                             "deliveryDate": "",
@@ -1395,7 +1373,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "floor": 0,
                                             "roomsCount": 0,
                                             "landArea": 0,
-                                            "sellingArea": 0,
                                             "gardenSize": 0,
                                             "finishing": "",
                                             "dataSource": "",
@@ -1414,12 +1391,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                             function enforceType(key, value) {
                                                 const numberFields = [
-                                                    "offer",
                                                     "floor",
                                                     "roomsCount",
                                                     "bathroomCount",
                                                     "landArea",
-                                                    "sellingArea",
                                                     "gardenSize",
                                                     "downPayment",
                                                     "totalPrice",
@@ -1456,9 +1431,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 unitObject.view = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("delivery-date")) {
                                                 unitObject.deliveryDate = li.querySelector(".value").textContent;
-                                            } else if (key === "Paid") {
-                                                let value = input.replace("EGP", "").trim();
-                                                unitObject.paid = formatNumber(value);
                                             } else {
                                                 const camelKey = toCamelCase(key);
                                                 if (camelKey in unitObject) {
@@ -1627,7 +1599,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         method: "GET",
                                         contentType: "json",
                                         success: function (response) {
-                                            if (response.action) {
+                                            if (response.action && Object.keys(borderByAction).includes(response.action)) {
                                                 callNow.innerHTML = `${borderByAction[response.action].icon}${response.action}`;
                                                 allLeadScores[phoneNumber] = response.score;
                                                 callNow.style.backgroundColor = borderByAction[response.action].color;
