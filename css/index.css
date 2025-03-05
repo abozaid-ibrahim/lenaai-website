@@ -318,7 +318,8 @@ h1 {
 /* Facebook Upload Overlay */
 
 .upload-overlay,
-.gallery-overlay {
+.gallery-overlay,
+.demo-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -335,7 +336,8 @@ h1 {
 }
 
 .fb-upload,
-.gallery-content {
+.gallery-content,
+.demo-popup {
     background: #cbb26a;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     width: 40%;
@@ -346,7 +348,8 @@ h1 {
     min-height: min-content;
 }
 
-.upload-header {
+.upload-header,
+.demo-header {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -355,7 +358,8 @@ h1 {
     box-shadow: 0 2px 6px rgba(0, 0, 0, .08), 0 4px 12px rgba(0, 0, 0, .08);
 }
 
-.upload-header h1 {
+.upload-header h1,
+.demo-header h1 {
     flex: 1;
     font-size: 24px;
     text-align: left;
@@ -363,12 +367,14 @@ h1 {
     color: black;
 }
 
-.upload-header .fa-solid {
+.upload-header .fa-solid,
+.demo-header .fa-solid {
     font-size: 30px;
     color: black;
 }
 
-.upload-header .fa-solid:hover {
+.upload-header .fa-solid:hover,
+.demo-header .fa-solid:hover {
     color: #5e5c5c;
     cursor: pointer;
 }

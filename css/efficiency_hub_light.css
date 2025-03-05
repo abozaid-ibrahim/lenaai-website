@@ -296,6 +296,82 @@ a {
     width: 100%;
 }
 
+.demo-header {
+    background-color: var(--primary-color);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: var(--box-shadow);
+    border: none;
+}
+
+.demo-header h1 {
+    color: var(--text-color);
+}
+
+.demo-header .fa-solid {
+    color: var(--text-color);
+}
+
+.demo-header .fa-solid:hover {
+    color: var(--alt-button-color-hover);
+}
+
+.demo-popup {
+    background-color: var(--text-color);
+    border-radius: 17px;
+}
+
+.demo-content {
+    padding: 30px;
+}
+
+#demo-form input {
+    padding: 1rem;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    background-color: var(--alt-button-color);
+    width: 100%;
+    margin-bottom: 1rem;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+}
+
+.form-half {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+#demo-form #demo-submit {
+    margin-bottom: 0;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    font-weight: bold;
+}
+
+#demo-form #demo-submit:hover {
+    background-color: var(--primary-color-hover);
+    transform: scale(1.05);
+}
+
+.demo-content p {
+    color: #667085;
+    text-align: left;
+    margin-top: 0;
+}
+
+.error-phone,
+.error-email,
+.error-name {
+    color: rgb(219, 13, 13);
+    margin-bottom: 1rem;
+    display: none;
+    text-align: left;
+}
+
 /* vod */
 
 .vod {
