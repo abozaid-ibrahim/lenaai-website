@@ -797,7 +797,24 @@ h1 {
 .dot:nth-child(3) {
     animation-delay: 0.4s;
 }
+footer {
+    background-color:#cbb26a;
+    color: white;
+    text-align: center; 
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+}
 
+footer a {
+    color: white; /* Link color */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
 @keyframes blink {
     0% {
         opacity: 0.3;
