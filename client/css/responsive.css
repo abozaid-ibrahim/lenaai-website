@@ -203,11 +203,6 @@
         padding: .5rem;
     }
 
-    .add-btn {
-        margin: auto;
-        margin-top: 1rem;
-    }
-
     .unit-header {
         flex-direction: column;
     }
