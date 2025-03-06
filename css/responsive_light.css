@@ -56,6 +56,10 @@
         display: flex;
     }
 
+    .sign-in-sm button, .sign-in-sm a {
+        margin-bottom: 0;
+    }
+
     .menu-toggle {
         display: block;
         font-size: 24px;
@@ -122,13 +126,14 @@
 
     .chatbot {
         width: 95%;
-        top: 15%;
+        top: 21%;
         right: 2.5%;
         margin: 0;
+        max-height: 72vh;
     }
 
     #messages {
-        height: 60vh;
+        height: 56vh;
     }
 
     .chat-header h2 {
@@ -178,6 +183,7 @@
         gap: 1rem;
         flex-wrap: nowrap;
         flex-direction: column;
+        margin: 0 2%;
     }
 
     .grid-image,
@@ -206,6 +212,15 @@
     .job-details {
         width: 100%;
         flex: 1;
+    }
+
+    .demo-popup {
+        width: 100%;
+    }
+
+    .form-half {
+        flex-direction: column;
+        gap: 0;
     }
 }
 

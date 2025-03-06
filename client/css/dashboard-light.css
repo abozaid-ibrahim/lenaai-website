@@ -766,14 +766,20 @@ input:checked+.slider:before {
     font-weight: bold;
 }
 
-.add-btn {
-    margin-left: auto;
+.add-units {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.add-btn, .import-btn {
     color: var(--alt-text-color);
     background-color: var(--alt-button-color);
     border-radius: 16px;
     width: fit-content;
     padding: .6rem 1rem;
-    margin-top: 2rem;
     transition: background-color .2s ease-in-out;
     display: flex;
     align-items: center;
@@ -781,13 +787,14 @@ input:checked+.slider:before {
     box-shadow: var(--box-shadow);
 }
 
-.add-btn:hover {
+.add-btn:hover,
+.import-btn:hover {
     cursor: pointer;
     background-color: var(--alt-button-color-hover);
     color: var(--primary-color-hover);
 }
 
-.add-btn i {
+.add-btn i, .import-btn i {
     border: none;
     padding: 0;
     margin-right: 10px;
@@ -1397,6 +1404,11 @@ input:checked+.slider:before {
 .error {
     color: red;
     font-size: 24px;
+}
+
+.val-error {
+    color: red;
+    font-size: 1rem;
 }
 
 .seg-ctrl {

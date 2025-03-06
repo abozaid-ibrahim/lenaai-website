@@ -2152,6 +2152,70 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     })
 
+    const importButton = document.querySelector(".import-btn");
+    importButton.addEventListener("click", function () {
+        const editOverlay = document.querySelector(".edit-overlay");
+        const editPopup = document.querySelector(".edit-popup");
+
+        editPopup.classList.add("delete-popup");
+        editOverlay.style.display = "flex";
+        editPopup.innerHTML = `
+        <div class="history-header">
+            <h1>Import Units From File</h1>
+            <i class="fa-solid close-btn fa-circle-xmark"></i>
+        </div>
+        <div class="edit-content">
+            <div class="val-error" style="display: none;"></div>
+            <ul class="edit-details">
+                <li>
+                    File Link
+                    <input type="text" id="file-link" placeholder="File Link">
+                </li>
+            </ul>
+            <div class="details-btns">
+                <div class="save">Import</div>
+            </div>
+        </div>`;
+
+        document.querySelector(".close-btn").addEventListener("click", function () {
+            editPopup.classList.remove("delete-popup");
+            editOverlay.style.display = "none";
+            editPopup.innerHTML = '';
+        });
+
+        document.querySelector(".save").addEventListener("click", function () {
+            const spreadSheetInput = document.querySelector(".edit-content #file-link");
+            const spreadSheetLink = document.querySelector(".edit-content #file-link").value;
+            const error = document.querySelector(".edit-content .val-error");
+            const spreadsheetRegex = /^(https?:\/\/)?(www\.)?docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9_-]+(\/(edit|view|copy)?(\?.*)?)?$|[^\s]+\.xls[x]?|[^\s]+\.csv$/;
+
+            error.style.display = "none";
+            error.innerHTML = ``;
+            if (spreadSheetLink === "" || !spreadsheetRegex.test(spreadSheetLink)) {
+                error.style.display = "block";
+                error.innerHTML = `Invalid link! Please enter a valid Excel file (.xls, .xlsx, .csv) or a Google Sheets link.`;
+                spreadSheetInput.style.border = "2px solid red";
+                return;
+            } else {
+                error.style.display = "none";
+                error.innerHTML = ``;
+                spreadSheetInput.style.border = "2px solid #cbb26a";
+
+                const requestData = {
+                    "spreadsheet_url": spreadSheetLink,
+                }
+    
+                console.log(requestData);
+    
+                setTimeout(() => {
+                    editPopup.classList.remove("delete-popup");
+                    editOverlay.style.display = "none";
+                    editPopup.innerHTML = '';
+                }, 1500);
+            }
+        });
+    });
+
     const themeToggle = document.getElementById("theme-toggle");
     const themeStylesheet = document.getElementById("theme-stylesheet");
     const themeIcon = themeToggle.querySelector("i");

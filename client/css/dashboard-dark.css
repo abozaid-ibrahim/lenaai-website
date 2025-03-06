@@ -1245,27 +1245,34 @@ input:checked+.slider:before {
     cursor: pointer;
 }
 
-.add-btn {
-    margin-left: auto;
+.add-units {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.add-btn, .import-btn {
     color: #cbb26a;
     border: 2px solid #cbb26a;
     border-radius: 16px;
     width: fit-content;
     padding: .6rem 1rem;
-    margin-top: 2rem;
     font-weight: bold;
     display: flex;
     align-items: center;
     font-size: 1rem;
 }
 
-.add-btn:hover {
+.add-btn:hover,
+.import-btn:hover {
     cursor: pointer;
     background-color: #cbb26a;
     color: black;
 }
 
-.add-btn i {
+.add-btn i, .import-btn i {
     border: none;
     padding: 0;
     margin-right: 10px;
@@ -1350,6 +1357,11 @@ input:checked+.slider:before {
 .error {
     color: red;
     font-size: 24px;
+}
+
+.val-error {
+    color: red;
+    font-size: 1rem;
 }
 
 .seg-ctrl {

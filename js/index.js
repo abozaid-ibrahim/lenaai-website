@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let requestUrl = "chat";
+    let requestUrl = "langgraph_chat";
     const phoneNumberRegex = /^\d{10,15}$/;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     function logoutUser() {
                         localStorage.removeItem("lenaai_access_token");
 
-                        window.location.href = "../index.html";
+                        window.location.href = "./index.html";
                     }
 
                     $("#sign-in, .sign-in-sm button").on("click", function (event) {
@@ -40,6 +40,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
     checkLoginStatus();
 
+    const themeToggle = document.getElementById("theme-toggle");
+    const themeStylesheet = document.getElementById("theme-stylesheet");
+    const themeStylesheetResponsive = document.getElementById("theme-stylesheet-resp");
+    const themeIcon = themeToggle.querySelector("i");
+
+    const lightThemePath = "css/efficiency_hub_light.css";
+    const darkThemePath = "css/efficiency_hub_dark.css";
+    const lightThemePathResponsive = "css/responsive_light.css";
+    const darkThemePathResponsive = "css/responsive_dark.css";
+
+    const savedTheme = localStorage.getItem("theme") || "light";
+    themeStylesheet.href = savedTheme === "dark" ? darkThemePath: lightThemePath;
+    themeStylesheetResponsive.href = savedTheme === "dark" ? darkThemePathResponsive: lightThemePathResponsive;
+
+    function updateButton(theme) {
+        if (theme === "dark") {
+            themeToggle.innerHTML = `<i class="bi bi-sun"></i>`;
+        } else {
+            themeToggle.innerHTML = `<i class="bi bi-moon"></i>`;
+        }
+    }
+
+    updateButton(savedTheme);
+
+    themeToggle.addEventListener("click", function () {
+        const isDark = themeStylesheet.href.includes("efficiency_hub_light.css");
+        themeStylesheet.href = isDark ? darkThemePath : lightThemePath;
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        updateButton(isDark ? "dark" : "light");
+    });
+
     // // countdown section
     // function updateCountdown() {
     //     const now = new Date().getTime();
@@ -54,25 +85,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // }
 
     // setInterval(updateCountdown, 1000);
-
-    $("textarea").each(function () {
-        this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
-    }).on("input", function () {
-        this.style.height = 0;
-        this.style.height = (this.scrollHeight) + "px";
-    });
-
-    const inputField = document.getElementById("user-input");
-    const originalHeight = inputField.style.height || inputField.offsetHeight + "px";
-    inputField.addEventListener("keydown", function (event) {
-        if (event.key === "Enter" && !event.shiftKey) {
-            event.preventDefault();
-            takeUserInput();
-            this.value = "";
-            this.style.height = originalHeight;
-            this.setAttribute("placeholder", "Type Something Here");
-        }
-    });
 
     let responseProperties;
 
@@ -120,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <img src="${fileContentSource}">
             </div>`;
             chatPreview.innerHTML = "";
-            messagesDiv.style.height = "700px";
+            messagesDiv.style.height = "55vh";
             fileAttached = false;
         }
         message.innerHTML = userInput;
@@ -133,6 +145,11 @@ document.addEventListener("DOMContentLoaded", function () {
         messagesDiv.appendChild(message);
         messagesDiv.appendChild(typingIndicatorDiv);
 
+        if (userInput === userPhoneNumber) {
+            userInput = "Hello";
+        }
+
+        console.log(requestUrl, userInput);
         $.ajax({
             url: `https://api.lenaai.net/${requestUrl}`,
             method: "POST",
@@ -201,13 +218,38 @@ document.addEventListener("DOMContentLoaded", function () {
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
+    $("textarea").each(function () {
+        this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+    }).on("input", function () {
+        this.style.height = 0;
+        this.style.height = (this.scrollHeight) + "px";
+    });
+
+    const inputField = document.getElementById("user-input");
+    const originalHeight = inputField.style.height || inputField.offsetHeight + "px";
+    function handleSubmit() {
+        if (inputField.value.trim() !== "") {
+            takeUserInput();
+            inputField.value = "";
+            inputField.style.height = originalHeight;
+            inputField.setAttribute("placeholder", "Type Something Here");
+        }
+    }
+
+    inputField.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            handleSubmit();
+        }
+    });
+
     chatSubmit.addEventListener("click", function () {
-        takeUserInput();
+        handleSubmit();
     });
 
     inputForm.addEventListener("submit", function (event) {
         event.preventDefault();
-        takeUserInput();
+        handleSubmit();
     });
 
     // upload a file
@@ -386,12 +428,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (currentEngineName.textContent !== selectedEngineName) {
                 currentEngineName.textContent = selectedEngineName;
-                if (selectedEngineName === "Chat-bot (Default)") {
-                    requestUrl = "chat";
-                } else if (selectedEngineName === "Lena Chatbot") {
-                    requestUrl = "lena_chatbot"
-                } else {
-                    requestUrl = "mamado_chatbpt"
+                if (selectedEngineName === "Langgraph Chat-bot") {
+                    requestUrl = "langgraph_chat";
+                } else if (selectedEngineName === "Lena Chat-bot") {
+                    requestUrl = "chat"
                 }
 
                 messagesDiv.innerHTML = `
@@ -657,37 +697,6 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
     }
 
-    const themeToggle = document.getElementById("theme-toggle");
-    const themeStylesheet = document.getElementById("theme-stylesheet");
-    const themeStylesheetResponsive = document.getElementById("theme-stylesheet-resp");
-    const themeIcon = themeToggle.querySelector("i");
-
-    const lightThemePath = "css/efficiency_hub_light.css";
-    const darkThemePath = "css/efficiency_hub_dark.css";
-    const lightThemePathResponsive = "css/responsive_light.css";
-    const darkThemePathResponsive = "css/responsive_dark.css";
-
-    const savedTheme = localStorage.getItem("theme") || "light";
-    themeStylesheet.href = savedTheme === "dark" ? darkThemePath: lightThemePath;
-    themeStylesheetResponsive.href = savedTheme === "dark" ? darkThemePathResponsive: lightThemePathResponsive;
-
-    function updateButton(theme) {
-        if (theme === "dark") {
-            themeToggle.innerHTML = `<i class="bi bi-sun"></i>`;
-        } else {
-            themeToggle.innerHTML = `<i class="bi bi-moon"></i>`;
-        }
-    }
-
-    updateButton(savedTheme);
-
-    themeToggle.addEventListener("click", function () {
-        const isDark = themeStylesheet.href.includes("efficiency_hub_light.css");
-        themeStylesheet.href = isDark ? darkThemePath : lightThemePath;
-        localStorage.setItem("theme", isDark ? "dark" : "light");
-        updateButton(isDark ? "dark" : "light");
-    });
-
     const slides = document.getElementsByClassName("slide");
     const sliderWrapper = document.querySelector('.slider-wrapper');
     const prev = document.getElementById("prev");
@@ -781,7 +790,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="error-phone"></div>
                     <input type="text" id="phone" placeholder="Phone Number" required>
                     <div class="error-email"></div>
-                    <input type"email" id="email" placeholder="Email Address" required>
+                    <input type="email" id="email" placeholder="Email Address" required>
                     <input type="submit" id="demo-submit" value="Request Demo">
                 </form>
             </div>
@@ -794,46 +803,89 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.querySelector("#demo-submit").addEventListener("click", function (event) {
             event.preventDefault();
-            const errorName = document.querySelector("#demo-form .error-name");
-            const errorPhone = document.querySelector("#demo-form .error-phone");
-            const errorEmail = document.querySelector("#demo-form .error-email");
-            const firstName = document.querySelector("#first-name").value;
-            const lastName = document.querySelector("#last-name").value;
-            const fullName = firstName + " " + lastName;
-            const phone = document.querySelector("#phone").value;
-            const email = document.querySelector("#email").value;
-
-            errorPhone.style.display = "none";
-            errorPhone.innerHTML = '';
-            errorEmail.style.display = "none";
-            errorEmail.innerHTML = '';
-            errorName.style.display = "none";
-            errorName.innerHTML = '';
-
-            if(firstName === "" || lastName === "") {
+        
+            const errorName = document.querySelector(".error-name");
+            const errorPhone = document.querySelector(".error-phone");
+            const errorEmail = document.querySelector(".error-email");
+        
+            const firstName = document.querySelector("#first-name").value.trim();
+            const lastName = document.querySelector("#last-name").value.trim();
+            const phone = document.querySelector("#phone").value.trim();
+            const email = document.querySelector("#email").value.trim();
+        
+            const fullName = `${firstName} ${lastName}`;
+        
+            errorName.innerHTML = "";
+            errorPhone.innerHTML = "";
+            errorEmail.innerHTML = "";
+        
+            const nameRegex = /^[A-Za-z\s]{2,}$/;
+            let isValid = true;
+        
+            if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
                 errorName.style.display = "block";
-                errorName.innerHTML = `Provide Your First and Last Name`;
+                errorName.innerHTML = `Provide a valid First and Last Name (Only letters, min 2 characters).`;
+                isValid = false;
             }
-
+        
+            const phoneNumberRegex = /^[\d\s+\-()]{11,15}$/;
             if (!phoneNumberRegex.test(phone)) {
                 errorPhone.style.display = "block";
-                errorPhone.innerHTML = `Invalid Phone Number, Please Enter A Valid Phone Number`;
+                errorPhone.innerHTML = `Invalid Phone Number. Enter 11-15 digits (can include +, -).`;
+                isValid = false;
             }
-
+        
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (!emailRegex.test(email)) {
                 errorEmail.style.display = "block";
-                errorEmail.innerHTML = `Invalid Email Address, Please Enter A Valid Email Address`;
+                errorEmail.innerHTML = `Invalid Email Address. Please enter a valid email.`;
+                isValid = false;
             }
-
+        
+            document.querySelector("#first-name").style.border = !nameRegex.test(firstName) ? "2px solid red" : "";
+            document.querySelector("#last-name").style.border = !nameRegex.test(lastName) ? "2px solid red" : "";
+            document.querySelector("#phone").style.border = !phoneNumberRegex.test(phone) ? "2px solid red" : "";
+            document.querySelector("#email").style.border = !emailRegex.test(email) ? "2px solid red" : "";
+        
+            if (!isValid) return;
+        
             const clientData = {
-                "name": fullName,
-                "phone": phone,
-                "email": email
-            }
+                name: fullName,
+                phone: phone,
+                email: email
+            };
 
-            console.log(clientData);
-            demoOverlay.style.display = "none";
-            demoPopUp.innerHTML = ``;
-        })
+            $.ajax({
+                url: "https://api.lenaai.net/requesting-demo/",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(clientData),
+                success: function (response) {
+                    if (response.status === "Record created successfully") {
+                        console.log("Form submitted successfully:", clientData, response);
+                        demoOverlay.style.display = "none";
+                        demoPopUp.innerHTML = '';
+                    } else {
+                        errorPhone.style.display = "block";
+                        errorPhone.innerHTML = `A Demo Request Already Exists For This Phone Number/Email Address`;
+                    }
+                },
+                error: function (error) {
+                    console.log("Form request failed:", error)
+                }
+            })
+        });                
+    })
+
+    const trialButton = document.querySelector(".trial .chat");
+    trialButton.addEventListener("click", function () {
+        chatBot.classList.toggle("chat-active");
+        if (popUp.classList.contains("fa-message")) {
+            popUp.classList.remove("fa-message");
+            popUp.classList.add("fa-square-xmark");
+        } else {
+            popUp.classList.remove("fa-square-xmark");
+            popUp.classList.add("fa-message");
+        }
     })
 })

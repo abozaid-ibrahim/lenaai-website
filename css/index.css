@@ -83,7 +83,7 @@ h1 {
 /* Chatbot section */
 
 .chatbot {
-    width: 25%;
+    width: 400px;
     background-color: black;
     border: 3px solid #cbb26a;
     border-radius: 16px;
@@ -94,7 +94,7 @@ h1 {
     top: 19%;
     right: 0%;
     height: fit-content;
-    max-height: 70vh;
+    max-height: 73vh;
     overflow-y: auto;
     visibility: hidden;
     z-index: 2;
@@ -124,7 +124,7 @@ h1 {
 #messages {
     border: 1px solid #616060;
     border-radius: 16px;
-    height: 500px;
+    height: 55vh;
     padding: 20px;
     overflow-y: auto;
     scrollbar-width: none;
@@ -152,12 +152,14 @@ h1 {
     outline: none;
     padding: 0;
     padding-left: 10px;
-    padding-top: 8px;
+    padding-top: 7px;
+    padding-bottom: 4px;
     height: 0;
     background-color: transparent;
     color: #cbb26a;
     font-size: 1rem;
     width: 100%;
+    font-family: "Poppins", sans-serif;
 }
 
 #submit-btn {
@@ -303,6 +305,7 @@ h1 {
     border: 2px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     z-index: 10;
+    transition: all 0.3s ease-in-out;
 }
 
 #popup:hover {
@@ -475,8 +478,8 @@ h1 {
 }
 
 .engine-name {
-    font-weight: bold;
     font-size: 14px;
+    font-weight: bold;
 }
 
 .current-engine:hover {
@@ -492,10 +495,10 @@ h1 {
     left: 5%;
     background: #cbb26a;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    min-width: 180px;
+    min-width: 230px;
     z-index: 10;
     border-radius: 10px;
-    padding: 15px 0;
+    padding: 10px;
 }
 
 .dropdown ul {
@@ -505,9 +508,11 @@ h1 {
 }
 
 .dropdown ul li {
-    padding: 10px;
+    padding: 12px;
     color: black;
     font-weight: bold;
+    font-size: 1rem;
+    border-radius: 16px;
 }
 
 .dropdown ul li:hover {
@@ -797,6 +802,7 @@ h1 {
 .dot:nth-child(3) {
     animation-delay: 0.4s;
 }
+
 footer {
     background-color:#cbb26a;
     color: white;
@@ -815,16 +821,20 @@ footer a {
 footer a:hover {
     text-decoration: underline; /* Underline on hover */
 }
+
 @keyframes blink {
     0% {
         opacity: 0.3;
+        transform: scale(1);
     }
 
     50% {
         opacity: 1;
+        transform: scale(1.2);
     }
 
     100% {
         opacity: 0.3;
+        transform: scale(1);
     }
 }
