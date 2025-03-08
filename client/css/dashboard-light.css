@@ -577,6 +577,53 @@ input:checked+.slider:before {
     overflow-y: auto;
 }
 
+.images .property-details {
+    padding: .5rem 1rem;
+    background-color: transparent;
+    color: var(--text-color);
+    border-radius: 10px;
+    border: 2px solid #cbb26a;
+    display: flex;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    width: 65%;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.images .property-details h2 {
+    color: var(--secondary-color);
+    text-align: center;
+    margin: 5px 0;
+    width: 100%;
+    font-size: .9em;
+}
+
+.images .property-details p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    word-break: break-all;
+    font-size: 1em;
+    font-weight: 500;
+    margin: 5px 0;
+    width: 100%;
+}
+
+.images .property-details span {
+    color: #fff;
+    max-width: 50%;
+    text-align: center;
+}
+
+.images .hidden-details {
+    display: none;
+}
+
+.chat-history .chat-image {
+    width: 50%;
+}
+
 .input-field {
     display: flex;
     justify-content: space-between;

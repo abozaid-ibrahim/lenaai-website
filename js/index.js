@@ -171,35 +171,40 @@ document.addEventListener("DOMContentLoaded", function () {
                 let imagesDiv;
 
                 if (response.properties && response.properties.length > 0) {
-                    response.properties.forEach((property) => {
+                    Object.values(response.properties).forEach((property) => {
                         imagesDiv = document.createElement("div");
                         imagesDiv.classList.add("images");
 
-                        let propertyImages = property.images;
-                        propertyImages.forEach(imageUrl => {
-                            let image = document.createElement("div");
-                            image.classList.add("chat-image");
-                            image.innerHTML = `<img src="${imageUrl}" alt="Property Image" draggable="false">`;
-                            imagesDiv.appendChild(image);
-                        });
+                        let propertyImages = property.metadata.images;
+                        if (Array.isArray(propertyImages) && typeof propertyImages !== "string") {
+                            propertyImages.forEach(propertyImage => {
+                                let image = document.createElement("div");
+                                image.classList.add("chat-image");
+                                image.innerHTML = `<img src="${propertyImage.url}" alt="Property Image" draggable="false">`;
+                                imagesDiv.appendChild(image);
+                            });
+                        }
 
                         let detailsDiv = document.createElement("div");
                         detailsDiv.classList.add("property-details");
                         detailsDiv.innerHTML = `
-                            <h2>${property.compound}</h2>
-                            <p><strong>Location:</strong> <span>${property.city}, ${property.country}</span></p>
-                            <p><strong>Type:</strong> <span>${property.typeName} - ${property.buildingType}</span></p>
-                            <p><strong>Zone:</strong> <span>${property.zone}</span></p>
-                            <p><strong>Rooms:</strong> <span>${property.roomsCount}</span></p>
-                            <p><strong>Finishing:</strong> <span>${property.finishing}, ${property.status}</span></p>
+                            <h2>${property.metadata.compound}</h2>
+                            <p><strong>Location:</strong> <span>${property.metadata.city}, ${property.metadata.country}</span></p>
+                            <p><strong>Type:</strong> <span>${property.metadata.buildingType}</span></p>
+                            <p><strong>Rooms:</strong> <span>${property.metadata.roomsCount}</span></p>
+                            <p><strong>Bathrooms:</strong> <span>${property.metadata.bathroomCount}</span></p>
+                            <p><strong>View:</strong> <span>${property.metadata.view}</span></p>
+                            <p><strong>Total Price:</strong> <span>${property.metadata.totalPrice} EGP</span></p>
                             <div class="hidden-details">
-                                <p><strong>Phase:</strong> <span>${property.phase}</span></p>
-                                <p><strong>Land Area:</strong> <span>${property.landAreaSqMeters} m²</span></p>
-                                <p><strong>Selling Area:</strong> <span>${property.sellingAreaSqMeters} m²</span></p>
-                                <p><strong>Garden Size:</strong> <span>${property.gardenSize} m²</span></p>
-                                <p><strong>Delivery Date:</strong> <span>${property.deliveryDate}</span></p>
-                                <p><strong>Price Plan (8 Years):</strong> <span>${property.plan8Years} EGP</span></p>
-                                <p><strong>Price Plan (9 Years):</strong> <span>${property.plan9Years} EGP</span></p>
+                                <p><strong>Payment Plans:</strong> <span>${property.metadata.paymentPlans}</span></p>
+                                <p><strong>Developer:</strong> <span>${property.metadata.developer}</span></p>
+                                <p><strong>Floor:</strong> <span>${property.metadata.floor}</span></p>
+                                <p><strong>Down Payment:</strong> <span>${property.metadata.downPayment} EGP</span></p>
+                                <p><strong>Selling Area:</strong> <span>${property.metadata.landArea} m²</span></p>
+                                <p><strong>Garden Size:</strong> <span>${property.metadata.gardenSize} m²</span></p>
+                                <p><strong>Garage Area:</strong> <span>${property.metadata.garageArea} m²</span></p>
+                                <p><strong>Delivery Date:</strong> <span>${property.metadata.deliveryDate}</span></p>
+                                <p><strong>Finishing:</strong> <span>${property.metadata.finishing}</span></p>
                             </div>
                         `;
 
