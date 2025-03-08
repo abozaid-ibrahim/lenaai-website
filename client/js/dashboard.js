@@ -167,7 +167,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             $(".units-list li .unit-header").click(function () {
                                 $(this).next(".unit-details").slideToggle();
-                                $(this).find("i").toggleClass("fa-chevron-right fa-chevron-down");
 
                                 const unitDetails = $(this).next(".unit-details");
                                 const sliderWrapper = unitDetails.find(".slider-wrapper");
@@ -363,12 +362,33 @@ document.addEventListener("DOMContentLoaded", function () {
                             })
 
                             // Add Unit
+                            let newUnitImages = [];
                             const addButton = document.querySelector(".add-btn");
                             addButton.addEventListener("click", function () {
                                 const editOverlay = document.querySelector(".edit-overlay");
                                 const editPopup = document.querySelector(".edit-popup");
-                                const unit = document.querySelectorAll(".unit")[0];
-                                const propertyDetails = unit.querySelector(".property-details");
+                                const propertyDetails = document.createElement("div");
+                                propertyDetails.innerHTML = `
+                                    <p><strong>Unit ID</strong>:</p>
+                                    <p><strong>Compound</strong>:</p>
+                                    <p><strong>Building Type</strong>:</p>
+                                    <p><strong>View</strong>:</p>
+                                    <p><strong>Country</strong>:</p>
+                                    <p><strong>City</strong>:</p>
+                                    <p><strong>Developer</strong>: <span class="dev"></span></p>
+                                    <p><strong>Down Payment</strong>:</p>
+                                    <p><strong>Payment Plans</strong>:</p>
+                                    <p><strong>Total Price</strong>:</p>
+                                    <p><strong>Garage Area</strong>:</p>
+                                    <p><strong>Delivery Date</strong>:</p>
+                                    <p><strong>Floor</strong>:</p>
+                                    <p><strong>Rooms Count</strong>:</p>
+                                    <p><strong>Bathroom Count</strong>:</p>
+                                    <p><strong>Land Area</strong>:</p>
+                                    <p><strong>Garden Size</strong>:</p>
+                                    <p><strong>Finishing</strong>:</p>
+                                    <p style="display: none;"><strong>Data Source</strong>:</p>
+                                `;
 
                                 editOverlay.style.display = "flex";
                                 editPopup.innerHTML = `
@@ -399,7 +419,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             detail.innerHTML = `
                                             ${key}
                                             <div class="edit-drop">
-                                                <div class="value">${compoundsNamesList[0]}</div><i class="fa-solid fa-chevron-down"></i>
+                                                <div class="value">New Compound</div><i class="fa-solid fa-chevron-down"></i>
                                                 <ul class="dropdown">
                                                 </ul>
                                             </div>`;
@@ -497,52 +517,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                     document.querySelector(".edit-details").addEventListener("click", toggleDatePicker);
 
-                                    $(document).ready(function () {
-                                        $(".edit-drop").click(function (event) {
-                                            event.stopPropagation();
-
-                                            let dropdown = $(this).find(".dropdown");
-
-                                            $(".dropdown").not(dropdown).slideUp();
-
-                                            dropdown.stop(true, true).slideToggle();
-                                            $(this).find("i").toggleClass("rotate-icon");
-                                        });
-
-                                        $(document).click(function () {
-                                            $(".dropdown").slideUp();
-                                        });
+                                    $(".edit-content").on("click", ".edit-drop", function (event) {
+                                        event.stopPropagation();
+                                
+                                        let dropdown = $(this).find(".dropdown");
+                                
+                                        // Close other dropdowns before opening this one
+                                        $(".dropdown").not(dropdown).slideUp();
+                                
+                                        dropdown.stop(true, true).slideToggle();
+                                        $(this).find("i").toggleClass("rotate-icon");
                                     });
-
-                                    $(document).ready(function () {
-                                        $(".edit-drop li").click(function (event) {
-                                            event.stopPropagation();
-
-                                            let selectedText = $(this).text();
-                                            let parentElement = $(this).closest(".building, .compound, .views");
-                                            let valueElement = parentElement.find(".value");
-                                            valueElement.text(selectedText);
-                                            $(this).closest(".dropdown").slideUp();
-                                            parentElement.find("i").toggleClass("rotate-icon");
-                                        });
+                                
+                                    $(".edit-content").on("click", ".edit-drop li", function (event) {
+                                        event.stopPropagation();
+                                
+                                        let selectedText = $(this).text();
+                                        let parentElement = $(this).closest(".building, .compound, .views");
+                                        let valueElement = parentElement.find(".value");
+                                
+                                        valueElement.text(selectedText);
+                                        $(this).closest(".dropdown").slideUp();
+                                        parentElement.find("i").toggleClass("rotate-icon");
                                     });
-
+                                
                                     $(document).click(function () {
                                         $(".dropdown").slideUp();
-                                    });
+                                    });                                   
 
                                     document.querySelector(".edit-details").innerHTML += `
                                     <div class="current-images">
                                         <h2>Current Images</h2>
                                         <div class="images">
-                                            <div class="chat-image">
-                                                <img src="../assets/Image 85.png" alt="Chat Image" draggable="false">
-                                                <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
-                                            </div>
-                                            <div class="chat-image">
-                                                <img src="../assets/Image_135.png" alt="Chat Image" draggable="false">
-                                                <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="photo-preview"></div>
@@ -639,12 +645,40 @@ document.addEventListener("DOMContentLoaded", function () {
                                     });
 
                                     uploadButton.addEventListener("click", function () {
-                                        fileField.value = "";
+                                        if (!fileField.files.length) {
+                                            showCustomAlert("Please select a file first.");
+                                            return;
+                                        }
+                                        const formData = new FormData();
+                                        formData.append("file", fileField.files[0]);
+                                        $.ajax({
+                                            url: "https://api.lenaai.net/images/",
+                                            method: "POST",
+                                            data: formData,
+                                            contentType: false,
+                                            processData: false,
+                                            success: function (response) {
+                                                console.log("File uploaded successfully:", response);
+                                                newUnitImages.push(response);
+
+                                                const imagesDiv = document.querySelector(".current-images").querySelector(".images");
+                                                imagesDiv.innerHTML += `
+                                                <div class="chat-image">
+                                                    <img src="${response.url}" alt="Chat Image" draggable="false">
+                                                    <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
+                                                </div>`;
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.error("Error:", xhr.responseText);
+                                            }
+                                        });
+
                                         document.querySelector(".photo-preview").innerHTML = "";
                                         document.querySelector(".photo-preview").style.display = "none";
                                         uploadButton.style.display = "none";
                                         attachButton.style.display = "block";
-                                    })
+                                        fileField.value = "";
+                                    });
 
                                     function toCamelCase(str) {
                                         return str
@@ -742,88 +776,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "downPayment": 0,
                                             "totalPrice": 0,
                                             "paymentPlans": "",
-                                            "images": [
-                                                {
-                                                    "fileType": "image",
-                                                    "height": 2200,
-                                                    "thumbnailUrl": "https://ik.imagekit.io/lenaai/tr:n-ik_ml_thumbnail/35b219a5-32b7-451a-a019-bbe3bed4bb5c_WfuFCcKP_",
-                                                    "size": 217466,
-                                                    "fileId": "67b74eca432c47641657deb7",
-                                                    "url": "https://ik.imagekit.io/lenaai/35b219a5-32b7-451a-a019-bbe3bed4bb5c_WfuFCcKP_",
-                                                    "width": 1700,
-                                                    "versionInfo": {
-                                                        "id": "67b74eca432c47641657deb7",
-                                                        "name": "Version 1"
-                                                    },
-                                                    "AITags": null,
-                                                    "filePath": "/35b219a5-32b7-451a-a019-bbe3bed4bb5c_WfuFCcKP_",
-                                                    "name": "35b219a5-32b7-451a-a019-bbe3bed4bb5c_WfuFCcKP_"
-                                                },
-                                                {
-                                                    "fileType": "image",
-                                                    "height": 2200,
-                                                    "thumbnailUrl": "https://ik.imagekit.io/lenaai/tr:n-ik_ml_thumbnail/8cb327b4-546b-4381-8ac4-c3f459d31197_T6vsOZ-ES",
-                                                    "size": 2295603,
-                                                    "fileId": "67b74ecc432c47641657e4de",
-                                                    "url": "https://ik.imagekit.io/lenaai/8cb327b4-546b-4381-8ac4-c3f459d31197_T6vsOZ-ES",
-                                                    "width": 1700,
-                                                    "versionInfo": {
-                                                        "id": "67b74ecc432c47641657e4de",
-                                                        "name": "Version 1"
-                                                    },
-                                                    "AITags": null,
-                                                    "filePath": "/8cb327b4-546b-4381-8ac4-c3f459d31197_T6vsOZ-ES",
-                                                    "name": "8cb327b4-546b-4381-8ac4-c3f459d31197_T6vsOZ-ES"
-                                                },
-                                                {
-                                                    "fileType": "image",
-                                                    "height": 2200,
-                                                    "thumbnailUrl": "https://ik.imagekit.io/lenaai/tr:n-ik_ml_thumbnail/8523b5bc-b114-4a7e-a6a7-d580987b6885_y-37Sa4E-",
-                                                    "size": 1971166,
-                                                    "fileId": "67b74ecf432c47641657f70b",
-                                                    "url": "https://ik.imagekit.io/lenaai/8523b5bc-b114-4a7e-a6a7-d580987b6885_y-37Sa4E-",
-                                                    "width": 1700,
-                                                    "versionInfo": {
-                                                        "id": "67b74ecf432c47641657f70b",
-                                                        "name": "Version 1"
-                                                    },
-                                                    "AITags": null,
-                                                    "filePath": "/8523b5bc-b114-4a7e-a6a7-d580987b6885_y-37Sa4E-",
-                                                    "name": "8523b5bc-b114-4a7e-a6a7-d580987b6885_y-37Sa4E-"
-                                                },
-                                                {
-                                                    "fileType": "image",
-                                                    "height": 2200,
-                                                    "thumbnailUrl": "https://ik.imagekit.io/lenaai/tr:n-ik_ml_thumbnail/7919df6b-8714-4e5d-ba05-fef3a5ece5b9_XDgSS08fO",
-                                                    "size": 516563,
-                                                    "fileId": "67b74ed1432c47641657fc6b",
-                                                    "url": "https://ik.imagekit.io/lenaai/7919df6b-8714-4e5d-ba05-fef3a5ece5b9_XDgSS08fO",
-                                                    "width": 1700,
-                                                    "versionInfo": {
-                                                        "id": "67b74ed1432c47641657fc6b",
-                                                        "name": "Version 1"
-                                                    },
-                                                    "AITags": null,
-                                                    "filePath": "/7919df6b-8714-4e5d-ba05-fef3a5ece5b9_XDgSS08fO",
-                                                    "name": "7919df6b-8714-4e5d-ba05-fef3a5ece5b9_XDgSS08fO"
-                                                },
-                                                {
-                                                    "fileType": "image",
-                                                    "height": 2200,
-                                                    "thumbnailUrl": "https://ik.imagekit.io/lenaai/tr:n-ik_ml_thumbnail/257cc40b-0e98-4252-8fe7-f79778a7208d_w3jGN1FGT",
-                                                    "size": 1311313,
-                                                    "fileId": "67b74ed3432c47641658019f",
-                                                    "url": "https://ik.imagekit.io/lenaai/257cc40b-0e98-4252-8fe7-f79778a7208d_w3jGN1FGT",
-                                                    "width": 1700,
-                                                    "versionInfo": {
-                                                        "id": "67b74ed3432c47641658019f",
-                                                        "name": "Version 1"
-                                                    },
-                                                    "AITags": null,
-                                                    "filePath": "/257cc40b-0e98-4252-8fe7-f79778a7208d_w3jGN1FGT",
-                                                    "name": "257cc40b-0e98-4252-8fe7-f79778a7208d_w3jGN1FGT"
-                                                }
-                                            ],
+                                            "images": newUnitImages,
                                             "updatedAt": getFormattedDateTime()
                                         };
                                         let unitId;
@@ -1089,39 +1042,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         document.querySelector(".edit-details").addEventListener("click", toggleDatePicker);
 
-                                        $(document).ready(function () {
-                                            $(".edit-drop").click(function (event) {
-                                                event.stopPropagation();
-
-                                                let dropdown = $(this).find(".dropdown");
-
-                                                $(".dropdown").not(dropdown).slideUp();
-
-                                                dropdown.stop(true, true).slideToggle();
-                                                $(this).find("i").toggleClass("rotate-icon");
-                                            });
-
-                                            $(document).click(function () {
-                                                $(".dropdown").slideUp();
-                                            });
+                                        $(".edit-content").on("click", ".edit-drop", function (event) {
+                                            event.stopPropagation();
+                                    
+                                            let dropdown = $(this).find(".dropdown");
+                                    
+                                            // Close other dropdowns before opening this one
+                                            $(".dropdown").not(dropdown).slideUp();
+                                    
+                                            dropdown.stop(true, true).slideToggle();
+                                            $(this).find("i").toggleClass("rotate-icon");
                                         });
-
-                                        $(document).ready(function () {
-                                            $(".edit-drop li").click(function (event) {
-                                                event.stopPropagation();
-
-                                                let selectedText = $(this).text();
-                                                let parentElement = $(this).closest(".building, .compound, .views");
-                                                let valueElement = parentElement.find(".value");
-                                                valueElement.text(selectedText);
-                                                $(this).closest(".dropdown").slideUp();
-                                                parentElement.find("i").toggleClass("rotate-icon");
-                                            });
+                                    
+                                        $(".edit-content").on("click", ".edit-drop li", function (event) {
+                                            event.stopPropagation();
+                                    
+                                            let selectedText = $(this).text();
+                                            let parentElement = $(this).closest(".building, .compound, .views");
+                                            let valueElement = parentElement.find(".value");
+                                    
+                                            valueElement.text(selectedText);
+                                            $(this).closest(".dropdown").slideUp();
+                                            parentElement.find("i").toggleClass("rotate-icon");
                                         });
-
+                                    
                                         $(document).click(function () {
                                             $(".dropdown").slideUp();
                                         });
+                                        
                                     }
 
                                     document.querySelector(".edit-details").innerHTML += `
@@ -1590,9 +1538,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "icon": `<i class="fa-solid fa-circle-right"></i>`
                                         },
                                         "Missing requirement": {
-                                            "color": "yellow",
-                                            "icon": `<i class="fa-solid fa-file-pen"></i>`
-                                        },
+                                            "color": "#CC7722",
+                                            "icon": `<i class="fa-solid fa-clipboard-question"></i>`
+                                        }
                                     };
                                     $.ajax({
                                         url: `https://api.lenaai.net/user-actions/${phoneNumber}/${clientId}`,
@@ -1978,6 +1926,90 @@ document.addEventListener("DOMContentLoaded", function () {
                                             }
                                             if (message.bot_response !== "") {
                                                 messagesDiv.appendChild(botResponse);
+                                            }
+
+                                            if (message.properties && message.properties !== "") {
+                                                Object.values(message.properties).forEach((property) => {
+                                                    let imagesDiv = document.createElement("div");
+                                                    imagesDiv.classList.add("images");
+
+                                                    let detailsDiv = document.createElement("div");
+                                                    detailsDiv.classList.add("property-details");
+                                                    detailsDiv.innerHTML = `
+                                                        <h2>${property.metadata.compound || ""}</h2>
+                                                        <p>Location<span>${property.metadata.city || ""}, ${property.metadata.country || ""}</span></p>
+                                                        <p>Type<span>${property.metadata.buildingType || ""}</span></p>
+                                                        <p>Rooms<span>${property.metadata.roomsCount || ""}</span></p>
+                                                        <p>Bathrooms<span>${property.metadata.bathroomCount || ""}</span></p>
+                                                        <p>Total Price<span>${property.metadata.totalPrice.toLocaleString() || ""} EGP</span></p>
+                                                        <p>Payment Plans<span>${property.metadata.paymentPlans || ""}</span></p>
+                                                        <p>Developer<span>${property.metadata.developer || ""}</span></p>
+                                                        <p>Floor<span>${property.metadata.floor || ""}</span></p>
+                                                        <p>View<span>${property.metadata.view || ""}</span></p>
+                                                        <p>Down Payment<span>${property.metadata.downPayment.toLocaleString() || ""} EGP</span></p>
+                                                        <p>Selling Area<span>${property.metadata.landArea || ""} m²</span></p>
+                                                        <p>Garden Size<span>${property.metadata.gardenSize || ""} m²</span></p>
+                                                        <p>Garage Area<span>${property.metadata.garageArea || ""} m²</span></p>
+                                                        <p>Delivery Date<span>${property.metadata.deliveryDate || ""}</span></p>
+                                                        <p>Finishing<span>${property.metadata.finishing || ""}</span></p>
+                                                    `;
+
+                                                    imagesDiv.appendChild(detailsDiv);
+
+                                                    let propertyImages = property.metadata.images;
+                                                    if (Array.isArray(propertyImages) && typeof propertyImages !== "string") {
+                                                        propertyImages.forEach(propertyImage => {
+                                                            let image = document.createElement("div");
+                                                            image.classList.add("chat-image");
+                                                            image.innerHTML = `<img src="${propertyImage.url}" alt="Property Image" draggable="false">`;
+                                                            imagesDiv.appendChild(image);
+                                                        });
+                                                    }
+
+                                                    messagesDiv.appendChild(imagesDiv);
+                                                })
+
+                                                // chat images drag
+                                                let wasDragging = false;
+
+                                                document.addEventListener("mousedown", function (e) {
+                                                    const slider = e.target.closest(".images");
+                                                    if (!slider || !slider.contains(e.target)) return;
+
+                                                    let startX = e.clientX;
+                                                    let scrollLeft = slider.scrollLeft;
+
+                                                    slider.classList.add("image-active");
+
+                                                    function handleMouseMove(e) {
+                                                        wasDragging = true;
+                                                        const x = e.clientX;
+                                                        const walk = (x - startX) * 1;
+                                                        slider.scrollLeft = scrollLeft - walk;
+                                                    }
+
+                                                    function stopScrolling() {
+                                                        slider.classList.remove("image-active");
+                                                        document.removeEventListener("mousemove", handleMouseMove);
+                                                        document.removeEventListener("mouseup", stopScrolling);
+
+                                                        if (wasDragging) {
+                                                            document.addEventListener("click", preventClick, true);
+                                                            setTimeout(() => {
+                                                                document.removeEventListener("click", preventClick, true);
+                                                                wasDragging = false;
+                                                            }, 0);
+                                                        }
+                                                    }
+
+                                                    document.addEventListener("mousemove", handleMouseMove);
+                                                    document.addEventListener("mouseup", stopScrolling, { once: true });
+                                                });
+                                                
+                                                function preventClick(e) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
                                             }
                                         })
 
