@@ -767,4 +767,6 @@ a {
 
 footer {
     background-color: var(--primary-color);
+    padding: 0 2rem;
+    text-align: left;
 }
