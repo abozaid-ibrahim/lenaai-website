@@ -1662,6 +1662,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 data-status="${borderByAction[action] ? "action-needed" : "no-action"}"
                                                 data-messages='${JSON.stringify(messages).replace(/'/g, "&apos;")}'
                                                 data-requirements='${JSON.stringify(user.requirements).replace(/'/g, "&apos;")}'
+                                                data-profile="${user.profile.toggle_ai_auto_reply}"
                                             >
                                                 <li class="client-name">${phoneNumber}</li>
                                                 <li class="client-date">${latestDateOnly}</li>
@@ -1923,6 +1924,18 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     <i class="fa-solid fa-paper-plane" id="submit-btn"></i>
                                                 </div>
                                             </div>`;
+
+                                            const userProfile = client.getAttribute("data-profile");
+                                            const leftOption = chatHistory.querySelector(".seg-opt-left");
+                                            const rightOption = chatHistory.querySelector(".seg-opt-right");
+
+                                            if (userProfile === "true") {
+                                                leftOption.classList.add("seg-active");
+                                                rightOption.classList.remove("seg-active");
+                                            } else {
+                                                rightOption.classList.add("seg-active");
+                                                leftOption.classList.remove("seg-active");
+                                            }
     
                                             const chatSubmit = document.getElementById("submit-btn");
                                             const inputForm = document.getElementById("input-form");
@@ -1993,6 +2006,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     }),
                                                     success: function (response) {
                                                         console.log("API Response:", response);
+                                                        client.setAttribute("data-profile", toggleAI.toString());
                                                     },
                                                     error: function (error) {
                                                         console.error("API Error:", error);
@@ -2161,29 +2175,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                             document.querySelector(".close-btn").addEventListener("click", function () {
                                                 chatOverlay.style.display = "none";
                                                 chatHistory.innerHTML = '';
-                                            });
-    
-                                            $.ajax({
-                                                url: `https://api.lenaai.net/lenaai-auto-reply/${userNumber}/${clientId}`,
-                                                method: "GET",
-                                                dataType: "json",
-                                                success: function (response) {
-                                                    console.log("API Response:", response);
-                                        
-                                                    const rightOption = document.querySelector(".seg-opt-right");
-                                                    const leftOption = document.querySelector(".seg-opt-left");
-                                        
-                                                    if (response.toggle_ai_auto_reply === true) {
-                                                        leftOption.classList.add("seg-active");
-                                                        rightOption.classList.remove("seg-active");
-                                                    } else {
-                                                        rightOption.classList.add("seg-active");
-                                                        leftOption.classList.remove("seg-active");
-                                                    }
-                                                },
-                                                error: function (error) {
-                                                    console.error("API Error:", error);
-                                                }
                                             });
                                         });
                                     });
