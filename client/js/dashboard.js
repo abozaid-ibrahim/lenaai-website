@@ -2397,16 +2397,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 spreadSheetInput.style.border = "2px solid #cbb26a";
 
                 const requestData = {
+                    "client_id": clientId,
                     "spreadsheet_url": spreadSheetLink,
+                    "sheet_range": "Sheet1"
                 }
     
                 console.log(requestData);
-    
-                setTimeout(() => {
-                    editPopup.classList.remove("delete-popup");
-                    editOverlay.style.display = "none";
-                    editPopup.innerHTML = '';
-                }, 1500);
+
+                $.ajax({
+                    url: "https://api.lenaai.net/import-from-spreadsheet",
+                    method: "POST",
+                    contentType: "applicaiton/json",
+                    data: JSON.stringify(requestData),
+                    success: function (response) {
+                        console.log("request success", response);
+                        editPopup.classList.remove("delete-popup");
+                        editOverlay.style.display = "none";
+                        editPopup.innerHTML = '';
+                    },
+                    error: function (error) {
+                        console.log("request failed", error);
+                        error.style.display = "none";
+                        error.innerHTML = ``;
+                    }
+                })
             }
         });
     });
