@@ -52,6 +52,7 @@
         background-color: #2e2e2eec;
         border: 2px solid rgba(255, 255, 255, 0.2);
         border-radius: 16px;
+        z-index: 1;
     }
 
     .nav-list a {
@@ -94,9 +95,9 @@
         padding: 0 1rem;
     }
 
-    .filters-container {
+    .filters {
         flex-direction: column;
-        padding-left: 0;
+        gap: 20px;
     }
 
     .overview {

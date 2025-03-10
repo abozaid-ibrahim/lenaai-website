@@ -565,12 +565,49 @@ document.addEventListener("DOMContentLoaded", function () {
                                     const dropZone = document.querySelector(".upload-images");
                                     const uploadButton = document.querySelector(".upload-btn");
                                     const attachButton = document.querySelector(".upload-images .fa-plus");
-                                    const deleteButtons = document.querySelectorAll(".del");
+                                    const saveButton = document.querySelector(".save");
+                                    let pendingRequests = 0;
 
-                                    deleteButtons.forEach((button) => {
-                                        button.addEventListener("click", function () {
-                                            this.closest(".chat-image").remove();
-                                        });
+                                    function updateUIState() {
+                                        if (pendingRequests > 0) {
+                                            saveButton.classList.add("disabled");
+                                        } else {
+                                            saveButton.classList.remove("disabled");
+                                        }
+                                    }
+
+                                    document.querySelector(".images").addEventListener("click", function (event) {
+                                        if (event.target.closest(".del")) {
+                                            let theImage = event.target.closest(".chat-image");
+                                            const imageUrl = theImage.querySelector("img").getAttribute("src");
+                                            const imageFileId = theImage.querySelector("img").getAttribute("data-file-id");
+                                            let overlay = document.createElement("div");
+                                            overlay.classList.add("image-overlay");
+                                            overlay.innerHTML = `<i class="fa-solid fa-spinner fa-spin loading-spinner"></i>`;
+                                            theImage.appendChild(overlay);
+                                            theImage.classList.add("deleting");
+
+                                            pendingRequests++;
+                                            updateUIState();
+                                            $.ajax({
+                                                url: `https://api.lenaai.net/images/${imageFileId}`,
+                                                method: "DELETE",
+                                                success: function (response) {
+                                                    console.log("File deleted successfully:", response);
+                                                    theImage.remove();
+                                                    newUnitImages = newUnitImages.filter(item => item.url !== imageUrl);
+                                                },
+                                                error: function (xhr, status, error) {
+                                                    console.error("Error:", xhr.responseText);
+                                                    theImage.classList.remove("deleting");
+                                                    overlay.remove();
+                                                },
+                                                complete: function () {
+                                                    pendingRequests--;
+                                                    updateUIState();
+                                                }
+                                            });
+                                        }
                                     });
 
                                     attachButton.addEventListener("click", function () {
@@ -651,6 +688,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                         }
                                         const formData = new FormData();
                                         formData.append("file", fileField.files[0]);
+                                        let tempURL = URL.createObjectURL(fileField.files[0]);
+                                        let newImage = document.createElement("div");
+                                        newImage.classList.add("chat-image", "uploading");
+                                        newImage.innerHTML = `
+                                            <img src="${tempURL}" alt="Uploading Image">
+                                            <div class="image-overlay">
+                                                <i class="fa-solid fa-spinner fa-spin loading-spinner"></i>
+                                            </div>
+                                        `;
+                                        const imagesDiv = document.querySelector(".current-images .images");
+                                        imagesDiv.appendChild(newImage);
+
+                                        pendingRequests++;
+                                        updateUIState();
                                         $.ajax({
                                             url: "https://api.lenaai.net/images/",
                                             method: "POST",
@@ -662,14 +713,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 newUnitImages.push(response);
 
                                                 const imagesDiv = document.querySelector(".current-images").querySelector(".images");
+                                                newImage.remove();
                                                 imagesDiv.innerHTML += `
                                                 <div class="chat-image">
-                                                    <img src="${response.url}" alt="Chat Image" draggable="false">
+                                                    <img src="${response.url}" data-file-id="${response.fileId}" alt="Chat Image" draggable="false">
                                                     <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
                                                 </div>`;
                                             },
                                             error: function (xhr, status, error) {
                                                 console.error("Error:", xhr.responseText);
+                                                newImage.remove();
+                                            },
+                                            complete: function () {
+                                                pendingRequests--;
+                                                updateUIState();
                                             }
                                         });
 
@@ -1093,6 +1150,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                     const uploadButton = document.querySelector(".upload-btn");
                                     const attachButton = document.querySelector(".upload-images .fa-plus");
                                     const imagesDiv = document.querySelector(".images");
+                                    const saveButton = document.querySelector(".save");
+                                    let pendingRequests = 0;
+
+                                    function updateUIState() {
+                                        if (pendingRequests > 0) {
+                                            saveButton.classList.add("disabled");
+                                        } else {
+                                            saveButton.classList.remove("disabled");
+                                        }
+                                    }
 
                                     allUnitsImages[originalUnitId].forEach((image) => {
                                         imagesDiv.innerHTML += `
@@ -1101,28 +1168,41 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
                                             </div>`
                                         ;
+                                    });
 
-                                        const deleteButtons = document.querySelectorAll(".del");
-                                        deleteButtons.forEach((button) => {
-                                            button.addEventListener("click", function () {
-                                                let theImage = button.parentElement;
-                                                const imageUrl = theImage.querySelector("img").getAttribute("src");
-                                                const imageFileId = theImage.querySelector("img").getAttribute("data-file-id");
-                                                theImage.remove();
-                                                $.ajax({
-                                                    url: `https://api.lenaai.net/images/${imageFileId}`,
-                                                    method: "DELETE",
-                                                    success: function (response) {
-                                                        console.log("File deleted successfully:", response);
-                                                        allUnitsImages[originalUnitId] = allUnitsImages[originalUnitId].filter(item => item.url !== imageUrl);
-                                                    },
-                                                    error: function (xhr, status, error) {
-                                                        console.error("Error:", xhr.responseText);
-                                                    }
-                                                });
+                                    document.querySelector(".images").addEventListener("click", function (event) {
+                                        if (event.target.closest(".del")) {
+                                            let theImage = event.target.closest(".chat-image");
+                                            const imageUrl = theImage.querySelector("img").getAttribute("src");
+                                            const imageFileId = theImage.querySelector("img").getAttribute("data-file-id");
+                                            let overlay = document.createElement("div");
+                                            overlay.classList.add("image-overlay");
+                                            overlay.innerHTML = `<i class="fa-solid fa-spinner fa-spin loading-spinner"></i>`;
+                                            theImage.appendChild(overlay);
+                                            theImage.classList.add("deleting");
+
+                                            pendingRequests++;
+                                            updateUIState();
+                                            $.ajax({
+                                                url: `https://api.lenaai.net/images/${imageFileId}`,
+                                                method: "DELETE",
+                                                success: function (response) {
+                                                    console.log("File deleted successfully:", response);
+                                                    theImage.remove();
+                                                    allUnitsImages[originalUnitId] = allUnitsImages[originalUnitId].filter(item => item.url !== imageUrl);
+                                                },
+                                                error: function (xhr, status, error) {
+                                                    console.error("Error:", xhr.responseText);
+                                                    theImage.classList.remove("deleting");
+                                                    overlay.remove();
+                                                },
+                                                complete: function () {
+                                                    pendingRequests--;
+                                                    updateUIState();
+                                                }
                                             });
-                                        });
-                                    })
+                                        }
+                                    });
 
                                     attachButton.addEventListener("click", function () {
                                         fileField.click();
@@ -1202,6 +1282,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                         }
                                         const formData = new FormData();
                                         formData.append("file", fileField.files[0]);
+                                        let tempURL = URL.createObjectURL(fileField.files[0]);
+                                        let newImage = document.createElement("div");
+                                        newImage.classList.add("chat-image", "uploading");
+                                        newImage.innerHTML = `
+                                            <img src="${tempURL}" alt="Uploading Image">
+                                            <div class="image-overlay">
+                                                <i class="fa-solid fa-spinner fa-spin loading-spinner"></i>
+                                            </div>
+                                        `;
+                                        const imagesDiv = document.querySelector(".current-images .images");
+                                        imagesDiv.appendChild(newImage);
+
+                                        pendingRequests++;
+                                        updateUIState();
                                         $.ajax({
                                             url: "https://api.lenaai.net/images/",
                                             method: "POST",
@@ -1213,14 +1307,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 allUnitsImages[originalUnitId].push(response);
 
                                                 const imagesDiv = document.querySelector(".current-images").querySelector(".images");
+                                                newImage.remove();
                                                 imagesDiv.innerHTML += `
                                                 <div class="chat-image">
-                                                    <img src="${response.url}" alt="Chat Image" draggable="false">
+                                                    <img src="${response.url}" data-file-id="${response.fileId}" alt="Chat Image" draggable="false">
                                                     <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
                                                 </div>`;
                                             },
                                             error: function (xhr, status, error) {
                                                 console.error("Error:", xhr.responseText);
+                                                newImage.remove();
+                                            },
+                                            complete: function () {
+                                                pendingRequests--;
+                                                updateUIState();
                                             }
                                         });
 
@@ -1548,7 +1648,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                         contentType: "json",
                                         success: function (response) {
                                             if (response.action && Object.keys(borderByAction).includes(response.action)) {
-                                                callNow.innerHTML = `${borderByAction[response.action].icon}${response.action}`;
+                                                if (response.action === "Missing requirement") {
+                                                    callNow.innerHTML = `${borderByAction[response.action].icon}Missing Info`;
+                                                } else {
+                                                    callNow.innerHTML = `${borderByAction[response.action].icon}${response.action}`;
+                                                }
                                                 allLeadScores[phoneNumber] = response.score;
                                                 callNow.style.backgroundColor = borderByAction[response.action].color;
                                                 callNow.style.color = "#fff";
@@ -1572,6 +1676,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 const clients = Array.from(document.querySelectorAll(".client"));
 
+                                $(".filters").on("click", ".filters-drop", function (event) {
+                                    event.stopPropagation();
+                            
+                                    let dropdown = $(this).find(".dropdown");
+                            
+                                    $(".dropdown").not(dropdown).slideUp();
+                            
+                                    dropdown.stop(true, true).slideToggle();
+                                });
+                            
+                                $(".filters").on("click", ".filters-drop li", function (event) {
+                                    event.stopPropagation();
+                            
+                                    let selectedItem = $(this).clone();
+                                    let filterButton = $(this).closest(".filters-drop").find(".value");
+
+                                    if (filterButton.length) {
+                                        filterButton.html(selectedItem.html() + `<i class="fa-solid fa-chevron-down"></i>`);
+                                    }
+
+                                    $(this).closest(".dropdown").slideUp();
+                                });
+                            
+                                $(document).click(function () {
+                                    $(".dropdown").slideUp();
+                                });
+
+                                // All Chats filer
+                                const allChatsButton = document.querySelector(".all-chats");
+                                allChatsButton.addEventListener("click", function () {
+                                    clients.forEach(client => {
+                                        client.style.display = "flex";
+                                    });
+                                })
+
                                 // Recent first filter
                                 let descending = false;
                                 const recentButton = document.querySelector(".recent");
@@ -1592,62 +1731,36 @@ document.addEventListener("DOMContentLoaded", function () {
                                         // }
                                         container[0].appendChild(client)
                                     });
-
-                                    descending = !descending;
-                                    if (descending === true) {
-                                        recentButton.classList.add("filter-active");
-                                    } else {
-                                        recentButton.classList.remove("filter-active");
-                                    }
                                 });
 
                                 // Action filter
-                                let actionFilterActive = false;
                                 const actionButton = document.querySelector(".action");
                                 actionButton.addEventListener("click", function () {
-                                    if (!actionFilterActive) {
-                                        clients.forEach((client, i) => {
-                                            if (client.getAttribute("data-status") !== "action-needed") {
-                                                client.style.display = "none";
-                                            }
-
-                                            // if (i %2 === 0) {
-                                            //     client.style.backgroundColor = "#F9FAFB";
-                                            // } else {
-                                            //     client.style.backgroundColor = "#F3F4F6";
-                                            // }
-                                        });
-
-                                        actionFilterActive = !actionFilterActive;
-                                    } else {
-                                        clients.forEach((client) => {
+                                    clients.forEach((client, i) => {
+                                        if (client.getAttribute("data-status") !== "action-needed") {
+                                            client.style.display = "none";
+                                        } else {
                                             client.style.display = "flex";
-                                        });
+                                        }
 
-                                        actionFilterActive = !actionFilterActive;
-                                    }
-
-                                    if (actionFilterActive === true) {
-                                        actionButton.classList.add("filter-active");
-                                    } else {
-                                        actionButton.classList.remove("filter-active");
-                                    }
+                                        // if (i %2 === 0) {
+                                        //     client.style.backgroundColor = "#F9FAFB";
+                                        // } else {
+                                        //     client.style.backgroundColor = "#F3F4F6";
+                                        // }
+                                    });
                                 });
 
                                 // Switch button for active
-                                const switchButton = document.getElementById("switch-status");
-                                switchButton.addEventListener("change", function () {
-                                    if (switchButton.checked) {
-                                        clients.forEach((client) => {
-                                            if (client.getAttribute("data-status") === "action-needed") {
-                                                client.style.display = "none";
-                                            }
-                                        })
-                                    } else {
-                                        clients.forEach(client => {
+                                const noActionButton = document.querySelector(".no-action");
+                                noActionButton.addEventListener("click", function () {
+                                    clients.forEach((client) => {
+                                        if (client.getAttribute("data-status") === "action-needed") {
+                                            client.style.display = "none";
+                                        } else {
                                             client.style.display = "flex";
-                                        });
-                                    }
+                                        }
+                                    })
                                 });
 
                                 // Client Search bar
@@ -1906,20 +2019,70 @@ document.addEventListener("DOMContentLoaded", function () {
                                         });                                        
 
                                         const messagesDiv = document.getElementById("messages");
+                                        let latestTimestamp = "";
                                         parsedMessages.forEach((message) => {
                                             if (message.bot_response === "" && message.user_message === "") {
                                                 return;
                                             }
+
+                                            function timeAgo(timestamp) {
+                                                let now = new Date();
+                                                let messageTime = new Date(timestamp);
+                                                let diff = Math.floor((now - messageTime) / 60000);
+                                            
+                                                if (diff < 1) return "Just now";
+                                                if (diff < 60) return `${diff} min ago`;
+                                                if (diff < 1440) return `${Math.floor(diff / 60)} hrs ago`;
+                                            
+                                                let options = { month: "short", day: "numeric" };
+                                            
+                                                if (messageTime.getFullYear() !== now.getFullYear()) {
+                                                    options.year = "numeric";
+                                                }
+                                            
+                                                return messageTime.toLocaleDateString("en-US", options);
+                                            }
+
+                                            function formatTime(timestamp) {
+                                                let messageTime = new Date(timestamp);
+                                                return messageTime.toLocaleTimeString("en-US", {
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                    hour12: true
+                                                });
+                                            }
+        
                                             let userMessage = document.createElement("div");
                                             let botResponse = document.createElement("div");
-                                            let cleanMessage = message.bot_response.split('"message":')[0].trim();
 
+                                            let userMessageTime = document.createElement("div");
+                                            let botMessageTime = document.createElement("div");
+
+                                            let cleanMessage = message.bot_response.split('"message":')[0].trim();
                                             cleanMessage = cleanMessage.replace(/[,"]+$/, "").trim();
-                                            userMessage.innerHTML = message.user_message
-                                            botResponse.innerHTML = cleanMessage
+
+                                            userMessageTime.innerHTML = formatTime(message.timestamp);
+                                            userMessageTime.classList.add("message-time");
+                                            botMessageTime.innerHTML = formatTime(message.timestamp);
+                                            botMessageTime.classList.add("message-time");
+
+                                            userMessage.innerHTML = message.user_message;
+                                            userMessage.appendChild(userMessageTime);
+
+                                            botResponse.innerHTML = cleanMessage;
+                                            botResponse.appendChild(botMessageTime);
 
                                             userMessage.classList.add("message", "sent");
                                             botResponse.classList.add("message");
+
+                                            let conversationTime = timeAgo(message.timestamp);
+                                            if (latestTimestamp === "" || latestTimestamp !== conversationTime) {
+                                                let timeDiv = document.createElement("div");
+                                                timeDiv.classList.add("timestamp");
+                                                timeDiv.textContent = conversationTime;
+                                                messagesDiv.appendChild(timeDiv);
+                                                latestTimestamp = conversationTime;
+                                            }
 
                                             if (message.user_message !== "") {
                                                 messagesDiv.appendChild(userMessage);

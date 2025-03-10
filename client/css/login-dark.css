@@ -158,6 +158,17 @@ a {
     margin: 13rem auto;
 }
 
+.signup-form {
+    width: 100%;
+    max-width: 550px;
+    padding: 40px;
+    background-color: #111;
+    border-radius: 12px;
+    border: 2px solid #cbb26a;
+    text-align: center;
+    margin: 8rem auto;
+}
+
 h2 {
     font-size: 1.8rem;
     margin-bottom: 20px;
@@ -201,6 +212,12 @@ input[type="submit"]:hover {
     background-color: white;
     color: black;
     box-shadow: 0 0 10px rgba(203, 178, 106, 0.5);
+}
+
+.form-half {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
 }
 
 .error {
