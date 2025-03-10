@@ -1558,56 +1558,34 @@ document.addEventListener("DOMContentLoaded", function () {
                         renderUnits(response);
 
                         // Populate chat list
-                        $.ajax({
-                            url: `https://api.lenaai.net/conversations/${clientId}`,
-                            method: "GET",
-                            dataType: "json",
-                            success: function (response) {
-                                const container = $(".clients-list");
-                                let allPhoneNumbers = [];
-                                let allLeadScores = {};
+                        let cursor = "";
+                        let isLoading = false;
+                        let hasMoreData = true;
+                        let allPhoneNumbers = [];
+                        let allLeadScores = {};
 
-                                response.forEach((conversation, i) => {
-                                    const phoneNumber = conversation.phone_number;
-                                    const messages = conversation.messages;
+                        function fetchData() {
+                            if (isLoading || !hasMoreData) return;
+                            isLoading = true;
 
-                                    allPhoneNumbers.push(phoneNumber);
-                                    let latestDate = "N/A";
-                                    let latestDateOnly = "";
-                                    if (messages.length > 0) {
-                                        const latestTimestamp = messages
-                                            .map(msg => new Date(msg.timestamp))
-                                            .sort((a, b) => b - a)[0];
-
-                                        latestDate = latestTimestamp.toISOString();
-                                        latestDateOnly = latestTimestamp.toISOString().split("T")[0];
+                            $.ajax({
+                                url: `https://api.lenaai.net/dashboard/${clientId}`,
+                                method: "GET",
+                                data: {
+                                    "cursor": cursor
+                                },
+                                success: function (response) {
+                                    console.log(response)
+                                    if (!response.pagination.has_more || !response.pagination.next_cursor) {
+                                        hasMoreData = false;
+                                        $(".overview-container").off("scroll");
+                                    } else {
+                                        cursor = response.pagination.next_cursor;
                                     }
+                        
+                                    isLoading = false;
 
-                                    container.append(`
-                                        <ul class="client"
-                                            data-date="${latestDate}"
-                                            data-status="no-action"
-                                            data-messages='${JSON.stringify(messages).replace(/'/g, "&apos;")}'
-                                        >
-                                            <li class="client-name">${phoneNumber}</li>
-                                            <li class="client-date">${latestDateOnly}</li>
-                                            <li class="requirements">
-                                                Requirements
-                                                <ul class="dropdown">
-                                                    <li>2 bedrooms</li>
-                                                    <li>villa</li>
-                                                    <li>Cairo</li>
-                                                </ul>
-                                            </li>
-                                            <li class="need-action">
-                                                <div class="messages-no">${(messages.length * 2).toString().padStart(2, "0")}</div>
-                                            </li>
-                                            <li class="call-now"><i class="fa-regular fa-circle-check"></i>No Action</li>
-                                        </ul>
-                                    `);
-
-                                    const appendedClient = container.children().last()[0];
-                                    const callNow = appendedClient.querySelector(".call-now");
+                                    const container = $(".clients-list");
                                     const borderByAction = {
                                         "Make a call": {
                                             "color": "green",
@@ -1642,574 +1620,581 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "icon": `<i class="fa-solid fa-clipboard-question"></i>`
                                         }
                                     };
-                                    $.ajax({
-                                        url: `https://api.lenaai.net/user-actions/${phoneNumber}/${clientId}`,
-                                        method: "GET",
-                                        contentType: "json",
-                                        success: function (response) {
-                                            if (response.action && Object.keys(borderByAction).includes(response.action)) {
-                                                if (response.action === "Missing requirement") {
-                                                    callNow.innerHTML = `${borderByAction[response.action].icon}Missing Info`;
-                                                } else {
-                                                    callNow.innerHTML = `${borderByAction[response.action].icon}${response.action}`;
-                                                }
-                                                allLeadScores[phoneNumber] = response.score;
-                                                callNow.style.backgroundColor = borderByAction[response.action].color;
-                                                callNow.style.color = "#fff";
-                                                callNow.style.border = borderByAction[response.action].color;
-                                                $(appendedClient).attr("data-status", "action-needed");
+    
+                                    response.users.forEach((user) => {
+                                        const phoneNumber = user.phoneNumber;
+                                        allPhoneNumbers.push(phoneNumber);
+
+                                        const messages = user.conversation;
+
+                                        const action = user.actions.action;
+                                        const score = user.actions.score
+                                        allLeadScores[phoneNumber] = score;
+                                        const actionElement = document.createElement("li");
+                                        actionElement.classList.add("call-now");
+                                        if (action && Object.keys(borderByAction).includes(action)) {
+                                            if (action === "Missing requirement") {
+                                                actionElement.innerHTML = `${borderByAction[action].icon}Missing Info`;
                                             } else {
-                                                callNow.innerHTML = `<i class="fa-regular fa-circle-check"></i>No Action`;
+                                                actionElement.innerHTML = `${borderByAction[action].icon}${action}`;
                                             }
-                                        },
-                                        error: function (error) {
-                                            console.log(`Failed to call user actions for user ${userNumber}`, error);
-                                        }
-                                    });
-
-                                    // if (i %2 === 0) {
-                                    //     container.children().last().css("background-color", "#F9FAFB");
-                                    // } else {
-                                    //     container.children().last().css("background-color", "#E5E7EB");
-                                    // }
-                                });
-
-                                const clients = Array.from(document.querySelectorAll(".client"));
-
-                                $(".filters").on("click", ".filters-drop", function (event) {
-                                    event.stopPropagation();
-                            
-                                    let dropdown = $(this).find(".dropdown");
-                            
-                                    $(".dropdown").not(dropdown).slideUp();
-                            
-                                    dropdown.stop(true, true).slideToggle();
-                                });
-                            
-                                $(".filters").on("click", ".filters-drop li", function (event) {
-                                    event.stopPropagation();
-                            
-                                    let selectedItem = $(this).clone();
-                                    let filterButton = $(this).closest(".filters-drop").find(".value");
-
-                                    if (filterButton.length) {
-                                        filterButton.html(selectedItem.html() + `<i class="fa-solid fa-chevron-down"></i>`);
-                                    }
-
-                                    $(this).closest(".dropdown").slideUp();
-                                });
-                            
-                                $(document).click(function () {
-                                    $(".dropdown").slideUp();
-                                });
-
-                                // All Chats filer
-                                const allChatsButton = document.querySelector(".all-chats");
-                                allChatsButton.addEventListener("click", function () {
-                                    clients.forEach(client => {
-                                        client.style.display = "flex";
-                                    });
-                                })
-
-                                // Recent first filter
-                                let descending = false;
-                                const recentButton = document.querySelector(".recent");
-                                recentButton.addEventListener("click", function () {
-
-                                    clients.sort((a, b) => {
-                                        const dateA = new Date(a.getAttribute("data-date"));
-                                        const dateB = new Date(b.getAttribute("data-date"));
-                                        return descending ? dateA - dateB : dateB - dateA;
-                                    });
-
-                                    container[0].innerHTML = "";
-                                    clients.forEach((client, i) => {
-                                        // if (i %2 === 0) {
-                                        //     client.style.backgroundColor = "#F9FAFB";
-                                        // } else {
-                                        //     client.style.backgroundColor = "#F3F4F6";
-                                        // }
-                                        container[0].appendChild(client)
-                                    });
-                                });
-
-                                // Action filter
-                                const actionButton = document.querySelector(".action");
-                                actionButton.addEventListener("click", function () {
-                                    clients.forEach((client, i) => {
-                                        if (client.getAttribute("data-status") !== "action-needed") {
-                                            client.style.display = "none";
+                                            actionElement.style.backgroundColor = borderByAction[action].color;
+                                            actionElement.style.color = "#fff";
+                                            actionElement.style.border = borderByAction[action].color;
                                         } else {
-                                            client.style.display = "flex";
+                                            actionElement.innerHTML = `<i class="fa-regular fa-circle-check"></i>No Action`;
                                         }
 
-                                        // if (i %2 === 0) {
-                                        //     client.style.backgroundColor = "#F9FAFB";
-                                        // } else {
-                                        //     client.style.backgroundColor = "#F3F4F6";
-                                        // }
+                                        let latestDate = "N/A";
+                                        let latestDateOnly = "";
+                                        if (messages.length > 0) {
+                                            const latestTimestamp = messages
+                                                .map(msg => new Date(msg.timestamp))
+                                                .sort((a, b) => b - a)[0];
+    
+                                            latestDate = latestTimestamp.toISOString();
+                                            latestDateOnly = latestTimestamp.toISOString().split("T")[0];
+                                        }
+    
+                                        const client = $(`
+                                            <ul class="client"
+                                                data-date="${latestDate}"
+                                                data-status="${borderByAction[action] ? "action-needed" : "no-action"}"
+                                                data-messages='${JSON.stringify(messages).replace(/'/g, "&apos;")}'
+                                                data-requirements='${JSON.stringify(user.requirements).replace(/'/g, "&apos;")}'
+                                            >
+                                                <li class="client-name">${phoneNumber}</li>
+                                                <li class="client-date">${latestDateOnly}</li>
+                                                <li class="requirements">
+                                                    Requirements
+                                                    <ul class="dropdown">
+                                                        <li>2 bedrooms</li>
+                                                        <li>villa</li>
+                                                        <li>Cairo</li>
+                                                    </ul>
+                                                </li>
+                                                <li class="need-action">
+                                                    <div class="messages-no">${(messages.length * 2).toString().padStart(2, "0")}</div>
+                                                </li>
+                                            </ul>
+                                        `);
+                                        client.append(actionElement);
+                                        container.append(client);
                                     });
-                                });
 
-                                // Switch button for active
-                                const noActionButton = document.querySelector(".no-action");
-                                noActionButton.addEventListener("click", function () {
-                                    clients.forEach((client) => {
-                                        if (client.getAttribute("data-status") === "action-needed") {
-                                            client.style.display = "none";
-                                        } else {
-                                            client.style.display = "flex";
+                                    $(".overview-container").on("scroll", function () {
+                                        if (!hasMoreData) return;
+
+                                        if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 100) {
+                                            fetchData();
                                         }
+                                    });
+    
+                                    const clients = Array.from(document.querySelectorAll(".client"));
+    
+                                    // All Chats filer
+                                    const allChatsButton = document.querySelector(".all-chats");
+                                    allChatsButton.addEventListener("click", function () {
+                                        clients.forEach(client => {
+                                            client.style.display = "flex";
+                                        });
                                     })
-                                });
-
-                                // Client Search bar
-                                const search = document.getElementById("client-search-bar");
-                                const notFound = document.querySelector(".not-found");
-                                const baseNotFoundText = notFound.textContent;
-                                search.addEventListener("keyup", function () {
-                                    const input = search.value
-                                    let filter = input.toUpperCase();
-                                    let resultsCount = 0;
-
-                                    clients.forEach((client) => {
-                                        const clientName = client.querySelector(".client-name").textContent;
-                                        if (clientName.toUpperCase().indexOf(filter) > -1) {
-                                            client.style.display = "flex";
-                                            resultsCount++;
+    
+                                    // Recent first filter
+                                    let descending = false;
+                                    const recentButton = document.querySelector(".recent");
+                                    recentButton.addEventListener("click", function () {
+    
+                                        clients.sort((a, b) => {
+                                            const dateA = new Date(a.getAttribute("data-date"));
+                                            const dateB = new Date(b.getAttribute("data-date"));
+                                            return descending ? dateA - dateB : dateB - dateA;
+                                        });
+    
+                                        container[0].innerHTML = "";
+                                        clients.forEach((client, i) => {
+                                            // if (i %2 === 0) {
+                                            //     client.style.backgroundColor = "#F9FAFB";
+                                            // } else {
+                                            //     client.style.backgroundColor = "#F3F4F6";
+                                            // }
+                                            container[0].appendChild(client)
+                                        });
+                                    });
+    
+                                    // Action filter
+                                    const actionButton = document.querySelector(".action");
+                                    actionButton.addEventListener("click", function () {
+                                        clients.forEach((client, i) => {
+                                            if (client.getAttribute("data-status") !== "action-needed") {
+                                                client.style.display = "none";
+                                            } else {
+                                                client.style.display = "flex";
+                                            }
+    
+                                            // if (i %2 === 0) {
+                                            //     client.style.backgroundColor = "#F9FAFB";
+                                            // } else {
+                                            //     client.style.backgroundColor = "#F3F4F6";
+                                            // }
+                                        });
+                                    });
+    
+                                    // Switch button for active
+                                    const noActionButton = document.querySelector(".no-action");
+                                    noActionButton.addEventListener("click", function () {
+                                        clients.forEach((client) => {
+                                            if (client.getAttribute("data-status") === "action-needed") {
+                                                client.style.display = "none";
+                                            } else {
+                                                client.style.display = "flex";
+                                            }
+                                        })
+                                    });
+    
+                                    // Client Search bar
+                                    const search = document.getElementById("client-search-bar");
+                                    const notFound = document.querySelector(".not-found");
+                                    const baseNotFoundText = notFound.textContent;
+                                    search.addEventListener("keyup", function () {
+                                        const input = search.value
+                                        let filter = input.toUpperCase();
+                                        let resultsCount = 0;
+    
+                                        clients.forEach((client) => {
+                                            const clientName = client.querySelector(".client-name").textContent;
+                                            if (clientName.toUpperCase().indexOf(filter) > -1) {
+                                                client.style.display = "flex";
+                                                resultsCount++;
+                                            } else {
+                                                client.style.display = "none";
+                                            }
+                                        })
+    
+                                        if (resultsCount === 0) {
+                                            notFound.textContent = baseNotFoundText + `"${input}"`
+                                            notFound.style.display = "block";
                                         } else {
-                                            client.style.display = "none";
+                                            notFound.style.display = "none";
                                         }
-                                    })
-
-                                    if (resultsCount === 0) {
-                                        notFound.textContent = baseNotFoundText + `"${input}"`
-                                        notFound.style.display = "block";
-                                    } else {
-                                        notFound.style.display = "none";
-                                    }
-                                });
-
-                                // Requirements
-                                const requirements = document.querySelectorAll(".requirements");
-                                requirements.forEach((requirement) => {
-                                    requirement.addEventListener("click", function (event) {
-                                        event.stopPropagation();
-                                        const userNumber = event.target.parentElement.querySelector(".client-name").textContent;
-                                        const reqOverlay = document.querySelector(".req-overlay");
-                                        const reqProfile = document.querySelector(".req-profile");
-
-                                        reqOverlay.style.display = "flex";
-                                        reqProfile.innerHTML = `
-                                        <div class="history-header">
-                                            <h1>${userNumber}'s requirements</h1>
-                                            <i class="fa-solid close-btn fa-circle-xmark"></i>
-                                        </div>
-                                        <div class="user-profile">
-                                            <div class="user-image">
-                                                <img src="../assets/user-default.png">
-                                                <div class="probability">
-                                                    <h3>Purchase Probability</h3>
-                                                    <canvas id="probabilityChart"></canvas>
+                                    });
+    
+                                    // Requirements
+                                    const requirements = document.querySelectorAll(".requirements");
+                                    requirements.forEach((requirement) => {
+                                        requirement.addEventListener("click", function (event) {
+                                            event.stopPropagation();
+                                            const userNumber = event.target.parentElement.querySelector(".client-name").textContent;
+                                            const reqOverlay = document.querySelector(".req-overlay");
+                                            const reqProfile = document.querySelector(".req-profile");
+    
+                                            reqOverlay.style.display = "flex";
+                                            reqProfile.innerHTML = `
+                                            <div class="history-header">
+                                                <h1>${userNumber}'s requirements</h1>
+                                                <i class="fa-solid close-btn fa-circle-xmark"></i>
+                                            </div>
+                                            <div class="user-profile">
+                                                <div class="user-image">
+                                                    <img src="../assets/user-default.png">
+                                                    <div class="probability">
+                                                        <h3>Purchase Probability</h3>
+                                                        <canvas id="probabilityChart"></canvas>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="user-info">
-                                                <ul class="req-list">
-                                                </ul>
-                                            </div>
-                                        </div>`;
+                                                <div class="user-info">
+                                                    <ul class="req-list">
+                                                    </ul>
+                                                </div>
+                                            </div>`;
+    
+                                            const requirementsList = document.querySelector(".req-list");
+                                            const requirementsAttr = event.target.parentElement.getAttribute("data-requirements");
+                                            const userRequirements = JSON.parse(requirementsAttr);
+                                            Object.keys(userRequirements).forEach((requirement) => {
+                                                if (requirement.includes("id")) {
+                                                    return;
+                                                }
 
-                                        $.ajax({
-                                            url: `https://api.lenaai.net/user-filters/${userNumber}/${clientId}`,
-                                            method: "GET",
-                                            contentType: "json",
-                                            success: function (response) {
-                                                const requirementsList = document.querySelector(".req-list");
-                                                Object.keys(response).forEach((requirement) => {
-                                                    if (requirement.includes("id")) {
-                                                        return;
+                                                let listItem = document.createElement("li");
+                                                let requirementTitle = requirement.charAt(0).toUpperCase() + requirement.slice(1).replaceAll("_", " ");
+                                                let requirementValue = [];
+
+                                                if (requirement === "must_have_features" || requirement === "Financial Plans") {
+                                                    if (Array.isArray(userRequirements[requirement])) {
+                                                        requirementValue = userRequirements[requirement].flatMap(obj =>
+                                                            Object.entries(obj).map(([key, value]) => `${key}: ${value}`)
+                                                        );
+                                                    } else {
+                                                        const featObject = userRequirements[requirement];
+                                                        Object.keys(featObject).forEach((feature) => {
+                                                            requirementValue.push(`${feature}: ${featObject[feature]}`);
+                                                        });
                                                     }
+                                                    requirementValue = requirementValue.join(",<br>");
+                                                } else {
+                                                    requirementValue = userRequirements[requirement];
+                                                    if (Array.isArray(requirementValue)) {
+                                                        requirementValue = requirementValue.join(",<br>");
+                                                    }
+                                                }
 
-                                                    let listItem = document.createElement("li");
-                                                    let requirementTitle = requirement.charAt(0).toUpperCase() + requirement.slice(1).replaceAll("_", " ");
-                                                    let requirementValue = [];
+                                                listItem.innerHTML = `
+                                                    <div class="req-title">${requirementTitle}</div>
+                                                    <div class="req-value">${requirementValue}</div>
+                                                `;
 
-                                                    if (requirement === "must_have_features" || requirement === "Financial Plans") {
-                                                        if (Array.isArray(response[requirement])) {
-                                                            requirementValue = response[requirement].flatMap(obj =>
-                                                                Object.entries(obj).map(([key, value]) => `${key}: ${value}`)
-                                                            );
-                                                        } else {
-                                                            const featObject = response[requirement];
-                                                            Object.keys(featObject).forEach((feature) => {
-                                                                requirementValue.push(`${feature}: ${featObject[feature]}`);
+                                                requirementsList.appendChild(listItem);
+                                            });
+
+                                            const grid = document.querySelector(".req-list");
+
+                                            new Masonry(grid, {
+                                                itemSelector: "li",
+                                                columnWidth: grid.querySelector("li"),
+                                                gutter: 18,
+                                                percentPosition: true,
+                                            });
+                                            
+                                            const purchaseProbability = allLeadScores[userNumber] || 0; // Example: 75%
+    
+                                            // Get the canvas element
+                                            const ctx = document.getElementById('probabilityChart').getContext('2d');
+    
+                                            // Create the Doughnut Chart
+                                            new Chart(ctx, {
+                                                type: 'doughnut',
+                                                data: {
+                                                    labels: ['Probability', 'Remaining'],
+                                                    datasets: [{
+                                                        data: [purchaseProbability, 100 - purchaseProbability],
+                                                        backgroundColor: ['#cbb26a', '#ddd'],
+                                                        borderWidth: 0
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: false,
+                                                    cutout: '70%',
+                                                    plugins: {
+                                                        legend: {
+                                                            display: false
+                                                        },
+                                                        tooltip: {
+                                                            enabled: true
+                                                        }
+                                                    }
+                                                }
+                                            });
+    
+                                            document.querySelector(".close-btn").addEventListener("click", function () {
+                                                reqOverlay.style.display = "none";
+                                                reqProfile.innerHTML = '';
+                                            });
+                                        })
+                                    })
+    
+                                    // Messages History
+                                    clients.forEach((client) => {
+                                        client.addEventListener("click", function () {
+                                            const chatOverlay = document.querySelector(".chat-overlay");
+                                            const chatHistory = document.querySelector(".chat-history");
+                                            const userNumber = client.querySelector(".client-name").textContent;
+                                            const messages = client.getAttribute("data-messages");
+                                            const parsedMessages = messages ? JSON.parse(messages) : [];
+                                            parsedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    
+                                            chatOverlay.style.display = "flex";
+                                            chatHistory.innerHTML = `
+                                            <div class="history-header">
+                                                <h1>Messages History</h1>
+                                                <div class="seg-ctrl">
+                                                    <div class="seg-opt-right">Manual</div>
+                                                    <div class="seg-opt-left">AI</div>
+                                                </div>
+                                                <i class="fa-solid close-btn fa-circle-xmark"></i>
+                                            </div>
+                                            <div class="chatbot">
+                                                <div id="messages">
+                                                </div>
+                                                <div class="input-field">
+                                                    <form id="input-form">
+                                                        <input type="text" id="user-input" placeholder="Type Something Here" autocomplete="off">
+                                                    </form>
+                                                    <i class="fa-solid fa-paper-plane" id="submit-btn"></i>
+                                                </div>
+                                            </div>`;
+    
+                                            const chatSubmit = document.getElementById("submit-btn");
+                                            const inputForm = document.getElementById("input-form");
+                                            function takeUserInput() {
+                                                let inputField = document.getElementById("user-input");
+                                                let userInput = inputField.value.trim();
+                                                const messagesDiv = document.getElementById("messages");
+                                                let message = document.createElement("div");
+    
+    
+                                                if (userInput === "") return;
+                                                message.innerHTML = userInput;
+                                                message.classList.add("message");
+                                                messagesDiv.appendChild(message);
+    
+                                                inputField.value = "";
+                                                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    
+                                                console.log(userInput)
+                                                $.ajax({
+                                                    url: `https://api.lenaai.net/webhook/message/text`,
+                                                    method: "POST",
+                                                    contentType: "application/json",
+                                                    data: JSON.stringify({
+                                                        "to_number": "201032788912",
+                                                        "message": userInput,
+                                                        "client_id": clientId
+                                                    }),
+                                                    success: function (response) {
+                                                        console.log(response);
+                                                    }
+                                                })
+                                            }
+    
+                                            chatSubmit.addEventListener("click", function () {
+                                                takeUserInput();
+                                            });
+    
+                                            inputForm.addEventListener("submit", function (event) {
+                                                event.preventDefault();
+                                                takeUserInput();
+                                            });
+    
+                                            document.querySelector(".seg-ctrl").addEventListener("click", function (event) {
+                                                const rightOption = document.querySelector(".seg-opt-right");
+                                                const leftOption = document.querySelector(".seg-opt-left");
+                                                let toggleAI = true;
+                                            
+                                                if (event.target.classList.contains("seg-opt-right")) {
+                                                    rightOption.classList.add("seg-active");
+                                                    leftOption.classList.remove("seg-active");
+                                                    toggleAI = false;
+                                                } else if (event.target.classList.contains("seg-opt-left")) {
+                                                    leftOption.classList.add("seg-active");
+                                                    rightOption.classList.remove("seg-active");
+                                                    toggleAI = true;
+                                                }
+    
+                                                $.ajax({
+                                                    url: `https://api.lenaai.net/lenaai-auto-reply`,
+                                                    method: "POST",
+                                                    contentType: "application/json",
+                                                    data: JSON.stringify({
+                                                        "phone_number": userNumber,
+                                                        "client_id": clientId,
+                                                        "toggle_ai_auto_reply": toggleAI,
+                                                        "username": clientUserName
+                                                    }),
+                                                    success: function (response) {
+                                                        console.log("API Response:", response);
+                                                    },
+                                                    error: function (error) {
+                                                        console.error("API Error:", error);
+                                                    }
+                                                });
+                                            });                                        
+    
+                                            const messagesDiv = document.getElementById("messages");
+                                            let latestTimestamp = "";
+                                            parsedMessages.forEach((message) => {
+                                                if (message.bot_response === "" && message.user_message === "") {
+                                                    return;
+                                                }
+    
+                                                function timeAgo(timestamp) {
+                                                    let now = new Date();
+                                                    let messageTime = new Date(timestamp);
+                                                    let diff = Math.floor((now - messageTime) / 60000);
+                                                
+                                                    if (diff < 1) return "Just now";
+                                                    if (diff < 60) return `${diff} min ago`;
+                                                    if (diff < 1440) return `${Math.floor(diff / 60)} hrs ago`;
+                                                
+                                                    let options = { month: "short", day: "numeric" };
+                                                
+                                                    if (messageTime.getFullYear() !== now.getFullYear()) {
+                                                        options.year = "numeric";
+                                                    }
+                                                
+                                                    return messageTime.toLocaleDateString("en-US", options);
+                                                }
+    
+                                                function formatTime(timestamp) {
+                                                    let messageTime = new Date(timestamp);
+                                                    return messageTime.toLocaleTimeString("en-US", {
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                        hour12: true
+                                                    });
+                                                }
+            
+                                                let userMessage = document.createElement("div");
+                                                let botResponse = document.createElement("div");
+    
+                                                let userMessageTime = document.createElement("div");
+                                                let botMessageTime = document.createElement("div");
+    
+                                                let cleanMessage = message.bot_response.split('"message":')[0].trim();
+                                                cleanMessage = cleanMessage.replace(/[,"]+$/, "").trim();
+    
+                                                userMessageTime.innerHTML = formatTime(message.timestamp);
+                                                userMessageTime.classList.add("message-time");
+                                                botMessageTime.innerHTML = formatTime(message.timestamp);
+                                                botMessageTime.classList.add("message-time");
+    
+                                                userMessage.innerHTML = message.user_message;
+                                                userMessage.appendChild(userMessageTime);
+    
+                                                botResponse.innerHTML = cleanMessage;
+                                                botResponse.appendChild(botMessageTime);
+    
+                                                userMessage.classList.add("message", "sent");
+                                                botResponse.classList.add("message");
+    
+                                                let conversationTime = timeAgo(message.timestamp);
+                                                if (latestTimestamp === "" || latestTimestamp !== conversationTime) {
+                                                    let timeDiv = document.createElement("div");
+                                                    timeDiv.classList.add("timestamp");
+                                                    timeDiv.textContent = conversationTime;
+                                                    messagesDiv.appendChild(timeDiv);
+                                                    latestTimestamp = conversationTime;
+                                                }
+    
+                                                if (message.user_message !== "") {
+                                                    messagesDiv.appendChild(userMessage);
+                                                }
+                                                if (message.bot_response !== "") {
+                                                    messagesDiv.appendChild(botResponse);
+                                                }
+    
+                                                if (message.properties && message.properties !== "") {
+                                                    Object.values(message.properties).forEach((property) => {
+                                                        let imagesDiv = document.createElement("div");
+                                                        imagesDiv.classList.add("images");
+    
+                                                        let detailsDiv = document.createElement("div");
+                                                        detailsDiv.classList.add("property-details");
+                                                        detailsDiv.innerHTML = `
+                                                            <h2>${property.metadata.compound || ""}</h2>
+                                                            <p>Location<span>${property.metadata.city || ""}, ${property.metadata.country || ""}</span></p>
+                                                            <p>Type<span>${property.metadata.buildingType || ""}</span></p>
+                                                            <p>Rooms<span>${property.metadata.roomsCount || ""}</span></p>
+                                                            <p>Bathrooms<span>${property.metadata.bathroomCount || ""}</span></p>
+                                                            <p>Total Price<span>${property.metadata.totalPrice.toLocaleString() || ""} EGP</span></p>
+                                                            <p>Payment Plans<span>${property.metadata.paymentPlans || ""}</span></p>
+                                                            <p>Developer<span>${property.metadata.developer || ""}</span></p>
+                                                            <p>Floor<span>${property.metadata.floor || ""}</span></p>
+                                                            <p>View<span>${property.metadata.view || ""}</span></p>
+                                                            <p>Down Payment<span>${property.metadata.downPayment.toLocaleString() || ""} EGP</span></p>
+                                                            <p>Selling Area<span>${property.metadata.landArea || ""} m²</span></p>
+                                                            <p>Garden Size<span>${property.metadata.gardenSize || ""} m²</span></p>
+                                                            <p>Garage Area<span>${property.metadata.garageArea || ""} m²</span></p>
+                                                            <p>Delivery Date<span>${property.metadata.deliveryDate || ""}</span></p>
+                                                            <p>Finishing<span>${property.metadata.finishing || ""}</span></p>
+                                                        `;
+    
+                                                        imagesDiv.appendChild(detailsDiv);
+    
+                                                        let propertyImages = property.metadata.images;
+                                                        if (Array.isArray(propertyImages) && typeof propertyImages !== "string") {
+                                                            propertyImages.forEach(propertyImage => {
+                                                                let image = document.createElement("div");
+                                                                image.classList.add("chat-image");
+                                                                image.innerHTML = `<img src="${propertyImage.url}" alt="Property Image" draggable="false">`;
+                                                                imagesDiv.appendChild(image);
                                                             });
                                                         }
-                                                        requirementValue = requirementValue.join(",<br>");
-                                                    } else {
-                                                        requirementValue = response[requirement];
-                                                        if (Array.isArray(requirementValue)) {
-                                                            requirementValue = requirementValue.join(",<br>");
+    
+                                                        messagesDiv.appendChild(imagesDiv);
+                                                    })
+    
+                                                    // chat images drag
+                                                    let wasDragging = false;
+    
+                                                    document.addEventListener("mousedown", function (e) {
+                                                        const slider = e.target.closest(".images");
+                                                        if (!slider || !slider.contains(e.target)) return;
+    
+                                                        let startX = e.clientX;
+                                                        let scrollLeft = slider.scrollLeft;
+    
+                                                        slider.classList.add("image-active");
+    
+                                                        function handleMouseMove(e) {
+                                                            wasDragging = true;
+                                                            const x = e.clientX;
+                                                            const walk = (x - startX) * 1;
+                                                            slider.scrollLeft = scrollLeft - walk;
                                                         }
+    
+                                                        function stopScrolling() {
+                                                            slider.classList.remove("image-active");
+                                                            document.removeEventListener("mousemove", handleMouseMove);
+                                                            document.removeEventListener("mouseup", stopScrolling);
+    
+                                                            if (wasDragging) {
+                                                                document.addEventListener("click", preventClick, true);
+                                                                setTimeout(() => {
+                                                                    document.removeEventListener("click", preventClick, true);
+                                                                    wasDragging = false;
+                                                                }, 0);
+                                                            }
+                                                        }
+    
+                                                        document.addEventListener("mousemove", handleMouseMove);
+                                                        document.addEventListener("mouseup", stopScrolling, { once: true });
+                                                    });
+                                                    
+                                                    function preventClick(e) {
+                                                        e.stopPropagation();
+                                                        e.preventDefault();
                                                     }
-
-                                                    listItem.innerHTML = `
-                                                        <div class="req-title">${requirementTitle}</div>
-                                                        <div class="req-value">${requirementValue}</div>
-                                                    `;
-
-                                                    requirementsList.appendChild(listItem);
-                                                });
-
-                                                const grid = document.querySelector(".req-list");
-
-                                                new Masonry(grid, {
-                                                    itemSelector: "li",
-                                                    columnWidth: grid.querySelector("li"),
-                                                    gutter: 18,
-                                                    percentPosition: true,
-                                                });
-                                            },
-                                            error: function (error) {
-                                                console.log(`Failed to call user filter for user ${userNumber}`, error);
-                                            }
-                                        });
-                                        const purchaseProbability = allLeadScores[userNumber] || 0; // Example: 75%
-
-                                        // Get the canvas element
-                                        const ctx = document.getElementById('probabilityChart').getContext('2d');
-
-                                        // Create the Doughnut Chart
-                                        new Chart(ctx, {
-                                            type: 'doughnut',
-                                            data: {
-                                                labels: ['Probability', 'Remaining'],
-                                                datasets: [{
-                                                    data: [purchaseProbability, 100 - purchaseProbability],
-                                                    backgroundColor: ['#cbb26a', '#ddd'],
-                                                    borderWidth: 0
-                                                }]
-                                            },
-                                            options: {
-                                                responsive: false,
-                                                cutout: '70%',
-                                                plugins: {
-                                                    legend: {
-                                                        display: false
-                                                    },
-                                                    tooltip: {
-                                                        enabled: true
-                                                    }
-                                                }
-                                            }
-                                        });
-
-                                        document.querySelector(".close-btn").addEventListener("click", function () {
-                                            reqOverlay.style.display = "none";
-                                            reqProfile.innerHTML = '';
-                                        });
-                                    })
-                                })
-
-                                // Messages History
-                                clients.forEach((client) => {
-                                    client.addEventListener("click", function () {
-                                        const chatOverlay = document.querySelector(".chat-overlay");
-                                        const chatHistory = document.querySelector(".chat-history");
-                                        const userNumber = client.querySelector(".client-name").textContent;
-                                        const messages = client.getAttribute("data-messages");
-                                        const parsedMessages = messages ? JSON.parse(messages) : [];
-                                        parsedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-                                        chatOverlay.style.display = "flex";
-                                        chatHistory.innerHTML = `
-                                        <div class="history-header">
-                                            <h1>Messages History</h1>
-                                            <div class="seg-ctrl">
-                                                <div class="seg-opt-right">Manual</div>
-                                                <div class="seg-opt-left">AI</div>
-                                            </div>
-                                            <i class="fa-solid close-btn fa-circle-xmark"></i>
-                                        </div>
-                                        <div class="chatbot">
-                                            <div id="messages">
-                                            </div>
-                                            <div class="input-field">
-                                                <form id="input-form">
-                                                    <input type="text" id="user-input" placeholder="Type Something Here" autocomplete="off">
-                                                </form>
-                                                <i class="fa-solid fa-paper-plane" id="submit-btn"></i>
-                                            </div>
-                                        </div>`;
-
-                                        const chatSubmit = document.getElementById("submit-btn");
-                                        const inputForm = document.getElementById("input-form");
-                                        function takeUserInput() {
-                                            let inputField = document.getElementById("user-input");
-                                            let userInput = inputField.value.trim();
-                                            const messagesDiv = document.getElementById("messages");
-                                            let message = document.createElement("div");
-
-
-                                            if (userInput === "") return;
-                                            message.innerHTML = userInput;
-                                            message.classList.add("message");
-                                            messagesDiv.appendChild(message);
-
-                                            inputField.value = "";
-                                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-                                            console.log(userInput)
-                                            $.ajax({
-                                                url: `https://api.lenaai.net/webhook/message/text`,
-                                                method: "POST",
-                                                contentType: "application/json",
-                                                data: JSON.stringify({
-                                                    "to_number": "201032788912",
-                                                    "message": userInput,
-                                                    "client_id": clientId
-                                                }),
-                                                success: function (response) {
-                                                    console.log(response);
                                                 }
                                             })
-                                        }
-
-                                        chatSubmit.addEventListener("click", function () {
-                                            takeUserInput();
-                                        });
-
-                                        inputForm.addEventListener("submit", function (event) {
-                                            event.preventDefault();
-                                            takeUserInput();
-                                        });
-
-                                        document.querySelector(".seg-ctrl").addEventListener("click", function (event) {
-                                            const rightOption = document.querySelector(".seg-opt-right");
-                                            const leftOption = document.querySelector(".seg-opt-left");
-                                            let toggleAI = true;
-                                        
-                                            if (event.target.classList.contains("seg-opt-right")) {
-                                                rightOption.classList.add("seg-active");
-                                                leftOption.classList.remove("seg-active");
-                                                toggleAI = false;
-                                            } else if (event.target.classList.contains("seg-opt-left")) {
-                                                leftOption.classList.add("seg-active");
-                                                rightOption.classList.remove("seg-active");
-                                                toggleAI = true;
-                                            }
-
+    
+                                            document.querySelector(".close-btn").addEventListener("click", function () {
+                                                chatOverlay.style.display = "none";
+                                                chatHistory.innerHTML = '';
+                                            });
+    
                                             $.ajax({
-                                                url: `https://api.lenaai.net/lenaai-auto-reply`,
-                                                method: "POST",
-                                                contentType: "application/json",
-                                                data: JSON.stringify({
-                                                    "phone_number": userNumber,
-                                                    "client_id": clientId,
-                                                    "toggle_ai_auto_reply": toggleAI,
-                                                    "username": clientUserName
-                                                }),
+                                                url: `https://api.lenaai.net/lenaai-auto-reply/${userNumber}/${clientId}`,
+                                                method: "GET",
+                                                dataType: "json",
                                                 success: function (response) {
                                                     console.log("API Response:", response);
+                                        
+                                                    const rightOption = document.querySelector(".seg-opt-right");
+                                                    const leftOption = document.querySelector(".seg-opt-left");
+                                        
+                                                    if (response.toggle_ai_auto_reply === true) {
+                                                        leftOption.classList.add("seg-active");
+                                                        rightOption.classList.remove("seg-active");
+                                                    } else {
+                                                        rightOption.classList.add("seg-active");
+                                                        leftOption.classList.remove("seg-active");
+                                                    }
                                                 },
                                                 error: function (error) {
                                                     console.error("API Error:", error);
                                                 }
                                             });
-                                        });                                        
-
-                                        const messagesDiv = document.getElementById("messages");
-                                        let latestTimestamp = "";
-                                        parsedMessages.forEach((message) => {
-                                            if (message.bot_response === "" && message.user_message === "") {
-                                                return;
-                                            }
-
-                                            function timeAgo(timestamp) {
-                                                let now = new Date();
-                                                let messageTime = new Date(timestamp);
-                                                let diff = Math.floor((now - messageTime) / 60000);
-                                            
-                                                if (diff < 1) return "Just now";
-                                                if (diff < 60) return `${diff} min ago`;
-                                                if (diff < 1440) return `${Math.floor(diff / 60)} hrs ago`;
-                                            
-                                                let options = { month: "short", day: "numeric" };
-                                            
-                                                if (messageTime.getFullYear() !== now.getFullYear()) {
-                                                    options.year = "numeric";
-                                                }
-                                            
-                                                return messageTime.toLocaleDateString("en-US", options);
-                                            }
-
-                                            function formatTime(timestamp) {
-                                                let messageTime = new Date(timestamp);
-                                                return messageTime.toLocaleTimeString("en-US", {
-                                                    hour: "2-digit",
-                                                    minute: "2-digit",
-                                                    hour12: true
-                                                });
-                                            }
-        
-                                            let userMessage = document.createElement("div");
-                                            let botResponse = document.createElement("div");
-
-                                            let userMessageTime = document.createElement("div");
-                                            let botMessageTime = document.createElement("div");
-
-                                            let cleanMessage = message.bot_response.split('"message":')[0].trim();
-                                            cleanMessage = cleanMessage.replace(/[,"]+$/, "").trim();
-
-                                            userMessageTime.innerHTML = formatTime(message.timestamp);
-                                            userMessageTime.classList.add("message-time");
-                                            botMessageTime.innerHTML = formatTime(message.timestamp);
-                                            botMessageTime.classList.add("message-time");
-
-                                            userMessage.innerHTML = message.user_message;
-                                            userMessage.appendChild(userMessageTime);
-
-                                            botResponse.innerHTML = cleanMessage;
-                                            botResponse.appendChild(botMessageTime);
-
-                                            userMessage.classList.add("message", "sent");
-                                            botResponse.classList.add("message");
-
-                                            let conversationTime = timeAgo(message.timestamp);
-                                            if (latestTimestamp === "" || latestTimestamp !== conversationTime) {
-                                                let timeDiv = document.createElement("div");
-                                                timeDiv.classList.add("timestamp");
-                                                timeDiv.textContent = conversationTime;
-                                                messagesDiv.appendChild(timeDiv);
-                                                latestTimestamp = conversationTime;
-                                            }
-
-                                            if (message.user_message !== "") {
-                                                messagesDiv.appendChild(userMessage);
-                                            }
-                                            if (message.bot_response !== "") {
-                                                messagesDiv.appendChild(botResponse);
-                                            }
-
-                                            if (message.properties && message.properties !== "") {
-                                                Object.values(message.properties).forEach((property) => {
-                                                    let imagesDiv = document.createElement("div");
-                                                    imagesDiv.classList.add("images");
-
-                                                    let detailsDiv = document.createElement("div");
-                                                    detailsDiv.classList.add("property-details");
-                                                    detailsDiv.innerHTML = `
-                                                        <h2>${property.metadata.compound || ""}</h2>
-                                                        <p>Location<span>${property.metadata.city || ""}, ${property.metadata.country || ""}</span></p>
-                                                        <p>Type<span>${property.metadata.buildingType || ""}</span></p>
-                                                        <p>Rooms<span>${property.metadata.roomsCount || ""}</span></p>
-                                                        <p>Bathrooms<span>${property.metadata.bathroomCount || ""}</span></p>
-                                                        <p>Total Price<span>${property.metadata.totalPrice.toLocaleString() || ""} EGP</span></p>
-                                                        <p>Payment Plans<span>${property.metadata.paymentPlans || ""}</span></p>
-                                                        <p>Developer<span>${property.metadata.developer || ""}</span></p>
-                                                        <p>Floor<span>${property.metadata.floor || ""}</span></p>
-                                                        <p>View<span>${property.metadata.view || ""}</span></p>
-                                                        <p>Down Payment<span>${property.metadata.downPayment.toLocaleString() || ""} EGP</span></p>
-                                                        <p>Selling Area<span>${property.metadata.landArea || ""} m²</span></p>
-                                                        <p>Garden Size<span>${property.metadata.gardenSize || ""} m²</span></p>
-                                                        <p>Garage Area<span>${property.metadata.garageArea || ""} m²</span></p>
-                                                        <p>Delivery Date<span>${property.metadata.deliveryDate || ""}</span></p>
-                                                        <p>Finishing<span>${property.metadata.finishing || ""}</span></p>
-                                                    `;
-
-                                                    imagesDiv.appendChild(detailsDiv);
-
-                                                    let propertyImages = property.metadata.images;
-                                                    if (Array.isArray(propertyImages) && typeof propertyImages !== "string") {
-                                                        propertyImages.forEach(propertyImage => {
-                                                            let image = document.createElement("div");
-                                                            image.classList.add("chat-image");
-                                                            image.innerHTML = `<img src="${propertyImage.url}" alt="Property Image" draggable="false">`;
-                                                            imagesDiv.appendChild(image);
-                                                        });
-                                                    }
-
-                                                    messagesDiv.appendChild(imagesDiv);
-                                                })
-
-                                                // chat images drag
-                                                let wasDragging = false;
-
-                                                document.addEventListener("mousedown", function (e) {
-                                                    const slider = e.target.closest(".images");
-                                                    if (!slider || !slider.contains(e.target)) return;
-
-                                                    let startX = e.clientX;
-                                                    let scrollLeft = slider.scrollLeft;
-
-                                                    slider.classList.add("image-active");
-
-                                                    function handleMouseMove(e) {
-                                                        wasDragging = true;
-                                                        const x = e.clientX;
-                                                        const walk = (x - startX) * 1;
-                                                        slider.scrollLeft = scrollLeft - walk;
-                                                    }
-
-                                                    function stopScrolling() {
-                                                        slider.classList.remove("image-active");
-                                                        document.removeEventListener("mousemove", handleMouseMove);
-                                                        document.removeEventListener("mouseup", stopScrolling);
-
-                                                        if (wasDragging) {
-                                                            document.addEventListener("click", preventClick, true);
-                                                            setTimeout(() => {
-                                                                document.removeEventListener("click", preventClick, true);
-                                                                wasDragging = false;
-                                                            }, 0);
-                                                        }
-                                                    }
-
-                                                    document.addEventListener("mousemove", handleMouseMove);
-                                                    document.addEventListener("mouseup", stopScrolling, { once: true });
-                                                });
-                                                
-                                                function preventClick(e) {
-                                                    e.stopPropagation();
-                                                    e.preventDefault();
-                                                }
-                                            }
-                                        })
-
-                                        document.querySelector(".close-btn").addEventListener("click", function () {
-                                            chatOverlay.style.display = "none";
-                                            chatHistory.innerHTML = '';
-                                        });
-
-                                        $.ajax({
-                                            url: `https://api.lenaai.net/lenaai-auto-reply/${userNumber}/${clientId}`,
-                                            method: "GET",
-                                            dataType: "json",
-                                            success: function (response) {
-                                                console.log("API Response:", response);
-                                    
-                                                const rightOption = document.querySelector(".seg-opt-right");
-                                                const leftOption = document.querySelector(".seg-opt-left");
-                                    
-                                                if (response.toggle_ai_auto_reply === true) {
-                                                    leftOption.classList.add("seg-active");
-                                                    rightOption.classList.remove("seg-active");
-                                                } else {
-                                                    rightOption.classList.add("seg-active");
-                                                    leftOption.classList.remove("seg-active");
-                                                }
-                                            },
-                                            error: function (error) {
-                                                console.error("API Error:", error);
-                                            }
                                         });
                                     });
-                                });
-                            },
-                            error: function (error) {
-                                console.error("Error fetching chat history:", error);
-                            }
-                        });
+                                },
+                                error: function (error) {
+                                    console.error("Error fetching chat history:", error);
+                                    isLoading = false;
+                                }
+                            });
+                        }
+                        fetchData();                        
                     },
                     error: function (xhr) {
                         console.error(xhr.responseText);
@@ -2222,6 +2207,33 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
     }
+
+    $(".filters").on("click", ".filters-drop", function (event) {
+        event.stopPropagation();
+
+        let dropdown = $(this).find(".dropdown");
+
+        $(".dropdown").not(dropdown).slideUp();
+
+        dropdown.stop(true, true).slideToggle();
+    });
+
+    $(".filters").on("click", ".filters-drop li", function (event) {
+        event.stopPropagation();
+
+        let selectedItem = $(this).clone();
+        let filterButton = $(this).closest(".filters-drop").find(".value");
+
+        if (filterButton.length) {
+            filterButton.html(selectedItem.html() + `<i class="fa-solid fa-chevron-down"></i>`);
+        }
+
+        $(this).closest(".dropdown").slideUp();
+    });
+
+    $(document).click(function () {
+        $(".dropdown").slideUp();
+    });
 
     // Header section
     $(document).ready(function () {
