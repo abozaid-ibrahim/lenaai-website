@@ -636,3 +636,8 @@ a {
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+footer {
+    padding: 0 2rem;
+    text-align: left;
+}
