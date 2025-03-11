@@ -1587,6 +1587,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                     const container = $(".clients-list");
                                     const borderByAction = {
+                                        "ScheduleCall": {
+                                            "color": "green",
+                                            "icon": `<i class="fa-solid fa-phone"></i>`
+                                        },
                                         "Make a call": {
                                             "color": "green",
                                             "icon": `<i class="fa-solid fa-phone"></i>`
@@ -1595,7 +1599,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "color": "green",
                                             "icon": `<i class="fa-solid fa-calendar-days"></i>`
                                         },
+                                        "OfficeVisit": {
+                                            "color": "green",
+                                            "icon": `<i class="fa-solid fa-calendar-days"></i>`
+                                        },
                                         "Property view": {
+                                            "color": "green",
+                                            "icon": `<i class="fa-solid fa-house"></i>`
+                                        },
+                                        "BookViewing": {
                                             "color": "green",
                                             "icon": `<i class="fa-solid fa-house"></i>`
                                         },

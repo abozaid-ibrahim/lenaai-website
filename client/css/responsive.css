@@ -35,7 +35,8 @@
         justify-content: space-between;
     }
 
-    .header-container .sign-in-btn {
+    .header-container .sign-in-btn,
+    .header-container #signup {
         display: none;
     }
 
@@ -61,7 +62,8 @@
         margin-bottom: 15px;
     }
 
-    .nav-list li:last-child {
+    .nav-list li:last-child,
+    .nav-list li:nth-child(4) {
         display: block;
     }
 
@@ -78,6 +80,11 @@
 
     .nav-list.show {
         display: flex;
+    }
+
+    .sign-in-sm button, .sign-in-sm a,
+    .sign-up-sm button, .sign-up-sm a {
+        margin-bottom: 0;
     }
 
     .menu-toggle {

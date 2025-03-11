@@ -96,14 +96,14 @@ a {
 
 .header-container button {
     margin-left: 15px;
-    padding: 7px 30px;
+    padding: 6px 18px;
     display: flex;
     align-items: center;
     border: 2px solid #cbb26a;
     outline: none;
     background-color: #cbb26a;
     color: black;
-    border-radius: 16px;
+    border-radius: 8px;
     font-weight: bold;
 }
 
@@ -163,12 +163,12 @@ a {
     border: 2px solid var(--secondary-color);
     transition: all 0.2s ease;
     position: relative;
+    width: 200px;
 }
 
 .filters-drop .value {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 10px;
 }
 
@@ -179,7 +179,7 @@ a {
 }
 
 .filters-drop .dropdown {
-    width: 220px;
+    width: 200px;
 }
 
 .filters-drop .dropdown li {
@@ -191,6 +191,10 @@ a {
 
 .filters .dropdown i {
     font-size: 1.2rem;
+}
+
+.filters-drop .fa-chevron-down {
+    margin-left: auto;
 }
 
 .overview,

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Signup</title>
     <link rel="icon" href="../assets/icon.png">
 
     <!-- Font -->
@@ -32,10 +32,17 @@
             <nav class="navbar">
                 <ul class="nav-list" id="nav-list">
                     <li><a href="../index.html">Home</a></li>
-                    <li class="active"><a href="dashboard.html">Client Dashboard</a></li>
+                    <li><a href="dashboard.html">Client Dashboard</a></li>
                     <li><a href="#">Job Opportunities</a></li>
+                    <li class="sign-up-sm">
+                        <a href="signup.html">
+                            <button>
+                                <i class="bi bi-box-arrow-in-right"></i> Signup
+                            </button>
+                        </a>
+                    </li>
                     <li class="sign-in-sm">
-                        <a href="client/login.html">
+                        <a href="login.html">
                             <button>
                                 <i class="bi bi-box-arrow-in-right"></i> Sign In
                             </button>
@@ -46,6 +53,11 @@
             <div id="theme-toggle">
                 <i class="bi bi-moon"></i>
             </div>
+            <a href="signup.html">
+                <button id="signup">
+                    <i class="bi bi-box-arrow-in-right"></i> Signup
+                </button>
+            </a>
             <a href="login.html">
                 <button class="sign-in-btn" id="sign-in">
                     <i class="bi bi-box-arrow-in-right"></i> Sign In
@@ -61,16 +73,19 @@
     <div class="signup-form">
         <h2 class="container-title">Sign up</h2>
         <form id="signup-form">
-            <div class="error"></div>
+            <div class="error-name"></div>
             <div class="form-half">
                 <input type="text" id="first-name" placeholder="First Name">
                 <input type="text" id="last-name" placeholder="Last Name">
             </div>
+            <div class="error-phone"></div>
             <input type="text" id="phone" placeholder="Phone Number">
+            <div class="error-email"></div>
             <input type="email" id="email" placeholder="Email Address">
+            <div class="error-password"></div>
             <input type="password" id="password1" placeholder="Passsword">
             <input type="password" id="password2" placeholder="Confirm Passsword">
-            <input type="submit" id="submit-btn" value="Signup">
+            <input type="submit" id="signup-submit" value="Signup">
         </form>
     </div>
 </body>

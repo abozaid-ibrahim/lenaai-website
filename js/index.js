@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 url: `https://api.lenaai.net/me?access_token=${token}`,
                 type: "POST",
                 success: function(response) {
+                    $("#signup, .sign-up-sm").css("display", "none");
                     $("#sign-in")
                         .html('<i class="bi bi-box-arrow-right"></i> Logout')
                         .addClass("logout");

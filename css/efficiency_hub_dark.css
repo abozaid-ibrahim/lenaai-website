@@ -73,7 +73,8 @@ a {
     color: #cbb26a;
 }
 
-.nav-list li:last-child {
+.nav-list li:last-child,
+.nav-list li:nth-child(4) {
     display: none;
 }
 
@@ -89,14 +90,14 @@ a {
 
 .header-container button {
     margin-left: 15px;
-    padding: 7px 30px;
+    padding: 6px 18px;
     display: flex;
     align-items: center;
     border: 2px solid #cbb26a;
     outline: none;
     background-color: #cbb26a;
     color: black;
-    border-radius: 16px;
+    border-radius: 8px;
     font-weight: bold;
 }
 
@@ -109,6 +110,18 @@ a {
 .header-container button .bi {
     margin-right: 10px;
     font-size: 1.5em;
+}
+
+#signup, .sign-up-sm button {
+    background-color: transparent;
+    color: var(--seconadry-color);
+    border: 2px solid var(--secondary-color);
+    padding: 6px 18px;
+}
+
+#signup:hover {
+    background-color: var(--secondary-color);
+    color: black;
 }
 
 .menu-toggle {

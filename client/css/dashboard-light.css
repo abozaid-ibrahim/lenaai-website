@@ -107,7 +107,7 @@ a {
     outline: none;
     background-color: var(--secondary-color);
     color: var(--primary-color-hover);
-    border-radius: 16px;
+    border-radius: 8px;
     font-size: 14px;
     line-height: 1.2;
     font-weight: 600;
@@ -171,12 +171,12 @@ a {
     transition: all 0.2s ease;
     position: relative;
     font-weight: 500;
+    width: 200px;
 }
 
 .filters-drop .value {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 10px;
 }
 
@@ -187,7 +187,7 @@ a {
 }
 
 .filters-drop .dropdown {
-    width: 220px;
+    width: 200px;
 }
 
 .filters-drop .dropdown li {
@@ -199,6 +199,10 @@ a {
 
 .filters .dropdown i {
     font-size: 1.2rem;
+}
+
+.filters-drop .fa-chevron-down {
+    margin-left: auto;
 }
 
 .overview,
