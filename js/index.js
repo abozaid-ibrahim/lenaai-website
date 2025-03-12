@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         let message = document.createElement("div");
-        let typingIndicatorDiv = document.createElement("div");
+        let skeletonMessage = document.createElement("div");
 
 
         if (userInput === "") return;
@@ -138,13 +138,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         message.innerHTML = userInput;
         message.classList.add("message", "sent");
-        typingIndicatorDiv.innerHTML = `
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>`;
-        typingIndicatorDiv.classList.add("typing-indicator", "message");
+        skeletonMessage.innerHTML = `
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+        `;
+        skeletonMessage.classList.add("message", "skeleton-message");
         messagesDiv.appendChild(message);
-        messagesDiv.appendChild(typingIndicatorDiv);
+        messagesDiv.appendChild(skeletonMessage);
 
         if (userInput === userPhoneNumber) {
             userInput = "Hello";
@@ -166,8 +168,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 chatResponse.innerHTML = response.message;
                 chatResponse.classList.add("message");
 
-                messagesDiv.removeChild(typingIndicatorDiv);
-                messagesDiv.appendChild(chatResponse);
+                $(skeletonMessage).fadeOut(300, function () {
+                    $(this).remove();
+                    messagesDiv.appendChild(chatResponse);
+                    $(chatResponse).hide().fadeIn(300);
+                });
 
                 let imagesDiv;
 

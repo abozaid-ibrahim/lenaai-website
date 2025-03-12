@@ -838,3 +838,34 @@ footer a:hover {
         transform: scale(1);
     }
 }
+
+.skeleton-message {
+    background-color: #e0e0e0;
+    border-radius: 16px;
+    padding: 15px;
+    width: fit-content;
+    width: 100%;
+    display: block;
+    margin-bottom: 15px;
+    animation: shimmer 1.5s infinite linear;
+}
+
+.skeleton-line {
+    height: 10px;
+    width: 100%;
+    background: linear-gradient(90deg, #d1d1d1 25%, #f3f3f3 50%, #d1d1d1 75%);
+    background-size: 200% 100%;
+    border-radius: 5px;
+    animation: shimmer 1.5s infinite linear;
+    margin-top: 5px;
+}
+
+.skeleton-line.short {
+    width: 50%;
+    margin-top: 5px;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
