@@ -34,6 +34,42 @@ document.addEventListener("DOMContentLoaded", function () {
                     logoutUser();
                 });
 
+                function showUnitsSkeleton() {
+                    $(".data").append(`
+                        <div class="skeleton-data">
+                            <div class="skeleton-title"></div>
+                            <div class="skeleton-content">
+                                <div class="skeleton-unit"></div>
+                                <div class="skeleton-unit"></div>
+                                <div class="skeleton-unit"></div>
+                            </div>
+                        </div>
+                        <div class="skeleton-data">
+                            <div class="skeleton-title"></div>
+                            <div class="skeleton-content">
+                                <div class="skeleton-unit"></div>
+                                <div class="skeleton-unit"></div>
+                                <div class="skeleton-unit"></div>
+                            </div>
+                        </div>
+                        <div class="skeleton-data">
+                            <div class="skeleton-title"></div>
+                            <div class="skeleton-content">
+                                <div class="skeleton-unit"></div>
+                                <div class="skeleton-unit"></div>
+                                <div class="skeleton-unit"></div>
+                            </div>
+                        </div>
+                    `);
+                }
+            
+                function hideUnitsSkeleton() {
+                    $(".skeleton-data").fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                }
+
+                showUnitsSkeleton();
                 $.ajax({
                     url: `https://api.lenaai.net/units/${clientId}`,
                     method: "GET",
@@ -83,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             }, {});
 
                             const dataSection = document.querySelector(".data");
-
+                            hideUnitsSkeleton();
                             Object.keys(groupedByCompound).forEach((compoundName) => {
                                 const dataContainer = document.createElement("div");
                                 const dataTitle = document.createElement("div");
@@ -1563,10 +1599,75 @@ document.addEventListener("DOMContentLoaded", function () {
                         let hasMoreData = true;
                         let allPhoneNumbers = [];
                         let allLeadScores = {};
+                        const clientsList = $(".clients-list");
+
+                        function showClientsSkeleton() {
+                            const skeletonHTML = `
+                                <div class="skeleton client">
+                                    <div class="skeleton-box name"></div>
+                                    <div class="skeleton-box date"></div>
+                                    <div class="skeleton-box requirements"></div>
+                                    <div class="skeleton-box messages"></div>
+                                    <div class="skeleton-box action"></div>
+                                </div>
+                                <div class="skeleton client">
+                                    <div class="skeleton-box name"></div>
+                                    <div class="skeleton-box date"></div>
+                                    <div class="skeleton-box requirements"></div>
+                                    <div class="skeleton-box messages"></div>
+                                    <div class="skeleton-box action"></div>
+                                </div>
+                                <div class="skeleton client">
+                                    <div class="skeleton-box name"></div>
+                                    <div class="skeleton-box date"></div>
+                                    <div class="skeleton-box requirements"></div>
+                                    <div class="skeleton-box messages"></div>
+                                    <div class="skeleton-box action"></div>
+                                </div>
+                                <div class="skeleton client">
+                                    <div class="skeleton-box name"></div>
+                                    <div class="skeleton-box date"></div>
+                                    <div class="skeleton-box requirements"></div>
+                                    <div class="skeleton-box messages"></div>
+                                    <div class="skeleton-box action"></div>
+                                </div>
+                                <div class="skeleton client">
+                                    <div class="skeleton-box name"></div>
+                                    <div class="skeleton-box date"></div>
+                                    <div class="skeleton-box requirements"></div>
+                                    <div class="skeleton-box messages"></div>
+                                    <div class="skeleton-box action"></div>
+                                </div>
+                                <div class="skeleton client">
+                                    <div class="skeleton-box name"></div>
+                                    <div class="skeleton-box date"></div>
+                                    <div class="skeleton-box requirements"></div>
+                                    <div class="skeleton-box messages"></div>
+                                    <div class="skeleton-box action"></div>
+                                </div>
+                                <div class="skeleton client">
+                                    <div class="skeleton-box name"></div>
+                                    <div class="skeleton-box date"></div>
+                                    <div class="skeleton-box requirements"></div>
+                                    <div class="skeleton-box messages"></div>
+                                    <div class="skeleton-box action"></div>
+                                </div>
+                            `;
+                            clientsList.append(skeletonHTML);
+                        }
+
+                        function hideClientsSkeleton() {
+                            $(".skeleton").fadeOut(300, function () {
+                                $(this).remove();
+                            });
+                        }
 
                         function fetchData() {
                             if (isLoading || !hasMoreData) return;
                             isLoading = true;
+                            const skeletonContainer = document.createElement("div");
+                            skeletonContainer.classList.add("skeleton-container");
+                            showClientsSkeleton();
 
                             $.ajax({
                                 url: `https://api.lenaai.net/dashboard/${clientId}`,
@@ -1576,6 +1677,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 },
                                 success: function (response) {
                                     console.log(response)
+                                    hideClientsSkeleton();
                                     if (!response.pagination.has_more || !response.pagination.next_cursor) {
                                         hasMoreData = false;
                                         $(".overview-container").off("scroll");
@@ -1587,6 +1689,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                     const container = $(".clients-list");
                                     const borderByAction = {
+                                        "ScheduleCall": {
+                                            "color": "green",
+                                            "icon": `<i class="fa-solid fa-phone"></i>`
+                                        },
                                         "Make a call": {
                                             "color": "green",
                                             "icon": `<i class="fa-solid fa-phone"></i>`
@@ -1595,7 +1701,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "color": "green",
                                             "icon": `<i class="fa-solid fa-calendar-days"></i>`
                                         },
+                                        "OfficeVisit": {
+                                            "color": "green",
+                                            "icon": `<i class="fa-solid fa-calendar-days"></i>`
+                                        },
                                         "Property view": {
+                                            "color": "green",
+                                            "icon": `<i class="fa-solid fa-house"></i>`
+                                        },
+                                        "BookViewing": {
                                             "color": "green",
                                             "icon": `<i class="fa-solid fa-house"></i>`
                                         },
@@ -1666,14 +1780,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             >
                                                 <li class="client-name">${phoneNumber}</li>
                                                 <li class="client-date">${latestDateOnly}</li>
-                                                <li class="requirements">
-                                                    Requirements
-                                                    <ul class="dropdown">
-                                                        <li>2 bedrooms</li>
-                                                        <li>villa</li>
-                                                        <li>Cairo</li>
-                                                    </ul>
-                                                </li>
+                                                <li class="requirements">Requirements</li>
                                                 <li class="need-action">
                                                     <div class="messages-no">${(messages.length * 2).toString().padStart(2, "0")}</div>
                                                 </li>
