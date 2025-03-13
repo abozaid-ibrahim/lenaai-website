@@ -43,17 +43,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const themeToggle = document.getElementById("theme-toggle");
     const themeStylesheet = document.getElementById("theme-stylesheet");
-    const themeStylesheetResponsive = document.getElementById("theme-stylesheet-resp");
     const themeIcon = themeToggle.querySelector("i");
 
     const lightThemePath = "css/efficiency_hub_light.css";
     const darkThemePath = "css/efficiency_hub_dark.css";
-    const lightThemePathResponsive = "css/responsive_light.css";
-    const darkThemePathResponsive = "css/responsive_dark.css";
 
     const savedTheme = localStorage.getItem("theme") || "light";
     themeStylesheet.href = savedTheme === "dark" ? darkThemePath: lightThemePath;
-    themeStylesheetResponsive.href = savedTheme === "dark" ? darkThemePathResponsive: lightThemePathResponsive;
 
     function updateButton(theme) {
         if (theme === "dark") {

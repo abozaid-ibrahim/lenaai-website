@@ -106,6 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         function renderUnits(allUnts) {
                             let compoundsNamesList = [];
+                            let developersNames = [];
                             document.querySelectorAll(".data-container").forEach(element => element.remove());
                             const groupedByCompound = allUnts.reduce((group, item) => {
                                 const { compound } = item;
@@ -142,6 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     unitElement.classList.add("unit")
                                     unitElement.setAttribute("data-dev", unit.developer);
                                     allUnitsImages[unit.unitId] = unit.images
+                                    developersNames.push(unit.developer);
                                     unitImages = unit.images
                                     unitElement.innerHTML = `
                                     <div class="unit-header">
@@ -193,6 +195,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                         sliderWrapper.appendChild(slide);
                                     });
                                 })
+                            })
+
+                            const uniqueDevelopers = [...new Set(developersNames)]
+                            const dataTitles = document.querySelector(".data-titles .dropdown");
+                            dataTitles.innerHTML = `<li>All</li>`;
+                            uniqueDevelopers.forEach((developer) => {
+                                let developerElement = document.createElement("li");
+                                developerElement.innerHTML = `${developer}`;
+                                dataTitles.appendChild(developerElement)
                             })
 
                             // Data section
@@ -275,8 +286,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             if (devs.length > 0 && units.length > 0) {
                                 devs.forEach((dev) => {
                                     dev.addEventListener("click", function () {
-                                        devs.forEach((d) => d.classList.remove("dev-active"));
-                                        dev.classList.add("dev-active");
                                         if (dev.textContent.trim() === "All") {
                                             units.forEach((unit) => {
                                                 unit.style.display = "block";
@@ -454,6 +463,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             detail.classList.add("compound");
                                             detail.innerHTML = `
                                             ${key}
+                                            <i class="fa-solid fa-pen-to-square" style="margin-left: auto; margin-right: 20px;"></i>
                                             <div class="edit-drop">
                                                 <div class="value">New Compound</div><i class="fa-solid fa-chevron-down"></i>
                                                 <ul class="dropdown">
@@ -504,6 +514,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         editDetails.appendChild(detail);
                                     });
+
+                                    $(".edit-content").on("click", ".compound", function (event) {
+                                        const compound = event.target.closest(".compound");
+                                
+                                        if (!compound) return;
+                                    
+                                        const editDrop = compound.querySelector(".edit-drop");
+                                        const icon = compound.querySelector("i");
+                                    
+                                        if (event.target.matches(".fa-pen-to-square")) {
+                                            if (editDrop) {
+                                                compound.dataset.dropdownHTML = editDrop.outerHTML;
+                                                editDrop.remove();
+                                            }
+                                            compound.insertAdjacentHTML("beforeend", `<input type="text" class="value">`);
+                                            icon.classList.remove("fa-pen-to-square");
+                                            icon.classList.add("fa-xmark");
+                                    
+                                        } else if (event.target.matches(".fa-xmark")) {
+                                            const inputField = compound.querySelector(".value");
+                                            if (inputField) {
+                                                inputField.remove();
+                                            }
+                                    
+                                            if (compound.dataset.dropdownHTML) {
+                                                compound.insertAdjacentHTML("beforeend", compound.dataset.dropdownHTML);
+                                            }
+                                    
+                                            icon.classList.remove("fa-xmark");
+                                            icon.classList.add("fa-pen-to-square");
+                                        }
+                                    });                                    
 
                                     const dateInput = document.querySelector(".delivery-date #cal");
                                     if (dateInput) {
@@ -558,11 +600,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                 
                                         let dropdown = $(this).find(".dropdown");
                                 
-                                        // Close other dropdowns before opening this one
                                         $(".dropdown").not(dropdown).slideUp();
                                 
                                         dropdown.stop(true, true).slideToggle();
-                                        $(this).find("i").toggleClass("rotate-icon");
+                                        $(this).find(".fa-chevron-down").toggleClass("rotate-icon");
                                     });
                                 
                                     $(".edit-content").on("click", ".edit-drop li", function (event) {
@@ -574,7 +615,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 
                                         valueElement.text(selectedText);
                                         $(this).closest(".dropdown").slideUp();
-                                        parentElement.find("i").toggleClass("rotate-icon");
+                                        parentElement.find(".fa-chevron-down").toggleClass("rotate-icon");
                                     });
                                 
                                     $(document).click(function () {
@@ -910,7 +951,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 unitId = input;
                                                 unitObject.unitId = input;
                                             } else if (li.classList.contains("compound")) {
-                                                unitObject.compound = li.querySelector(".value").textContent;
+                                                const inputField = li.querySelector("input.value");
+                                                const valueElement = li.querySelector(".value");
+
+                                                if (inputField) {
+                                                    unitObject.compound = inputField.value;
+                                                } else if (valueElement) {
+                                                    unitObject.compound = valueElement.textContent;
+                                                }
                                             } else if (li.classList.contains("building")) {
                                                 unitObject.buildingType = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("views")) {
@@ -1036,6 +1084,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 detail.classList.add("compound");
                                                 detail.innerHTML = `
                                                 ${key}
+                                                <i class="fa-solid fa-pen-to-square" style="margin-left: auto; margin-right: 20px;"></i>
                                                 <div class="edit-drop">
                                                     <div class="value">${value}</div><i class="fa-solid fa-chevron-down"></i>
                                                     <ul class="dropdown">
@@ -1085,6 +1134,38 @@ document.addEventListener("DOMContentLoaded", function () {
                                             }
 
                                             editDetails.appendChild(detail);
+                                        });
+
+                                        $(".edit-content").on("click", ".compound", function (event) {
+                                            const compound = event.target.closest(".compound");
+                                    
+                                            if (!compound) return;
+                                        
+                                            const editDrop = compound.querySelector(".edit-drop");
+                                            const icon = compound.querySelector("i");
+                                        
+                                            if (event.target.matches(".fa-pen-to-square")) {
+                                                if (editDrop) {
+                                                    compound.dataset.dropdownHTML = editDrop.outerHTML;
+                                                    editDrop.remove();
+                                                }
+                                                compound.insertAdjacentHTML("beforeend", `<input type="text" class="value">`);
+                                                icon.classList.remove("fa-pen-to-square");
+                                                icon.classList.add("fa-xmark");
+                                        
+                                            } else if (event.target.matches(".fa-xmark")) {
+                                                const inputField = compound.querySelector(".value");
+                                                if (inputField) {
+                                                    inputField.remove();
+                                                }
+                                        
+                                                if (compound.dataset.dropdownHTML) {
+                                                    compound.insertAdjacentHTML("beforeend", compound.dataset.dropdownHTML);
+                                                }
+                                        
+                                                icon.classList.remove("fa-xmark");
+                                                icon.classList.add("fa-pen-to-square");
+                                            }
                                         });
 
                                         const dateInput = document.querySelector(".delivery-date #cal");
@@ -1140,11 +1221,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                     
                                             let dropdown = $(this).find(".dropdown");
                                     
-                                            // Close other dropdowns before opening this one
                                             $(".dropdown").not(dropdown).slideUp();
                                     
                                             dropdown.stop(true, true).slideToggle();
-                                            $(this).find("i").toggleClass("rotate-icon");
+                                            $(this).find(".fa-chevron-down").toggleClass("rotate-icon");
                                         });
                                     
                                         $(".edit-content").on("click", ".edit-drop li", function (event) {
@@ -1156,7 +1236,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     
                                             valueElement.text(selectedText);
                                             $(this).closest(".dropdown").slideUp();
-                                            parentElement.find("i").toggleClass("rotate-icon");
+                                            parentElement.find(".fa-chevron-down").toggleClass("rotate-icon");
                                         });
                                     
                                         $(document).click(function () {
@@ -1508,7 +1588,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                             } else if (toCamelCase(key).includes("dataSource")) {
                                                 unitObject.dataSource = dataSrc;
                                             } else if (li.classList.contains("compound")) {
-                                                unitObject.compound = li.querySelector(".value").textContent;
+                                                const inputField = li.querySelector("input.value");
+                                                const valueElement = li.querySelector(".value");
+
+                                                if (inputField) {
+                                                    unitObject.compound = inputField.value;
+                                                } else if (valueElement) {
+                                                    unitObject.compound = valueElement.textContent;
+                                                }
                                             } else if (li.classList.contains("building")) {
                                                 unitObject.buildingType = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("views")) {
@@ -2306,7 +2393,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
     }
 
-    $(".filters").on("click", ".filters-drop", function (event) {
+    $(".data").on("click", ".units-drop", function (event) {
         event.stopPropagation();
 
         let dropdown = $(this).find(".dropdown");
@@ -2316,11 +2403,38 @@ document.addEventListener("DOMContentLoaded", function () {
         dropdown.stop(true, true).slideToggle();
     });
 
-    $(".filters").on("click", ".filters-drop li", function (event) {
+    $(".data").on("click", ".units-drop li", function (event) {
         event.stopPropagation();
 
         let selectedItem = $(this).clone();
-        let filterButton = $(this).closest(".filters-drop").find(".value");
+        let filterButton = $(this).closest(".units-drop").find(".value");
+
+        if (filterButton.length) {
+            filterButton.html(selectedItem.html() + `<i class="fa-solid fa-chevron-down"></i>`);
+        }
+
+        $(this).closest(".dropdown").slideUp();
+    });
+
+    $(document).click(function () {
+        $(".dropdown").slideUp();
+    });
+
+    $(".filters").on("click", ".filters-drop, .leads-drop", function (event) {
+        event.stopPropagation();
+
+        let dropdown = $(this).find(".dropdown");
+
+        $(".dropdown").not(dropdown).slideUp();
+
+        dropdown.stop(true, true).slideToggle();
+    });
+
+    $(".filters").on("click", ".filters-drop li, .leads-drop li", function (event) {
+        event.stopPropagation();
+
+        let selectedItem = $(this).clone();
+        let filterButton = $(this).closest(".filters-drop, .leads-drop").find(".value");
 
         if (filterButton.length) {
             filterButton.html(selectedItem.html() + `<i class="fa-solid fa-chevron-down"></i>`);
@@ -2403,15 +2517,17 @@ document.addEventListener("DOMContentLoaded", function () {
             <i class="fa-solid close-btn fa-circle-xmark"></i>
         </div>
         <div class="edit-content">
+            <div class="sheet-error" style="display: none;"></div>
             <ul class="edit-details">
                 <li>
                     Spread Sheet
                     <input type="text" id="spread-sheet" placeholder="Spread Sheet Link">
                 </li>
+                <div class="vod-error" style="display: none;"></div>
                 <li>
                     Video Link
                     <input type="text" id="video-link" placeholder="Video Link">
-                </il>
+                </li>
             </ul>
             <div class="details-btns">
                 <div class="save">Send</div>
@@ -2431,17 +2547,53 @@ document.addEventListener("DOMContentLoaded", function () {
         // });
 
         document.querySelector(".save").addEventListener("click", function () {
-            const spreadSheetLink = document.querySelector(".edit-content #spread-sheet").value;
-            const videoLink = document.querySelector(".edit-content #video-link").value;
-            const requestData = {
-                "spreadsheet_url": spreadSheetLink,
-                "video_url": videoLink,
-                "sheet_name": "Sheet1",
-                "client_id": clientId
+            const spreadSheetInput = document.querySelector("#spread-sheet");
+            const spreadSheetLink = spreadSheetInput.value.trim();
+            const videoInput = document.querySelector("#video-link");
+            const videoLink = videoInput.value.trim();
+            const sheetError = document.querySelector(".sheet-error");
+            const vodError = document.querySelector(".vod-error");
+    
+            const spreadsheetRegex = /^(https?:\/\/)?(www\.)?docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9_-]+(\/(edit|view|copy)?(\?.*)?)?$|[^\s]+\.xls[x]?|[^\s]+\.csv$/;
+    
+            let isValid = true;
+            sheetError.style.display = "none";
+            sheetError.innerHTML = "";
+
+            vodError.style.display = "none";
+            vodError.innerHTML = "";
+    
+            if (!spreadsheetRegex.test(spreadSheetLink) || spreadSheetLink === "") {
+                sheetError.style.display = "block";
+                sheetError.innerHTML = `Invalid link! Please enter a valid Excel file (.xls, .xlsx, .csv) or a Google Sheets.`;
+                spreadSheetInput.style.border = "2px solid red";
+                isValid = false;
+            } else {
+                spreadSheetInput.style.border = "2px solid #cbb26a";
             }
+    
+            if (!videoLink) {
+                vodError.style.display = "block";
+                vodError.innerHTML = `Invalid link! Please enter a valid link to a downloadable video.`;
+                videoInput.style.border = "2px solid red";
+                isValid = false;
+            } else {
+                videoInput.style.border = "2px solid #cbb26a";
+            }
+    
+            if (!isValid) return;
+    
+            const requestData = {
+                spreadsheet_url: spreadSheetLink,
+                video_url: videoLink,
+                sheet_name: "Sheet1",
+                client_id: clientId
+            };
+    
+            console.log("Sending request:", requestData);
 
             $.ajax({
-                url: `https://api.lenaai.net/webhook/send-video-using-spreadsheet`,
+                url: "https://api.lenaai.net/webhook/send-video-using-spreadsheet",
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(requestData),
@@ -2450,10 +2602,107 @@ document.addEventListener("DOMContentLoaded", function () {
                     editOverlay.style.display = "none";
                     editPopup.innerHTML = '';
                 },
-                error: function (error) {
-                    console.log("Request failed", error);
+                error: function (err) {
+                    console.error("Request failed", err);
+                    sheetError.style.display = "block";
+                    sheetError.innerHTML = "Request failed. Please try again.";
                 }
             });
+        });
+    })
+
+    const telegramMessageButton = document.querySelector(".telegram-msg");
+    telegramMessageButton.addEventListener("click", function () {
+        const editOverlay = document.querySelector(".edit-overlay");
+        const editPopup = document.querySelector(".edit-popup");
+
+        editPopup.classList.add("delete-popup");
+        editOverlay.style.display = "flex";
+        editPopup.innerHTML = `
+        <div class="history-header">
+            <h1>Send Cold Whats messages Patch</h1>
+            <i class="fa-solid close-btn fa-circle-xmark"></i>
+        </div>
+        <div class="edit-content">
+            <div class="sheet-error" style="display: none;"></div>
+            <ul class="edit-details">
+                <li>
+                    Spread Sheet
+                    <input type="text" id="spread-sheet" placeholder="Spread Sheet Link">
+                </li>
+                <div class="vod-error" style="display: none;"></div>
+                <li>
+                    Video Link
+                    <input type="text" id="video-link" placeholder="Video Link">
+                </li>
+            </ul>
+            <div class="details-btns">
+                <div class="save">Send</div>
+            </div>
+        </div>`;
+
+        document.querySelector(".close-btn").addEventListener("click", function () {
+            editPopup.classList.remove("delete-popup");
+            editOverlay.style.display = "none";
+            editPopup.innerHTML = '';
+        });
+
+        // document.querySelector(".cancel").addEventListener("click", function () {
+        //     editPopup.classList.remove("delete-popup");
+        //     editOverlay.style.display = "none";
+        //     editPopup.innerHTML = '';
+        // });
+
+        document.querySelector(".save").addEventListener("click", function () {
+            const spreadSheetInput = document.querySelector("#spread-sheet");
+            const spreadSheetLink = spreadSheetInput.value.trim();
+            const videoInput = document.querySelector("#video-link");
+            const videoLink = videoInput.value.trim();
+            const sheetError = document.querySelector(".sheet-error");
+            const vodError = document.querySelector(".vod-error");
+    
+            const spreadsheetRegex = /^(https?:\/\/)?(www\.)?docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9_-]+(\/(edit|view|copy)?(\?.*)?)?$|[^\s]+\.xls[x]?|[^\s]+\.csv$/;
+    
+            let isValid = true;
+            sheetError.style.display = "none";
+            sheetError.innerHTML = "";
+
+            vodError.style.display = "none";
+            vodError.innerHTML = "";
+    
+            if (!spreadsheetRegex.test(spreadSheetLink) || spreadSheetLink === "") {
+                sheetError.style.display = "block";
+                sheetError.innerHTML = `Invalid link! Please enter a valid Excel file (.xls, .xlsx, .csv) or a Google Sheets.`;
+                spreadSheetInput.style.border = "2px solid red";
+                isValid = false;
+            } else {
+                spreadSheetInput.style.border = "2px solid #cbb26a";
+            }
+    
+            if (!videoLink) {
+                vodError.style.display = "block";
+                vodError.innerHTML = `Invalid link! Please enter a valid link to a downloadable video.`;
+                videoInput.style.border = "2px solid red";
+                isValid = false;
+            } else {
+                videoInput.style.border = "2px solid #cbb26a";
+            }
+    
+            if (!isValid) return;
+    
+            const requestData = {
+                spreadsheet_url: spreadSheetLink,
+                video_url: videoLink,
+                sheet_name: "Sheet1",
+                client_id: clientId
+            };
+    
+            console.log("Sending request:", requestData);
+
+            setTimeout(() => {
+                editOverlay.style.display = "none";
+                editPopup.innerHTML = '';
+            }, 1000)
         });
     })
 
@@ -2498,7 +2747,7 @@ document.addEventListener("DOMContentLoaded", function () {
             error.innerHTML = ``;
             if (spreadSheetLink === "" || !spreadsheetRegex.test(spreadSheetLink)) {
                 error.style.display = "block";
-                error.innerHTML = `Invalid link! Please enter a valid Excel file (.xls, .xlsx, .csv) or a Google Sheets link.`;
+                error.innerHTML = `Invalid link! Please enter a valid Excel file (.xls, .xlsx, .csv) or a Google Sheets.`;
                 spreadSheetInput.style.border = "2px solid red";
                 return;
             } else {
