@@ -161,7 +161,9 @@ a {
     margin-bottom: 1rem;
 }
 
-.filters-drop {
+.filters-drop,
+.units-drop,
+.leads-drop {
     padding: .5rem .9rem;
     margin-right: 1rem;
     border-radius: 26px;
@@ -174,13 +176,28 @@ a {
     width: 200px;
 }
 
-.filters-drop .value {
+.leads-drop {
+    margin-left: auto;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    width: 220px;
+}
+
+.units-drop {
+    width: 400px;
+}
+
+.filters-drop .value,
+.units-drop .value,
+.leads-drop .value {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.filters-drop:hover {
+.filters-drop:hover,
+.units-drop:hover,
+.leads-drop:hover {
     cursor: pointer;
     background-color: var(--primary-color);
     color: var(--text-color);
@@ -190,18 +207,31 @@ a {
     width: 200px;
 }
 
-.filters-drop .dropdown li {
+.leads-drop .dropdown {
+    width: 220px;
+}
+
+.units-drop .dropdown {
+    width: 400px;
+}
+
+.filters-drop .dropdown li,
+.units-drop .dropdown li,
+.leads-drop .dropdown li {
     display: flex;
     align-items: center;
     gap: 8px;
     text-align: left;
 }
 
-.filters .dropdown i {
+.filters .dropdown i,
+.leads-drop .dropdown i {
     font-size: 1.2rem;
 }
 
-.filters-drop .fa-chevron-down {
+.filters-drop .fa-chevron-down,
+.leads-drop .fa-chevron-down,
+.units-drop .fa-chevron-down {
     margin-left: auto;
 }
 
@@ -230,8 +260,7 @@ a {
     font-size: 1.2rem;
 }
 
-#client-search-bar,
-#unit-search-bar {
+#client-search-bar {
     background-color: transparent;
     margin-left: 10px;
     border: none;
@@ -240,27 +269,19 @@ a {
     flex: 1;
 }
 
-.whats-msg {
+.whats-msg,
+.telegram-msg {
     display: flex;
-    color: var(--text-color);
-    background-color: var(--primary-color);
+    align-items: center;
     border-radius: 16px;
-    margin-left: auto;
-    padding: .4rem .8rem;
     font-size: 1rem;
     transition: background-color 0.3s ease;
-    box-shadow: var(--box-shadow);
 }
 
-.whats-msg i {
+.whats-msg i
+.telegram-msg i {
     font-size: 1.5rem;
     margin-right: 5px;
-}
-
-.whats-msg:hover {
-    background-color: var(--secondary-color);
-    color: #1B2838;
-    cursor: pointer;
 }
 
 /* Overview */
@@ -732,25 +753,8 @@ a {
 
 .data-titles {
     display: flex;
-    gap: 20px;
-    justify-content: space-evenly;
-}
-
-.data-titles li {
-    color: var(--text-color);
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    border-radius: 10px;
-    background-color: var(--primary-color);
-    padding: .5rem 1rem;
-    transition: background-color .2s ease-in-out;
-}
-
-.data-titles li:hover {
-    cursor: pointer;
-    background-color: var(--secondary-color);
-    color: var(--primary-color-hover);
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .fa-caret-down {
@@ -768,7 +772,6 @@ a {
     gap: 3rem;
     align-items: center;
     justify-content: flex-end;
-    margin-top: 2rem;
 }
 
 .add-btn, .import-btn {
@@ -1029,6 +1032,19 @@ a {
     justify-content: space-between;
     align-items: center;
     position: relative;
+}
+
+.compound .fa-pen-to-square,
+.compound .fa-xmark {
+    padding: .7rem;
+    border-radius: 10px;
+    font-size: 1rem
+}
+
+.compound .fa-pen-to-square:hover,
+.compound .fa-xmark:hover {
+    background-color: #ffffff4f;
+    cursor: pointer;
 }
 
 .date-picker input {
@@ -1365,7 +1381,9 @@ a {
 }
 
 .edit-drop .dropdown,
-.filters-drop .dropdown {
+.filters-drop .dropdown,
+.leads-drop .dropdown,
+.units-drop .dropdown {
     left: 0%;
     top: 100%;
 }
@@ -1444,7 +1462,9 @@ a {
     font-size: 24px;
 }
 
-.val-error {
+.val-error,
+.sheet-error,
+.vod-error {
     color: red;
     font-size: 1rem;
 }

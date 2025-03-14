@@ -46,6 +46,7 @@
                     <li><a href="../index.html">Home</a></li>
                     <li class="active"><a href="dashboard.html">Client Dashboard</a></li>
                     <li><a href="#">Job Opportunities</a></li>
+                    <li><a href="../properties.html">All Properties</a></li>
                     <li class="sign-in-sm">
                         <button>
                             <i class="bi bi-box-arrow-in-right"></i> Sign In
@@ -113,9 +114,22 @@
                     <i class="bi bi-search"></i>
                     <input type="text" id="client-search-bar" placeholder="Search for a client">
                 </div>
-                <div class="whats-msg">
-                    <i class="fa-brands fa-whatsapp"></i>
-                    Filter Leads
+                <div class="leads-drop">
+                    <div class="value">Filter Leads<i class="fa-solid fa-chevron-down"></i></div>
+                    <ul class="dropdown">
+                        <li class="whats-msg">
+                            <div>
+                                <i class="fa-brands fa-whatsapp"></i>
+                                WhatsApp Leads
+                            </div>
+                        </li>
+                        <li class="telegram-msg">
+                            <div>
+                                <i class="fa-brands fa-telegram"></i>
+                                Telegram Leads
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="overview-container">
@@ -156,7 +170,7 @@
     <section class="data">
         <div class="data-header">Available Units</div>
         <div class="data-tabs">
-            <ul class="data-titles">
+            <!-- <ul class="data-titles">
                 <li class="dev-active">All<i class="fa-solid fa-caret-down"></i></li>
                 <li>Talaat Mostafa Group (TMG)<i class="fa-solid fa-caret-down"></i></li>
                 <li>Tatweer Misr<i class="fa-solid fa-caret-down"></i></li>
@@ -164,16 +178,24 @@
                 <li>Mountain view<i class="fa-solid fa-caret-down"></i></li>
                 <li>The Nile Dev<i class="fa-solid fa-caret-down"></i></li>
                 <li>Hassan Allam<i class="fa-solid fa-caret-down"></i></li>
-            </ul>
-            <div class="add-units">
-                <div class="import-btn">
-                    <i class="fa-solid fa-file"></i>
-                    Import Units
+            </ul> -->
+            <div class="data-titles">
+                <div class="units-drop">
+                    <div class="value">Filter By Developer<i class="fa-solid fa-chevron-down"></i></div>
+                    <ul class="dropdown">
+                        <li>All</li>
+                    </ul>
                 </div>
-
-                <div class="add-btn">
-                    <i class="fa-solid fa-plus"></i>
-                    Add Unit
+                <div class="add-units">
+                    <div class="import-btn">
+                        <i class="fa-solid fa-file"></i>
+                        Import Units
+                    </div>
+    
+                    <div class="add-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Unit
+                    </div>
                 </div>
             </div>
         </div>

@@ -91,7 +91,7 @@ a {
 }
 
 .nav-list li:last-child,
-.nav-list li:nth-child(4) {
+.nav-list li:nth-child(5) {
     display: none;
 }
 
