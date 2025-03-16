@@ -29,7 +29,7 @@
     <!-- External Libraries -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js" defer></script>
 </head>
 
 <body>
@@ -96,8 +96,15 @@
         </div>
     </section> -->
 
+    <!-- Dashboard taps -->
+    <section class="tabs">
+        <button class="tab-btn active" data-tab="dashboard"><i class="fa-solid fa-list"></i>Dashboard</button>
+        <button class="tab-btn" data-tab="analytics"><i class="fa-solid fa-chart-simple"></i>Analytics</button>
+        <button class="tab-btn" data-tab="units"><i class="fa-solid fa-house"></i>Units</button>
+    </section>
+
     <!-- Clients overview -->
-    <section class="overview">
+    <section class="overview tab-content active" id="dashboard">
         <div class="main-container">
             <div class="overview-header">Clients Dashboard</div>
             <div class="filters">
@@ -145,13 +152,6 @@
                 <div class="not-found">No client exists with name/number </div>
             </div>
         </div>
-        <div class="chart">
-            <div class="chart-header">Statstics</div>
-            <div class="chart-container">
-                <canvas id="reqChart"></canvas>
-                <canvas id="actChart"></canvas>
-            </div>
-        </div>
 
         <!-- Chat history -->
         <div class="chat-overlay">
@@ -166,8 +166,17 @@
         </div>
     </section>
 
+    <!-- Charts section -->
+    <section class="chart tab-content" id="analytics">
+        <div class="chart-header">Clients Analytics</div>
+        <div class="chart-container">
+            <canvas id="reqChart"></canvas>
+            <canvas id="actChart"></canvas>
+        </div>
+    </section>
+
     <!-- Data Sheets -->
-    <section class="data">
+    <section class="data tab-content" id="units">
         <div class="data-header">Available Units</div>
         <div class="data-tabs">
             <!-- <ul class="data-titles">
