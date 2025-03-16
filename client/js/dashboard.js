@@ -1690,49 +1690,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         function showClientsSkeleton() {
                             const skeletonHTML = `
-                                <div class="skeleton client">
+                                <div class="skeleton">
                                     <div class="skeleton-box name"></div>
                                     <div class="skeleton-box date"></div>
                                     <div class="skeleton-box requirements"></div>
                                     <div class="skeleton-box messages"></div>
                                     <div class="skeleton-box action"></div>
                                 </div>
-                                <div class="skeleton client">
+                                <div class="skeleton">
                                     <div class="skeleton-box name"></div>
                                     <div class="skeleton-box date"></div>
                                     <div class="skeleton-box requirements"></div>
                                     <div class="skeleton-box messages"></div>
                                     <div class="skeleton-box action"></div>
                                 </div>
-                                <div class="skeleton client">
+                                <div class="skeleton">
                                     <div class="skeleton-box name"></div>
                                     <div class="skeleton-box date"></div>
                                     <div class="skeleton-box requirements"></div>
                                     <div class="skeleton-box messages"></div>
                                     <div class="skeleton-box action"></div>
                                 </div>
-                                <div class="skeleton client">
+                                <div class="skeleton">
                                     <div class="skeleton-box name"></div>
                                     <div class="skeleton-box date"></div>
                                     <div class="skeleton-box requirements"></div>
                                     <div class="skeleton-box messages"></div>
                                     <div class="skeleton-box action"></div>
                                 </div>
-                                <div class="skeleton client">
+                                <div class="skeleton">
                                     <div class="skeleton-box name"></div>
                                     <div class="skeleton-box date"></div>
                                     <div class="skeleton-box requirements"></div>
                                     <div class="skeleton-box messages"></div>
                                     <div class="skeleton-box action"></div>
                                 </div>
-                                <div class="skeleton client">
+                                <div class="skeleton">
                                     <div class="skeleton-box name"></div>
                                     <div class="skeleton-box date"></div>
                                     <div class="skeleton-box requirements"></div>
                                     <div class="skeleton-box messages"></div>
                                     <div class="skeleton-box action"></div>
                                 </div>
-                                <div class="skeleton client">
+                                <div class="skeleton">
                                     <div class="skeleton-box name"></div>
                                     <div class="skeleton-box date"></div>
                                     <div class="skeleton-box requirements"></div>
@@ -1760,6 +1760,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 url: `https://api.lenaai.net/dashboard/${clientId}`,
                                 method: "GET",
                                 data: {
+                                    "limit": 50,
                                     "cursor": cursor
                                 },
                                 success: function (response) {
@@ -2393,6 +2394,27 @@ document.addEventListener("DOMContentLoaded", function () {
         })
     }
 
+    $(".tab-content").not(".active").hide();
+    
+    $(".tab-btn").click(function () {
+        let tabId = $(this).data("tab");
+        
+        if ($(this).hasClass("active")) {
+            return;
+        }
+        
+        $(".tab-btn").removeClass("active");
+        $(this).addClass("active");
+        
+        let $currentTab = $(".tab-content.active");
+        let $newTab = $("#" + tabId);
+        
+        $currentTab.fadeOut(200, function() {
+            $currentTab.removeClass("active");
+            $newTab.addClass("active").fadeIn(300);
+        });
+    });
+
     $(".data").on("click", ".units-drop", function (event) {
         event.stopPropagation();
 
@@ -2499,15 +2521,26 @@ document.addEventListener("DOMContentLoaded", function () {
             }]
         },
         options: {
-            responsive: false,  // Disable auto-resizing
-            maintainAspectRatio: false,  // Allow manual sizing
+            responsive: false,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: "nearest",
+                intersect: false,
+            },
+            plugins: {
+                tooltip: {
+                    enabled: true,
+                    mode: "index",
+                    intersect: false,
+                }
+            },
         }
     });
 
     const whatsMessageButton = document.querySelector(".whats-msg");
     whatsMessageButton.addEventListener("click", function () {
-        const editOverlay = document.querySelector(".edit-overlay");
-        const editPopup = document.querySelector(".edit-popup");
+        const editOverlay = document.querySelector(".chat-overlay");
+        const editPopup = document.querySelector(".chat-history");
 
         editPopup.classList.add("delete-popup");
         editOverlay.style.display = "flex";
@@ -2580,7 +2613,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 videoInput.style.border = "2px solid #cbb26a";
             }
-    
+          
             if (!isValid) return;
     
             const requestData = {
@@ -2613,14 +2646,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const telegramMessageButton = document.querySelector(".telegram-msg");
     telegramMessageButton.addEventListener("click", function () {
-        const editOverlay = document.querySelector(".edit-overlay");
-        const editPopup = document.querySelector(".edit-popup");
+        const editOverlay = document.querySelector(".chat-overlay");
+        const editPopup = document.querySelector(".chat-history");
 
         editPopup.classList.add("delete-popup");
         editOverlay.style.display = "flex";
         editPopup.innerHTML = `
         <div class="history-header">
-            <h1>Send Cold Whats messages Patch</h1>
+            <h1>Send Cold Telegram messages Patch</h1>
             <i class="fa-solid close-btn fa-circle-xmark"></i>
         </div>
         <div class="edit-content">
