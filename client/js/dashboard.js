@@ -2613,9 +2613,9 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 videoInput.style.border = "2px solid #cbb26a";
             }
-    
+
             if (!isValid) return;
-    
+            
             const requestData = {
                 spreadsheet_url: spreadSheetLink,
                 video_url: videoLink,
