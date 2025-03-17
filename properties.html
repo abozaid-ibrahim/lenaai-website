@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <!-- CSS files -->
     <link rel="stylesheet" href="css/properties.css">
@@ -81,7 +81,7 @@
             <input type="text" id="client-search-bar" placeholder="City, developer or building">
         </div>
 
-        <div class="filters-drop">
+        <div class="filters-drop types">
             <div class="value">Property Type<i class="fa-solid fa-chevron-down"></i></div>
             <ul class="dropdown">
                 <li>Apartment</li>
@@ -167,6 +167,214 @@
             <li>900,000</li>
             <li>1,000,000</li>
         </ul>
+
+        <div class="filters-drop views">
+            <div class="value">View<i class="fa-solid fa-chevron-down"></i></div>
+            <ul class="dropdown">
+                <li>Lagoon</li>
+                <li>Sea view</li>
+                <li>Garden</li>
+                <li>Street</li>
+                <li>Open</li>
+                <li>Park</li>
+                <li>Other</li>
+            </ul>
+        </div>
+
+        <div class="find">Find</div>
+    </section>
+
+    <!-- Properties -->
+
+    <section class="properties-container">
+        <div class="section-header">
+            <div class="section-title">
+                <h2>Available Properties</h2>
+                <p>Discover your perfect home from our exclusive collection</p>
+            </div>
+            <div class="section-controls">
+                <div class="sort-options">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select">
+                        <option value="newest">Newest</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="area-desc">Beds: Least</option>
+                        <option value="area-desc">Beds: Most</option>
+                    </select>
+                </div>
+                <!-- <div class="view-options">
+                    <button class="view-btn active" data-view="list"><i class="bi bi-list-ul"></i></button>
+                    <button class="view-btn" data-view="grid"><i class="bi bi-grid-3x3-gap"></i></button>
+                </div> -->
+            </div>
+        </div>
+
+        <div class="properties-wrapper">
+            <ul class="properties-list">
+                <li class="property">
+                    <div class="property-header">
+                        <span class="property-badge">New</span>
+                        <div class="property-btn"><i class="fa-brands fa-whatsapp"></i>WhatsApp</div>
+                        <div class="property-btn"><i class="bi bi-chat-dots"></i>Chatbot</div>
+                    </div>
+                    <div class="property-details">
+                        <div class="property-images">
+                            <div class="slider">
+                                <div class="slider-wrapper">
+                                    <div class="slide">
+                                        <img src="assets/hero_1.jpg" draggable="false">
+                                    </div>
+                                    <div class="slide">
+                                        <img src="assets/careers2.png" draggable="false">
+                                    </div>
+                                </div>
+                        
+                                <div id="prev"><i class="fa-solid iconCall fa-chevron-left"></i></div>
+                                <div id="next"><i class="fa-solid iconCall fa-chevron-right"></i></div>
+                            </div>
+                        </div>
+                        <div class="details">
+                            <div class="details-top">
+                                <div class="property-type">Apartment</div>
+                                <div class="property-price">10,000,000 EGP</div>
+                                <div class="property-downpayment">Down Payment: 4,300,000 EGP</div>
+                            </div>
+                            <div class="details-bottom">
+                                <div class="property-location"><i class="bi bi-geo-alt"></i>Village West Sheikh Zayed Compounds, Sheikh Zayed, Giza</div>
+                                <ul class="details-list">
+                                    <li><i class="fa-solid fa-bed"></i>6</li>
+                                    <li><i class="fa-solid fa-bath"></i>5</li>
+                                    <li><i class="fa-solid fa-ruler-combined"></i>650 sqm</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="property-footer">
+                        <button class="save-property"><i class="bi bi-bookmark"></i> Save</button>
+                        <button class="view-details">View Details</button>
+                    </div> -->
+                </li>
+
+                <li class="property">
+                    <div class="property-header">
+                        <span class="property-badge">New</span>
+                        <div class="property-btn"><i class="fa-brands fa-whatsapp"></i>WhatsApp</div>
+                        <div class="property-btn"><i class="bi bi-chat-dots"></i>Chatbot</div>
+                    </div>
+                    <div class="property-details">
+                        <div class="property-images">
+                            <div class="slider">
+                                <div class="slider-wrapper">
+                                    <div class="slide">
+                                        <img src="assets/hero_1.jpg" draggable="false">
+                                    </div>
+                                    <div class="slide">
+                                        <img src="assets/careers2.png" draggable="false">
+                                    </div>
+                                </div>
+                        
+                                <div id="prev"><i class="fa-solid iconCall fa-chevron-left"></i></div>
+                                <div id="next"><i class="fa-solid iconCall fa-chevron-right"></i></div>
+                            </div>
+                        </div>
+                        <div class="details">
+                            <div class="details-top">
+                                <div class="property-type">Apartment</div>
+                                <div class="property-price">10,000,000 EGP</div>
+                                <div class="property-downpayment">Down Payment: 4,300,000 EGP</div>
+                            </div>
+                            <div class="details-bottom">
+                                <div class="property-location"><i class="bi bi-geo-alt"></i>Village West Sheikh Zayed Compounds, Sheikh Zayed, Giza</div>
+                                <ul class="details-list">
+                                    <li><i class="fa-solid fa-bed"></i>6</li>
+                                    <li><i class="fa-solid fa-bath"></i>5</li>
+                                    <li><i class="fa-solid fa-ruler-combined"></i>650 sqm</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="property-footer">
+                        <button class="save-property"><i class="bi bi-bookmark"></i> Save</button>
+                        <button class="view-details">View Details</button>
+                    </div> -->
+                </li>
+
+                <li class="property">
+                    <div class="property-header">
+                        <span class="property-badge">New</span>
+                        <div class="property-btn"><i class="fa-brands fa-whatsapp"></i>WhatsApp</div>
+                        <div class="property-btn"><i class="bi bi-chat-dots"></i>Chatbot</div>
+                    </div>
+                    <div class="property-details">
+                        <div class="property-images">
+                            <div class="slider">
+                                <div class="slider-wrapper">
+                                    <div class="slide">
+                                        <img src="assets/hero_1.jpg" draggable="false">
+                                    </div>
+                                    <div class="slide">
+                                        <img src="assets/careers2.png" draggable="false">
+                                    </div>
+                                </div>
+                        
+                                <div id="prev"><i class="fa-solid iconCall fa-chevron-left"></i></div>
+                                <div id="next"><i class="fa-solid iconCall fa-chevron-right"></i></div>
+                            </div>
+                        </div>
+                        <div class="details">
+                            <div class="details-top">
+                                <div class="property-type">Apartment</div>
+                                <div class="property-price">10,000,000 EGP</div>
+                                <div class="property-downpayment">Down Payment: 4,300,000 EGP</div>
+                            </div>
+                            <div class="details-bottom">
+                                <div class="property-location"><i class="bi bi-geo-alt"></i>Village West Sheikh Zayed Compounds, Sheikh Zayed, Giza</div>
+                                <ul class="details-list">
+                                    <li><i class="fa-solid fa-bed"></i>6</li>
+                                    <li><i class="fa-solid fa-bath"></i>5</li>
+                                    <li><i class="fa-solid fa-ruler-combined"></i>650 sqm</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="property-footer">
+                        <button class="save-property"><i class="bi bi-bookmark"></i> Save</button>
+                        <button class="view-details">View Details</button>
+                    </div> -->
+                </li>
+            </ul>
+            
+            <aside class="featured-properties">
+                <h3>Featured Properties</h3>
+                <div class="featured-badge">
+                    <i class="bi bi-award"></i>
+                    <span>Top Picks</span>
+                </div>
+                <div class="featured-item">
+                    <img src="./assets/Image_135.png" alt="Luxury Villa">
+                    <p>Luxury Villa - 10,500,000 EGP</p>
+                </div>
+                <div class="featured-item">
+                    <img src="./assets/hero_1.jpg" alt="Premium Apartment">
+                    <p>Premium Apartment - 7,800,000 EGP</p>
+                </div>
+                <div class="featured-item">
+                    <img src="./assets/careers2.png" alt="Beach House">
+                    <p>Beach House - 12,300,000 EGP</p>
+                </div>
+            </aside>
+        </div>
+        
+        <div class="pagination">
+            <button class="page-btn prev"><i class="bi bi-chevron-left"></i></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <span class="page-ellipsis">...</span>
+            <button class="page-btn">10</button>
+            <button class="page-btn next"><i class="bi bi-chevron-right"></i></button>
+        </div>
     </section>
 </body>
 
