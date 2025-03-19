@@ -369,9 +369,6 @@ a {
 
 .client-name {
     width: 15ch;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
     font-family: "Archivo", serif;
 }
 
@@ -447,7 +444,8 @@ a {
 
 .chat-overlay,
 .req-overlay,
-.edit-overlay {
+.edit-overlay,
+.tags-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -463,9 +461,14 @@ a {
     box-sizing: border-box;
 }
 
+.tags-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}
+
 .chat-history,
 .req-profile,
-.edit-popup {
+.edit-popup,
+.tags-popup {
     background: #cbb26a;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     width: 35%;
@@ -609,6 +612,7 @@ a {
 
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -1004,6 +1008,7 @@ a {
 }
 
 .edit-details li input[type="text"],
+.edit-tags,
 .edit-drop,
 .date-picker {
     width: 63%;
@@ -1016,6 +1021,12 @@ a {
     font-size: 1rem;
 }
 
+.edit-tags {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+}
+
 .edit-drop,
 .date-picker {
     display: flex;
@@ -1025,14 +1036,16 @@ a {
 }
 
 .compound .fa-pen-to-square,
-.compound .fa-xmark {
+.compound .fa-xmark,
+.payment-plan .fa-plus {
     padding: .7rem;
     border-radius: 10px;
     font-size: 1rem
 }
 
 .compound .fa-pen-to-square:hover,
-.compound .fa-xmark:hover {
+.compound .fa-xmark:hover,
+.payment-plan .fa-plus:hover {
     background-color: #ffffff4f;
     cursor: pointer;
 }
@@ -1404,7 +1417,8 @@ a {
 }
 
 
-.delete-popup {
+.delete-popup,
+.tags-popup {
     width: 40%;
 }
 
@@ -1634,4 +1648,25 @@ a {
 
 .tab-content.active {
     display: block;
+}
+
+.tag {
+    padding: 8px 12px;
+    font-weight: 400;
+    background-color: #00000063;
+    border-radius: 10px;
+    width: fit-content;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.tag i {
+    position: absolute;
+    top: -12%;
+    right: -1%;
+}
+
+.tag i:hover {
+    cursor: pointer;
+    color: var(--alt-button-color-hover);
 }

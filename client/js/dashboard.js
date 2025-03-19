@@ -85,23 +85,44 @@ document.addEventListener("DOMContentLoaded", function () {
                             "Apartment",
                             "Villa",
                             "Chalet",
-                            "Twin House",
-                            "Town House",
+                            "Twinhouse",
+                            "Townhouse",
+                            "House",
                             "Roof",
                             "Penthouse",
                             "Studio",
                             "Duplex",
                             "Loft",
-                            "Bungalow"
+                            "Bungalow",
+                            "Office",
+                            "Shop"
                         ];
                         const views = [
                             "Lagoon",
-                            "Sea view",
+                            "Sea",
+                            "City",
+                            "River",
+                            "Pool",
+                            "Golf",
+                            "Mountain",
                             "Garden",
                             "Street",
-                            "Open",
+                            "Open Area",
                             "Park",
                             "Other"
+                        ];
+                        const finishing = [
+                            "Fully Finished",
+                            "Semi Finished",
+                            "Core & Shell",
+                            "Furnished",
+                            "Unfurnished"
+                        ];
+                        const countries = [
+                            "Egypt",
+                            "United Arab Emirates",
+                            "Saudi Arabia",
+                            "Qatar"
                         ];
 
                         function renderUnits(allUnts) {
@@ -159,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             </div>
                             
                                             <div class="property-details">
-                                                <p><strong>Unit ID</strong>: ${unit.unitId}</p>
+                                                <p><strong>Title</strong>: ${unit.unitId}</p>
                                                 <p><strong>Compound</strong>: ${unit.compound}</p>
                                                 <p><strong>Building Type</strong>: ${unit.buildingType}</p>
                                                 <p><strong>View</strong>: ${unit.view}</p>
@@ -408,13 +429,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             // Add Unit
                             let newUnitImages = [];
+                            let paymentPlansList = [];
                             const addButton = document.querySelector(".add-btn");
                             addButton.addEventListener("click", function () {
                                 const editOverlay = document.querySelector(".edit-overlay");
                                 const editPopup = document.querySelector(".edit-popup");
                                 const propertyDetails = document.createElement("div");
                                 propertyDetails.innerHTML = `
-                                    <p><strong>Unit ID</strong>:</p>
+                                    <p><strong>Title</strong>:</p>
                                     <p><strong>Compound</strong>:</p>
                                     <p><strong>Building Type</strong>:</p>
                                     <p><strong>View</strong>:</p>
@@ -455,8 +477,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                         const key = p.querySelector("strong")?.textContent.trim().replace(":", "");
                                         const detail = document.createElement("li");
 
-                                        if (key === "Unit ID") {
+                                        if (key === "Title") {
                                             detail.innerHTML = `${key}<input type="text">`;
+                                        } else if (key === "Country") {
+                                            detail.classList.add("country")
+                                            detail.innerHTML = `
+                                            ${key}
+                                            <div class="edit-drop">
+                                                <div class="value">${countries[0]}</div><i class="fa-solid fa-chevron-down"></i>
+                                                <ul class="dropdown">
+                                                </ul>
+                                            </div>`;
+                                            countries.forEach((type) => {
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
+                                            });
                                         } else if (key === "Data Source") {
                                             detail.innerHTML = `${key}<input type="text">`;
                                         } else if (key === "Compound") {
@@ -506,8 +540,24 @@ document.addEventListener("DOMContentLoaded", function () {
                                             views.forEach((type) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                             });
-                                        } else if (key === "Payment Plans"){
-                                            detail.innerHTML = `${key}<input type="text" id="formattedInput" placeholder="0: 5000000, 5: 10000000" autocomplete="off">`;
+                                        } else if (key === "Payment Plans") {
+                                            detail.classList.add("payment-plan")
+                                            detail.innerHTML = `
+                                            ${key}
+                                            <i class="fa-solid fa-plus" style="margin-left: auto; margin-right: 20px;"></i>
+                                            <div class="edit-tags" style="padding: 18px;"></div>`;
+                                        } else if (key === "Finishing") {
+                                            detail.classList.add("finishing")
+                                            detail.innerHTML = `
+                                            ${key}
+                                            <div class="edit-drop">
+                                                <div class="value">${finishing[0]}</div><i class="fa-solid fa-chevron-down"></i>
+                                                <ul class="dropdown">
+                                                </ul>
+                                            </div>`;
+                                            finishing.forEach((type) => {
+                                                detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
+                                            });
                                         } else {
                                             detail.innerHTML = `${key}<input type="text">`;
                                         }
@@ -545,7 +595,136 @@ document.addEventListener("DOMContentLoaded", function () {
                                             icon.classList.remove("fa-xmark");
                                             icon.classList.add("fa-pen-to-square");
                                         }
-                                    });                                    
+                                    });
+                                    
+                                    $(".edit-content").on("click", ".payment-plan", function (event) {
+                                        const paymentPlan = event.target.closest(".payment-plan");
+                                
+                                        if (!paymentPlan) return;
+                                    
+                                        if (event.target.matches(".fa-plus")) {
+                                            const tagsOverlay = document.querySelector(".tags-overlay");
+                                            const tagsPopup = document.querySelector(".tags-popup");
+
+                                            tagsOverlay.style.display = "flex";
+                                            tagsPopup.innerHTML = `
+                                            <div class="history-header">
+                                                <h1>Add Payment Plan</h1>
+                                                <i class="fa-solid close-btn fa-circle-xmark"></i>
+                                            </div>
+                                            <div class="edit-content">
+                                                <div class="val-error" style="display: none;"></div>
+                                                <ul class="edit-details">
+                                                    <li>
+                                                        Years
+                                                        <input type="text" id="years" placeholder="Years">
+                                                    </li>
+                                                    <li>
+                                                        Total Price
+                                                        <input type="text" id="price" placeholder="Total Price">
+                                                    </li>
+                                                </ul>
+                                                <div class="details-btns">
+                                                    <div class="save">Add</div>
+                                                </div>
+                                            </div>`;
+
+                                            tagsPopup.querySelector(".close-btn").addEventListener("click", function () {
+                                                tagsOverlay.style.display = "none";
+                                                tagsPopup.innerHTML = '';
+                                            });
+
+                                            tagsPopup.querySelector(".save").addEventListener("click", function () {
+                                                const years = document.querySelector(".edit-content #years");
+                                                const price = document.querySelector(".edit-content #price");
+                                                const editTags = paymentPlan.querySelector(".edit-tags");
+                                                const error = document.querySelector(".edit-content .val-error");
+                                            
+                                                editTags.style.padding = "8px";
+                                                error.style.display = "none";
+                                                error.innerHTML = "";
+                                            
+                                                if (!years.value || isNaN(years.value) || !price.value || isNaN(price.value)) {
+                                                    error.style.display = "block";
+                                                    error.innerHTML = "Please enter valid numbers for both years and price.";
+                                            
+                                                    years.style.borderColor = !years.value || isNaN(years.value) ? "red" : "#cbb26a";
+                                                    price.style.borderColor = !price.value || isNaN(price.value) ? "red" : "#cbb26a";
+                                            
+                                                    return;
+                                                }
+                                            
+                                                const yearsValue = Number(years.value);
+                                                const priceValue = Number(price.value).toLocaleString();
+                                                let updated = false;
+                                            
+                                                const label = yearsValue === 0 ? "One-Time Payment" : `${yearsValue}-Years Plan`;
+                                            
+                                                editTags.querySelectorAll(".tag").forEach(tag => {
+                                                    const tagText = tag.textContent.trim();
+                                                    const tagYears = tagText.includes("One-Time Payment") ? 0 : parseInt(tagText.split("-")[0]);
+                                            
+                                                    if (tagYears === yearsValue) {
+                                                        tag.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${label}: ${priceValue} EGP`;
+                                                        updated = true;
+                                                        paymentPlansList = paymentPlansList.filter((item) => !item.startsWith(`${yearsValue}:`));
+                                                        paymentPlansList.push(`${yearsValue}: ${priceValue.replace(/[^\d.-]/g, "")}`);
+                                                    }
+                                                });
+                                            
+                                                if (!updated) {
+                                                    const newTag = document.createElement("div");
+                                                    newTag.classList.add("tag");
+                                                    newTag.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${label}: ${priceValue} EGP`;
+                                                    editTags.appendChild(newTag);
+                                                    paymentPlansList.push(`${yearsValue}: ${priceValue.replace(/[^\d.-]/g, "")}`);
+                                                }
+                                            
+                                                const tagsArray = Array.from(editTags.querySelectorAll(".tag"));
+                                                tagsArray.sort((a, b) => {
+                                                    const yearsA = a.textContent.includes("One-Time Payment") ? -1 : parseInt(a.textContent);
+                                                    const yearsB = b.textContent.includes("One-Time Payment") ? -1 : parseInt(b.textContent);
+                                                    return yearsA - yearsB;
+                                                });
+                                            
+                                                editTags.innerHTML = "";
+                                                tagsArray.forEach(tag => editTags.appendChild(tag));
+
+                                                tagsOverlay.style.display = "none";
+                                                tagsPopup.innerHTML = "";
+                                                paymentPlansList.sort((a, b) => {
+                                                    let yearsA = parseInt(a.split(":")[0]);
+                                                    let yearsB = parseInt(b.split(":")[0]);
+                                                    return yearsA - yearsB;
+                                                });
+                                                console.log(paymentPlansList);
+                                            });
+
+                                            function convertPaymentPlan(plan) {
+                                                let years = plan.includes("One-Time Payment") 
+                                                    ? 0 
+                                                    : parseInt(plan.split("-")[0]);
+                                                let price = parseInt((plan.split(":")[1]).replace(/[^\d]/g, "")); 
+                                                return `${years}: ${price}`;
+                                            }                                      
+
+                                            document.querySelector(".edit-tags").addEventListener("click", function (event) {
+                                                if (event.target.matches(".tag i")) {
+                                                    let tag = event.target.closest(".tag");
+                                                    let tagText = tag.textContent.trim();
+                                            
+                                                    let formattedPlan = convertPaymentPlan(tagText);
+                                            
+                                                    paymentPlansList = paymentPlansList.filter((item) => item !== formattedPlan);
+                                            
+                                                    tag.remove();
+
+                                                    const tagsDiv = document.querySelector(".edit-tags");
+                                                    tagsDiv.style.padding = tagsDiv.innerHTML.trim() === "" ? "18px" : "10px";
+                                                }
+                                            });
+                                        }
+                                    });
 
                                     const dateInput = document.querySelector(".delivery-date #cal");
                                     if (dateInput) {
@@ -610,7 +789,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         event.stopPropagation();
                                 
                                         let selectedText = $(this).text();
-                                        let parentElement = $(this).closest(".building, .compound, .views");
+                                        let parentElement = $(this).closest(".country, .building, .compound, .views, .finishing");
                                         let valueElement = parentElement.find(".value");
                                 
                                         valueElement.text(selectedText);
@@ -930,12 +1109,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     "totalPrice",
                                                     "garageArea"
                                                 ];
-
-                                                if (value.includes("EGP")) {
-                                                    value = parseInt(value.replace(/\s*EGP\s*/g, "").replace(/,/g, ""), 10);
-                                                } else if (numberFields.includes(key)) {
-                                                    return isNaN(value) || value === "N/A" ? 0 : Number(value);
+                                            
+                                                if (numberFields.includes(key)) {
+                                                    if (typeof value === "string") {
+                                                        value = value.replace(/[^\d.]/g, "");
+                                                    }
+                                                    
+                                                    return isNaN(value) || value === "" || value === "N/A" ? 0 : Number(value);
                                                 }
+                                            
                                                 return value;
                                             }
 
@@ -947,7 +1129,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 return Number(value).toLocaleString();
                                             }
 
-                                            if (toCamelCase(key) === "unitId") {
+                                            if (toCamelCase(key) === "title") {
                                                 unitId = input;
                                                 unitObject.unitId = input;
                                             } else if (li.classList.contains("compound")) {
@@ -959,12 +1141,18 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 } else if (valueElement) {
                                                     unitObject.compound = valueElement.textContent;
                                                 }
+                                            } else if (li.classList.contains("country")) {
+                                                unitObject.country = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("building")) {
                                                 unitObject.buildingType = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("views")) {
                                                 unitObject.view = li.querySelector(".value").textContent;
+                                            } else if (li.classList.contains("finishing")) {
+                                                unitObject.finishing = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("delivery-date")) {
                                                 unitObject.deliveryDate = li.querySelector(".value").textContent;
+                                            } else if (li.classList.contains("payment-plan")) {
+                                                unitObject.paymentPlans = paymentPlansList.join(", ");
                                             } else {
                                                 const camelKey = toCamelCase(key);
                                                 if (camelKey in unitObject) {
@@ -979,11 +1167,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                             const editContent = $(".edit-content");
 
                                             $("#loadingOverlay").remove();
-
-                                            if (!paymentPlansRegex.test(unitObject.paymentPlans)) {
-                                                showCustomAlert("Invalid Payment Plans format. Use: 0: 5000000, 5: 10000000");
-                                                return;
-                                            }
 
                                             editContent.append(`
                                                 <div id="loadingOverlay" class="loading-overlay">
@@ -1053,6 +1236,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     const unit = this.closest(".unit");
                                     const unitName = unit.querySelector(".unit-header span").textContent;
                                     const propertyDetails = unit.querySelector(".property-details");
+                                    let originalPaymentPlans = [];
 
                                     editOverlay.style.display = "flex";
                                     editPopup.innerHTML = `
@@ -1075,7 +1259,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             const value = p.textContent.replace(key + ":", "").trim();
                                             const detail = document.createElement("li");
 
-                                            if (key === "Unit ID") {
+                                            if (key === "Title") {
                                                 originalUnitId = value;
                                                 detail.innerHTML = `${key}<input type="text" value="${value}" disabled>`;
                                             } else if (key === "Data Source") {
@@ -1103,6 +1287,18 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     <input type="date" id="cal">
                                                 </div>
                                                 `;
+                                            } else if (key === "Country") {
+                                                detail.classList.add("country");
+                                                detail.innerHTML = `
+                                                ${key}
+                                                <div class="edit-drop">
+                                                    <div class="value">${value}</div><i class="fa-solid fa-chevron-down"></i>
+                                                    <ul class="dropdown">
+                                                    </ul>
+                                                </div>`;
+                                                countries.forEach((type) => {
+                                                    detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
+                                                });
                                             } else if (key === "Building Type") {
                                                 detail.classList.add("building");
                                                 detail.innerHTML = `
@@ -1127,8 +1323,39 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 views.forEach((type) => {
                                                     detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                                 });
+                                            } else if (key === "Finishing") {
+                                                detail.classList.add("finishing")
+                                                detail.innerHTML = `
+                                                ${key}
+                                                <div class="edit-drop">
+                                                    <div class="value">${value}</div><i class="fa-solid fa-chevron-down"></i>
+                                                    <ul class="dropdown">
+                                                    </ul>
+                                                </div>`;
+                                                finishing.forEach((type) => {
+                                                    detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
+                                                });
                                             } else if (key === "Payment Plans"){
-                                                detail.innerHTML = `${key}<input type="text" value="${value}" id="formattedInput" autocomplete="off">`;
+                                                const paymentPlansList = value.split(", ")
+                                                detail.classList.add("payment-plan");
+                                                detail.innerHTML = `
+                                                    ${key}
+                                                    <i class="fa-solid fa-plus" style="margin-left: auto; margin-right: 20px;"></i>
+                                                    <div class="edit-tags" style="padding: ${paymentPlansList.length > 0 ? '8px' : '18px'};"></div>
+                                                `;
+                                                paymentPlansList.forEach((plan) => {
+                                                    originalPaymentPlans.push(plan);
+                                                    const newTag = document.createElement("div");
+                                                    newTag.classList.add("tag");
+                                                    const yearsValue = plan.split(":")[0];
+                                                    const label = yearsValue === "0" ? "One-Time Payment" : `${yearsValue}-Years Plan`;
+                                                    const priceValue = (Number(plan.split(":")[1])).toLocaleString();
+                                                    newTag.innerHTML = `
+                                                        <i class="fa-solid fa-circle-xmark"></i>
+                                                        ${label}: ${priceValue} EGP
+                                                    `;
+                                                    detail.querySelector(".edit-tags").appendChild(newTag);
+                                                })
                                             } else {
                                                 detail.innerHTML = `${key}<input type="text" value="${value}">`;
                                             }
@@ -1166,6 +1393,142 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 icon.classList.remove("fa-xmark");
                                                 icon.classList.add("fa-pen-to-square");
                                             }
+                                        });
+
+                                        $(".edit-content").on("click", ".payment-plan", function (event) {
+                                            const paymentPlan = event.target.closest(".payment-plan");
+                                    
+                                            if (!paymentPlan) return;
+                                        
+                                            if (event.target.matches(".fa-plus")) {
+                                                const tagsOverlay = document.querySelector(".tags-overlay");
+                                                const tagsPopup = document.querySelector(".tags-popup");
+    
+                                                tagsOverlay.style.display = "flex";
+                                                tagsPopup.innerHTML = `
+                                                <div class="history-header">
+                                                    <h1>Add Payment Plan</h1>
+                                                    <i class="fa-solid close-btn fa-circle-xmark"></i>
+                                                </div>
+                                                <div class="edit-content">
+                                                    <div class="val-error" style="display: none;"></div>
+                                                    <ul class="edit-details">
+                                                        <li>
+                                                            Years
+                                                            <input type="text" id="years" placeholder="Years">
+                                                        </li>
+                                                        <li>
+                                                            Total Price
+                                                            <input type="text" id="price" placeholder="Total Price">
+                                                        </li>
+                                                    </ul>
+                                                    <div class="details-btns">
+                                                        <div class="save">Add</div>
+                                                    </div>
+                                                </div>`;
+    
+                                                tagsPopup.querySelector(".close-btn").addEventListener("click", function () {
+                                                    tagsOverlay.style.display = "none";
+                                                    tagsPopup.innerHTML = '';
+                                                });
+    
+                                                tagsPopup.querySelector(".save").addEventListener("click", function () {
+                                                    const years = document.querySelector(".edit-content #years");
+                                                    const price = document.querySelector(".edit-content #price");
+                                                    const editTags = paymentPlan.querySelector(".edit-tags");
+                                                    const error = document.querySelector(".edit-content .val-error");
+                                                
+                                                    editTags.style.padding = "5px";
+                                                    error.style.display = "none";
+                                                    error.innerHTML = "";
+                                                
+                                                    if (!years.value || isNaN(years.value) || !price.value || isNaN(price.value)) {
+                                                        error.style.display = "block";
+                                                        error.innerHTML = "Please enter valid numbers for both years and price.";
+                                                
+                                                        years.style.borderColor = !years.value || isNaN(years.value) ? "red" : "#cbb26a";
+                                                        price.style.borderColor = !price.value || isNaN(price.value) ? "red" : "#cbb26a";
+                                                
+                                                        return;
+                                                    }
+                                                
+                                                    const yearsValue = Number(years.value);
+                                                    const priceValue = Number(price.value).toLocaleString();
+                                                    let updated = false;
+                                                
+                                                    const label = yearsValue === 0 ? "One-Time Payment" : `${yearsValue}-Years Plan`;
+                                                
+                                                    editTags.querySelectorAll(".tag").forEach(tag => {
+                                                        const tagText = tag.textContent.trim();
+                                                        const tagYears = tagText.includes("One-Time Payment") ? 0 : parseInt(tagText.split("-")[0]);
+                                                
+                                                        if (tagYears === yearsValue) {
+                                                            tag.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${label}: ${priceValue} EGP`;
+                                                            updated = true;
+                                                            originalPaymentPlans = originalPaymentPlans.filter((item) => !item.startsWith(`${yearsValue}:`));
+                                                            originalPaymentPlans.push(`${yearsValue}: ${priceValue.replace(/[^\d.-]/g, "")}`);
+                                                        }
+                                                    });
+                                                
+                                                    if (!updated) {
+                                                        const newTag = document.createElement("div");
+                                                        newTag.classList.add("tag");
+                                                        newTag.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${label}: ${priceValue} EGP`;
+                                                        editTags.appendChild(newTag);
+                                                        originalPaymentPlans.push(`${yearsValue}: ${priceValue.replace(/[^\d.-]/g, "")}`);
+                                                    }
+                                                
+                                                    const tagsArray = Array.from(editTags.querySelectorAll(".tag"));
+                                                    tagsArray.sort((a, b) => {
+                                                        const yearsA = a.textContent.includes("One-Time Payment") ? -1 : parseInt(a.textContent);
+                                                        const yearsB = b.textContent.includes("One-Time Payment") ? -1 : parseInt(b.textContent);
+                                                        return yearsA - yearsB;
+                                                    });
+                                                
+                                                    editTags.innerHTML = "";
+                                                    tagsArray.forEach(tag => editTags.appendChild(tag));
+    
+                                                    tagsOverlay.style.display = "none";
+                                                    tagsPopup.innerHTML = "";
+                                                    originalPaymentPlans.sort((a, b) => {
+                                                        let yearsA = parseInt(a.split(":")[0]);
+                                                        let yearsB = parseInt(b.split(":")[0]);
+                                                        return yearsA - yearsB;
+                                                    });
+                                                    console.log(originalPaymentPlans);
+                                                });
+                                            }
+                                        });
+
+                                        function convertPaymentPlan(plan) {
+                                            let years = plan.includes("One-Time Payment") 
+                                                ? 0 
+                                                : parseInt(plan.split("-")[0]);
+                                            let price = parseInt((plan.split(":")[1]).replace(/[^\d]/g, "")); 
+                                            return `${years}: ${price}`;
+                                        }
+
+                                        $(document).on("click", ".edit-tags .tag i", function() {
+                                            const tag = $(this).closest(".tag");
+                                            const editTags = tag.closest(".edit-tags");
+                                        
+                                            const tagText = tag.clone().children().remove().end().text().trim();
+                                            
+                                            let formattedPlan = convertPaymentPlan(tagText);
+                                            console.log("Tag Text:", tagText);
+                                            console.log("Formatted Plan:", formattedPlan);
+                                            
+                                            originalPaymentPlans = originalPaymentPlans.filter((item) => item !== formattedPlan);
+                                            
+                                            tag.remove();
+                                            
+                                            if (editTags.children().length === 0) {
+                                                editTags.css("padding", "18px");
+                                            } else {
+                                                editTags.css("padding", "10px");
+                                            }
+                                            
+                                            console.log("Updated Plans:", originalPaymentPlans);
                                         });
 
                                         const dateInput = document.querySelector(".delivery-date #cal");
@@ -1231,7 +1594,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             event.stopPropagation();
                                     
                                             let selectedText = $(this).text();
-                                            let parentElement = $(this).closest(".building, .compound, .views");
+                                            let parentElement = $(this).closest(".country, .building, .compound, .views, .finishing");
                                             let valueElement = parentElement.find(".value");
                                     
                                             valueElement.text(selectedText);
@@ -1499,6 +1862,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                                     document.querySelector(".close-btn").addEventListener("click", function () {
+                                        originalPaymentPlans = [];
                                         editOverlay.style.display = "none";
                                         editPopup.innerHTML = '';
                                     });
@@ -1564,12 +1928,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     "totalPrice",
                                                     "garageArea"
                                                 ];
-
-                                                if (value.includes("EGP")) {
-                                                    value = parseInt(value.replace(/\s*EGP\s*/g, "").replace(/,/g, ""), 10);
-                                                } else if (numberFields.includes(key)) {
-                                                    return isNaN(value) || value === "N/A" ? 0 : Number(value);
+                                            
+                                                if (numberFields.includes(key)) {
+                                                    if (typeof value === "string") {
+                                                        value = value.replace(/[^\d.]/g, "");
+                                                    }
+                                                    
+                                                    return isNaN(value) || value === "" || value === "N/A" ? 0 : Number(value);
                                                 }
+                                            
                                                 return value;
                                             }
 
@@ -1581,7 +1948,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 return Number(value).toLocaleString();
                                             }
 
-                                            if (toCamelCase(key) === "unitId") {
+                                            if (toCamelCase(key) === "title") {
                                                 unitId = input;
                                                 unitObject.unitId = input;
                                                 unitObject.images = allUnitsImages[originalUnitId]
@@ -1596,12 +1963,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 } else if (valueElement) {
                                                     unitObject.compound = valueElement.textContent;
                                                 }
+                                            } else if (li.classList.contains("country")) {
+                                                unitObject.country = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("building")) {
                                                 unitObject.buildingType = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("views")) {
                                                 unitObject.view = li.querySelector(".value").textContent;
+                                            } else if (li.classList.contains("finishing")) {
+                                                unitObject.finishing = li.querySelector(".value").textContent;
                                             } else if (li.classList.contains("delivery-date")) {
                                                 unitObject.deliveryDate = li.querySelector(".value").textContent;
+                                            } else if (li.classList.contains("payment-plan")) {
+                                                unitObject.paymentPlans = originalPaymentPlans.join(", ");
+                                                originalPaymentPlans = [];
                                             } else {
                                                 const camelKey = toCamelCase(key);
                                                 if (camelKey in unitObject) {
@@ -2052,16 +2426,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 percentPosition: true,
                                             });
                                             
-                                            const purchaseProbability = allLeadScores[userNumber] || 0; // Example: 75%
-    
-                                            // Get the canvas element
+                                            const purchaseProbability = allLeadScores[userNumber] || 0;
+
                                             const ctx = document.getElementById('probabilityChart').getContext('2d');
-    
-                                            // Create the Doughnut Chart
-                                            new Chart(ctx, {
+
+                                            const probabilityChart = new Chart(ctx, {
                                                 type: 'doughnut',
                                                 data: {
-                                                    labels: ['Probability', 'Remaining'],
+                                                    labels: ['Probability', 'No Interest'],
                                                     datasets: [{
                                                         data: [purchaseProbability, 100 - purchaseProbability],
                                                         backgroundColor: ['#cbb26a', '#ddd'],
@@ -2072,16 +2444,34 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     responsive: false,
                                                     cutout: '70%',
                                                     plugins: {
-                                                        legend: {
-                                                            display: false
-                                                        },
-                                                        tooltip: {
-                                                            enabled: true
-                                                        }
+                                                        legend: { display: false },
+                                                        tooltip: { enabled: true }
                                                     }
-                                                }
+                                                },
+                                                plugins: [{
+                                                    beforeDraw: (chart) => {
+                                                        const width = chart.width;
+                                                        const height = chart.height;
+                                                        const ctx = chart.ctx;
+
+                                                        ctx.restore();
+                                                        
+                                                        const fontSize = Math.round(height / 6);
+                                                        ctx.font = `bold ${fontSize}px Poppins`;
+                                                        ctx.fillStyle = "white";
+                                                        ctx.textBaseline = 'middle';
+                                                        ctx.textAlign = 'center';
+
+                                                        const text = `${purchaseProbability}%`;
+                                                        const textX = Math.round(width / 2);
+                                                        const textY = Math.round(height / 2);
+
+                                                        ctx.fillText(text, textX, textY);
+                                                        ctx.save();
+                                                    }
+                                                }]
                                             });
-    
+
                                             document.querySelector(".close-btn").addEventListener("click", function () {
                                                 reqOverlay.style.display = "none";
                                                 reqProfile.innerHTML = '';
