@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     `);
                 }
-            
+
                 function hideUnitsSkeleton() {
                     $(".skeleton-data").fadeOut(300, function () {
                         $(this).remove();
@@ -386,7 +386,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             const loadingText = $("#loadingText");
                                             const loadingIcon = $("#loadingIcon");
                                             overlay.removeClass("hidden");
-                                        
+
                                             $.ajax({
                                                 url: `https://api.lenaai.net/delete-unit`,
                                                 method: "DELETE",
@@ -406,11 +406,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                                             loadingIcon.attr("class", "fa fa-check-circle success");
                                                             loadingText.html("Success!");
                                                         },
-                                                        error: function(error) {
+                                                        error: function (error) {
                                                             loadingIcon.attr("class", "fa fa-times-circle error");
                                                             loadingText.html("Failed. Please try again.");
                                                         },
-                                                        complete: function() {
+                                                        complete: function () {
                                                             setTimeout(() => overlay.addClass("hidden"), 1500);
                                                             setTimeout(() => {
                                                                 editOverlay.style.display = "none";
@@ -567,12 +567,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                     $(".edit-content").on("click", ".compound", function (event) {
                                         const compound = event.target.closest(".compound");
-                                
+
                                         if (!compound) return;
-                                    
+
                                         const editDrop = compound.querySelector(".edit-drop");
                                         const icon = compound.querySelector("i");
-                                    
+
                                         if (event.target.matches(".fa-pen-to-square")) {
                                             if (editDrop) {
                                                 compound.dataset.dropdownHTML = editDrop.outerHTML;
@@ -581,27 +581,27 @@ document.addEventListener("DOMContentLoaded", function () {
                                             compound.insertAdjacentHTML("beforeend", `<input type="text" class="value">`);
                                             icon.classList.remove("fa-pen-to-square");
                                             icon.classList.add("fa-xmark");
-                                    
+
                                         } else if (event.target.matches(".fa-xmark")) {
                                             const inputField = compound.querySelector(".value");
                                             if (inputField) {
                                                 inputField.remove();
                                             }
-                                    
+
                                             if (compound.dataset.dropdownHTML) {
                                                 compound.insertAdjacentHTML("beforeend", compound.dataset.dropdownHTML);
                                             }
-                                    
+
                                             icon.classList.remove("fa-xmark");
                                             icon.classList.add("fa-pen-to-square");
                                         }
                                     });
-                                    
+
                                     $(".edit-content").on("click", ".payment-plan", function (event) {
                                         const paymentPlan = event.target.closest(".payment-plan");
-                                
+
                                         if (!paymentPlan) return;
-                                    
+
                                         if (event.target.matches(".fa-plus")) {
                                             const tagsOverlay = document.querySelector(".tags-overlay");
                                             const tagsPopup = document.querySelector(".tags-popup");
@@ -639,31 +639,31 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 const price = document.querySelector(".edit-content #price");
                                                 const editTags = paymentPlan.querySelector(".edit-tags");
                                                 const error = document.querySelector(".edit-content .val-error");
-                                            
+
                                                 editTags.style.padding = "8px";
                                                 error.style.display = "none";
                                                 error.innerHTML = "";
-                                            
+
                                                 if (!years.value || isNaN(years.value) || !price.value || isNaN(price.value)) {
                                                     error.style.display = "block";
                                                     error.innerHTML = "Please enter valid numbers for both years and price.";
-                                            
+
                                                     years.style.borderColor = !years.value || isNaN(years.value) ? "red" : "#cbb26a";
                                                     price.style.borderColor = !price.value || isNaN(price.value) ? "red" : "#cbb26a";
-                                            
+
                                                     return;
                                                 }
-                                            
+
                                                 const yearsValue = Number(years.value);
                                                 const priceValue = Number(price.value).toLocaleString();
                                                 let updated = false;
-                                            
+
                                                 const label = yearsValue === 0 ? "One-Time Payment" : `${yearsValue}-Years Plan`;
-                                            
+
                                                 editTags.querySelectorAll(".tag").forEach(tag => {
                                                     const tagText = tag.textContent.trim();
                                                     const tagYears = tagText.includes("One-Time Payment") ? 0 : parseInt(tagText.split("-")[0]);
-                                            
+
                                                     if (tagYears === yearsValue) {
                                                         tag.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${label}: ${priceValue} EGP`;
                                                         updated = true;
@@ -671,7 +671,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                         paymentPlansList.push(`${yearsValue}: ${priceValue.replace(/[^\d.-]/g, "")}`);
                                                     }
                                                 });
-                                            
+
                                                 if (!updated) {
                                                     const newTag = document.createElement("div");
                                                     newTag.classList.add("tag");
@@ -679,14 +679,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     editTags.appendChild(newTag);
                                                     paymentPlansList.push(`${yearsValue}: ${priceValue.replace(/[^\d.-]/g, "")}`);
                                                 }
-                                            
+
                                                 const tagsArray = Array.from(editTags.querySelectorAll(".tag"));
                                                 tagsArray.sort((a, b) => {
                                                     const yearsA = a.textContent.includes("One-Time Payment") ? -1 : parseInt(a.textContent);
                                                     const yearsB = b.textContent.includes("One-Time Payment") ? -1 : parseInt(b.textContent);
                                                     return yearsA - yearsB;
                                                 });
-                                            
+
                                                 editTags.innerHTML = "";
                                                 tagsArray.forEach(tag => editTags.appendChild(tag));
 
@@ -701,22 +701,22 @@ document.addEventListener("DOMContentLoaded", function () {
                                             });
 
                                             function convertPaymentPlan(plan) {
-                                                let years = plan.includes("One-Time Payment") 
-                                                    ? 0 
+                                                let years = plan.includes("One-Time Payment")
+                                                    ? 0
                                                     : parseInt(plan.split("-")[0]);
-                                                let price = parseInt((plan.split(":")[1]).replace(/[^\d]/g, "")); 
+                                                let price = parseInt((plan.split(":")[1]).replace(/[^\d]/g, ""));
                                                 return `${years}: ${price}`;
-                                            }                                      
+                                            }
 
                                             document.querySelector(".edit-tags").addEventListener("click", function (event) {
                                                 if (event.target.matches(".tag i")) {
                                                     let tag = event.target.closest(".tag");
                                                     let tagText = tag.textContent.trim();
-                                            
+
                                                     let formattedPlan = convertPaymentPlan(tagText);
-                                            
+
                                                     paymentPlansList = paymentPlansList.filter((item) => item !== formattedPlan);
-                                            
+
                                                     tag.remove();
 
                                                     const tagsDiv = document.querySelector(".edit-tags");
@@ -752,7 +752,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         }
                                     }
 
-                                    editDetails.addEventListener("input", function(event) {
+                                    editDetails.addEventListener("input", function (event) {
                                         const target = event.target;
                                         if (target.id === "formattedInput") {
                                             if (paymentPlansRegex.test(target.value)) {
@@ -761,7 +761,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 target.style.border = "2px solid red";
                                             }
                                         }
-                                    });                                    
+                                    });
 
                                     document.querySelector(".edit-details").addEventListener("change", function (event) {
                                         if (event.target.matches(".delivery-date #cal")) {
@@ -776,30 +776,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                     $(".edit-content").on("click", ".edit-drop", function (event) {
                                         event.stopPropagation();
-                                
+
                                         let dropdown = $(this).find(".dropdown");
-                                
+
                                         $(".dropdown").not(dropdown).slideUp();
-                                
+
                                         dropdown.stop(true, true).slideToggle();
                                         $(this).find(".fa-chevron-down").toggleClass("rotate-icon");
                                     });
-                                
+
                                     $(".edit-content").on("click", ".edit-drop li", function (event) {
                                         event.stopPropagation();
-                                
+
                                         let selectedText = $(this).text();
                                         let parentElement = $(this).closest(".country, .building, .compound, .views, .finishing");
                                         let valueElement = parentElement.find(".value");
-                                
+
                                         valueElement.text(selectedText);
                                         $(this).closest(".dropdown").slideUp();
                                         parentElement.find(".fa-chevron-down").toggleClass("rotate-icon");
                                     });
-                                
+
                                     $(document).click(function () {
                                         $(".dropdown").slideUp();
-                                    });                                   
+                                    });
 
                                     document.querySelector(".edit-details").innerHTML += `
                                     <div class="current-images">
@@ -1109,15 +1109,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     "totalPrice",
                                                     "garageArea"
                                                 ];
-                                            
+
                                                 if (numberFields.includes(key)) {
                                                     if (typeof value === "string") {
                                                         value = value.replace(/[^\d.]/g, "");
                                                     }
-                                                    
+
                                                     return isNaN(value) || value === "" || value === "N/A" ? 0 : Number(value);
                                                 }
-                                            
+
                                                 return value;
                                             }
 
@@ -1181,7 +1181,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             const loadingText = $("#loadingText");
                                             const loadingIcon = $("#loadingIcon");
                                             overlay.removeClass("hidden");
-                                        
+
                                             $.ajax({
                                                 url: `https://api.lenaai.net/add-unit/`,
                                                 method: "POST",
@@ -1204,11 +1204,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                                             loadingIcon.attr("class", "fa fa-check-circle success");
                                                             loadingText.html("Success!");
                                                         },
-                                                        error: function(error) {
+                                                        error: function (error) {
                                                             loadingIcon.attr("class", "fa fa-times-circle error");
                                                             loadingText.html("Failed. Please try again.");
                                                         },
-                                                        complete: function() {
+                                                        complete: function () {
                                                             setTimeout(() => overlay.addClass("hidden"), 1500);
                                                             setTimeout(() => {
                                                                 editOverlay.style.display = "none";
@@ -1335,7 +1335,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 finishing.forEach((type) => {
                                                     detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                                 });
-                                            } else if (key === "Payment Plans"){
+                                            } else if (key === "Payment Plans") {
                                                 const paymentPlansList = value.split(", ")
                                                 detail.classList.add("payment-plan");
                                                 detail.innerHTML = `
@@ -1365,12 +1365,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         $(".edit-content").on("click", ".compound", function (event) {
                                             const compound = event.target.closest(".compound");
-                                    
+
                                             if (!compound) return;
-                                        
+
                                             const editDrop = compound.querySelector(".edit-drop");
                                             const icon = compound.querySelector("i");
-                                        
+
                                             if (event.target.matches(".fa-pen-to-square")) {
                                                 if (editDrop) {
                                                     compound.dataset.dropdownHTML = editDrop.outerHTML;
@@ -1379,17 +1379,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 compound.insertAdjacentHTML("beforeend", `<input type="text" class="value">`);
                                                 icon.classList.remove("fa-pen-to-square");
                                                 icon.classList.add("fa-xmark");
-                                        
+
                                             } else if (event.target.matches(".fa-xmark")) {
                                                 const inputField = compound.querySelector(".value");
                                                 if (inputField) {
                                                     inputField.remove();
                                                 }
-                                        
+
                                                 if (compound.dataset.dropdownHTML) {
                                                     compound.insertAdjacentHTML("beforeend", compound.dataset.dropdownHTML);
                                                 }
-                                        
+
                                                 icon.classList.remove("fa-xmark");
                                                 icon.classList.add("fa-pen-to-square");
                                             }
@@ -1397,13 +1397,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         $(".edit-content").on("click", ".payment-plan", function (event) {
                                             const paymentPlan = event.target.closest(".payment-plan");
-                                    
+
                                             if (!paymentPlan) return;
-                                        
+
                                             if (event.target.matches(".fa-plus")) {
                                                 const tagsOverlay = document.querySelector(".tags-overlay");
                                                 const tagsPopup = document.querySelector(".tags-popup");
-    
+
                                                 tagsOverlay.style.display = "flex";
                                                 tagsPopup.innerHTML = `
                                                 <div class="history-header">
@@ -1426,42 +1426,42 @@ document.addEventListener("DOMContentLoaded", function () {
                                                         <div class="save">Add</div>
                                                     </div>
                                                 </div>`;
-    
+
                                                 tagsPopup.querySelector(".close-btn").addEventListener("click", function () {
                                                     tagsOverlay.style.display = "none";
                                                     tagsPopup.innerHTML = '';
                                                 });
-    
+
                                                 tagsPopup.querySelector(".save").addEventListener("click", function () {
                                                     const years = document.querySelector(".edit-content #years");
                                                     const price = document.querySelector(".edit-content #price");
                                                     const editTags = paymentPlan.querySelector(".edit-tags");
                                                     const error = document.querySelector(".edit-content .val-error");
-                                                
+
                                                     editTags.style.padding = "5px";
                                                     error.style.display = "none";
                                                     error.innerHTML = "";
-                                                
+
                                                     if (!years.value || isNaN(years.value) || !price.value || isNaN(price.value)) {
                                                         error.style.display = "block";
                                                         error.innerHTML = "Please enter valid numbers for both years and price.";
-                                                
+
                                                         years.style.borderColor = !years.value || isNaN(years.value) ? "red" : "#cbb26a";
                                                         price.style.borderColor = !price.value || isNaN(price.value) ? "red" : "#cbb26a";
-                                                
+
                                                         return;
                                                     }
-                                                
+
                                                     const yearsValue = Number(years.value);
                                                     const priceValue = Number(price.value).toLocaleString();
                                                     let updated = false;
-                                                
+
                                                     const label = yearsValue === 0 ? "One-Time Payment" : `${yearsValue}-Years Plan`;
-                                                
+
                                                     editTags.querySelectorAll(".tag").forEach(tag => {
                                                         const tagText = tag.textContent.trim();
                                                         const tagYears = tagText.includes("One-Time Payment") ? 0 : parseInt(tagText.split("-")[0]);
-                                                
+
                                                         if (tagYears === yearsValue) {
                                                             tag.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${label}: ${priceValue} EGP`;
                                                             updated = true;
@@ -1469,7 +1469,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                             originalPaymentPlans.push(`${yearsValue}: ${priceValue.replace(/[^\d.-]/g, "")}`);
                                                         }
                                                     });
-                                                
+
                                                     if (!updated) {
                                                         const newTag = document.createElement("div");
                                                         newTag.classList.add("tag");
@@ -1477,17 +1477,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                                         editTags.appendChild(newTag);
                                                         originalPaymentPlans.push(`${yearsValue}: ${priceValue.replace(/[^\d.-]/g, "")}`);
                                                     }
-                                                
+
                                                     const tagsArray = Array.from(editTags.querySelectorAll(".tag"));
                                                     tagsArray.sort((a, b) => {
                                                         const yearsA = a.textContent.includes("One-Time Payment") ? -1 : parseInt(a.textContent);
                                                         const yearsB = b.textContent.includes("One-Time Payment") ? -1 : parseInt(b.textContent);
                                                         return yearsA - yearsB;
                                                     });
-                                                
+
                                                     editTags.innerHTML = "";
                                                     tagsArray.forEach(tag => editTags.appendChild(tag));
-    
+
                                                     tagsOverlay.style.display = "none";
                                                     tagsPopup.innerHTML = "";
                                                     originalPaymentPlans.sort((a, b) => {
@@ -1501,33 +1501,33 @@ document.addEventListener("DOMContentLoaded", function () {
                                         });
 
                                         function convertPaymentPlan(plan) {
-                                            let years = plan.includes("One-Time Payment") 
-                                                ? 0 
+                                            let years = plan.includes("One-Time Payment")
+                                                ? 0
                                                 : parseInt(plan.split("-")[0]);
-                                            let price = parseInt((plan.split(":")[1]).replace(/[^\d]/g, "")); 
+                                            let price = parseInt((plan.split(":")[1]).replace(/[^\d]/g, ""));
                                             return `${years}: ${price}`;
                                         }
 
-                                        $(document).on("click", ".edit-tags .tag i", function() {
+                                        $(document).on("click", ".edit-tags .tag i", function () {
                                             const tag = $(this).closest(".tag");
                                             const editTags = tag.closest(".edit-tags");
-                                        
+
                                             const tagText = tag.clone().children().remove().end().text().trim();
-                                            
+
                                             let formattedPlan = convertPaymentPlan(tagText);
                                             console.log("Tag Text:", tagText);
                                             console.log("Formatted Plan:", formattedPlan);
-                                            
+
                                             originalPaymentPlans = originalPaymentPlans.filter((item) => item !== formattedPlan);
-                                            
+
                                             tag.remove();
-                                            
+
                                             if (editTags.children().length === 0) {
                                                 editTags.css("padding", "18px");
                                             } else {
                                                 editTags.css("padding", "10px");
                                             }
-                                            
+
                                             console.log("Updated Plans:", originalPaymentPlans);
                                         });
 
@@ -1557,7 +1557,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             }
                                         }
 
-                                        editDetails.addEventListener("input", function(event) {
+                                        editDetails.addEventListener("input", function (event) {
                                             const target = event.target;
                                             if (target.id === "formattedInput") {
                                                 if (paymentPlansRegex.test(target.value)) {
@@ -1581,31 +1581,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                         $(".edit-content").on("click", ".edit-drop", function (event) {
                                             event.stopPropagation();
-                                    
+
                                             let dropdown = $(this).find(".dropdown");
-                                    
+
                                             $(".dropdown").not(dropdown).slideUp();
-                                    
+
                                             dropdown.stop(true, true).slideToggle();
                                             $(this).find(".fa-chevron-down").toggleClass("rotate-icon");
                                         });
-                                    
+
                                         $(".edit-content").on("click", ".edit-drop li", function (event) {
                                             event.stopPropagation();
-                                    
+
                                             let selectedText = $(this).text();
                                             let parentElement = $(this).closest(".country, .building, .compound, .views, .finishing");
                                             let valueElement = parentElement.find(".value");
-                                    
+
                                             valueElement.text(selectedText);
                                             $(this).closest(".dropdown").slideUp();
                                             parentElement.find(".fa-chevron-down").toggleClass("rotate-icon");
                                         });
-                                    
+
                                         $(document).click(function () {
                                             $(".dropdown").slideUp();
                                         });
-                                        
+
                                     }
 
                                     document.querySelector(".edit-details").innerHTML += `
@@ -1646,7 +1646,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 <img src="${image.url}" data-file-id="${image.fileId}" alt="Chat Image" draggable="false">
                                                 <div class="del"><i class="fa-solid fa-trash"></i><span class="del-text">Delete<span></div>
                                             </div>`
-                                        ;
+                                            ;
                                     });
 
                                     document.querySelector(".images").addEventListener("click", function (event) {
@@ -1928,15 +1928,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     "totalPrice",
                                                     "garageArea"
                                                 ];
-                                            
+
                                                 if (numberFields.includes(key)) {
                                                     if (typeof value === "string") {
                                                         value = value.replace(/[^\d.]/g, "");
                                                     }
-                                                    
+
                                                     return isNaN(value) || value === "" || value === "N/A" ? 0 : Number(value);
                                                 }
-                                            
+
                                                 return value;
                                             }
 
@@ -2008,7 +2008,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             const loadingText = $("#loadingText");
                                             const loadingIcon = $("#loadingIcon");
                                             overlay.removeClass("hidden");
-                                        
+
                                             $.ajax({
                                                 url: `https://api.lenaai.net/update-unit/`,
                                                 method: "POST",
@@ -2031,11 +2031,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                                             loadingIcon.attr("class", "fa fa-check-circle success");
                                                             loadingText.html("Success!");
                                                         },
-                                                        error: function(error) {
+                                                        error: function (error) {
                                                             loadingIcon.attr("class", "fa fa-times-circle error");
                                                             loadingText.html("Failed. Please try again.");
                                                         },
-                                                        complete: function() {
+                                                        complete: function () {
                                                             setTimeout(() => overlay.addClass("hidden"), 1500);
                                                             setTimeout(() => {
                                                                 editOverlay.style.display = "none";
@@ -2146,7 +2146,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     } else {
                                         cursor = response.pagination.next_cursor;
                                     }
-                        
+
                                     isLoading = false;
 
                                     const container = $(".clients-list");
@@ -2196,7 +2196,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             "icon": `<i class="fa-solid fa-clipboard-question"></i>`
                                         }
                                     };
-    
+
                                     response.users.forEach((user) => {
                                         const phoneNumber = user.phoneNumber;
                                         allPhoneNumbers.push(phoneNumber);
@@ -2227,11 +2227,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                             const latestTimestamp = messages
                                                 .map(msg => new Date(msg.timestamp))
                                                 .sort((a, b) => b - a)[0];
-    
+
                                             latestDate = latestTimestamp.toISOString();
                                             latestDateOnly = latestTimestamp.toISOString().split("T")[0];
                                         }
-    
+
                                         const client = $(`
                                             <ul class="client"
                                                 data-date="${latestDate}"
@@ -2259,9 +2259,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                             fetchData();
                                         }
                                     });
-    
+
                                     const clients = Array.from(document.querySelectorAll(".client"));
-    
+
                                     // All Chats filer
                                     const allChatsButton = document.querySelector(".all-chats");
                                     allChatsButton.addEventListener("click", function () {
@@ -2269,18 +2269,18 @@ document.addEventListener("DOMContentLoaded", function () {
                                             client.style.display = "flex";
                                         });
                                     })
-    
+
                                     // Recent first filter
                                     let descending = false;
                                     const recentButton = document.querySelector(".recent");
                                     recentButton.addEventListener("click", function () {
-    
+
                                         clients.sort((a, b) => {
                                             const dateA = new Date(a.getAttribute("data-date"));
                                             const dateB = new Date(b.getAttribute("data-date"));
                                             return descending ? dateA - dateB : dateB - dateA;
                                         });
-    
+
                                         container[0].innerHTML = "";
                                         clients.forEach((client, i) => {
                                             // if (i %2 === 0) {
@@ -2291,7 +2291,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             container[0].appendChild(client)
                                         });
                                     });
-    
+
                                     // Action filter
                                     const actionButton = document.querySelector(".action");
                                     actionButton.addEventListener("click", function () {
@@ -2301,7 +2301,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             } else {
                                                 client.style.display = "flex";
                                             }
-    
+
                                             // if (i %2 === 0) {
                                             //     client.style.backgroundColor = "#F9FAFB";
                                             // } else {
@@ -2309,7 +2309,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             // }
                                         });
                                     });
-    
+
                                     // Switch button for active
                                     const noActionButton = document.querySelector(".no-action");
                                     noActionButton.addEventListener("click", function () {
@@ -2321,7 +2321,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             }
                                         })
                                     });
-    
+
                                     // Client Search bar
                                     const search = document.getElementById("client-search-bar");
                                     const notFound = document.querySelector(".not-found");
@@ -2330,7 +2330,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         const input = search.value
                                         let filter = input.toUpperCase();
                                         let resultsCount = 0;
-    
+
                                         clients.forEach((client) => {
                                             const clientName = client.querySelector(".client-name").textContent;
                                             if (clientName.toUpperCase().indexOf(filter) > -1) {
@@ -2340,7 +2340,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 client.style.display = "none";
                                             }
                                         })
-    
+
                                         if (resultsCount === 0) {
                                             notFound.textContent = baseNotFoundText + `"${input}"`
                                             notFound.style.display = "block";
@@ -2348,7 +2348,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             notFound.style.display = "none";
                                         }
                                     });
-    
+
                                     // Requirements
                                     const requirements = document.querySelectorAll(".requirements");
                                     requirements.forEach((requirement) => {
@@ -2357,7 +2357,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             const userNumber = event.target.parentElement.querySelector(".client-name").textContent;
                                             const reqOverlay = document.querySelector(".req-overlay");
                                             const reqProfile = document.querySelector(".req-profile");
-    
+
                                             reqOverlay.style.display = "flex";
                                             reqProfile.innerHTML = `
                                             <div class="history-header">
@@ -2377,7 +2377,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     </ul>
                                                 </div>
                                             </div>`;
-    
+
                                             const requirementsList = document.querySelector(".req-list");
                                             const requirementsAttr = event.target.parentElement.getAttribute("data-requirements");
                                             const userRequirements = JSON.parse(requirementsAttr);
@@ -2425,7 +2425,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 gutter: 18,
                                                 percentPosition: true,
                                             });
-                                            
+
                                             const purchaseProbability = allLeadScores[userNumber] || 0;
 
                                             const ctx = document.getElementById('probabilityChart').getContext('2d');
@@ -2455,7 +2455,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                         const ctx = chart.ctx;
 
                                                         ctx.restore();
-                                                        
+
                                                         const fontSize = Math.round(height / 6);
                                                         ctx.font = `bold ${fontSize}px Poppins`;
                                                         ctx.fillStyle = "white";
@@ -2478,7 +2478,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             });
                                         })
                                     })
-    
+
                                     // Messages History
                                     clients.forEach((client) => {
                                         client.addEventListener("click", function () {
@@ -2488,7 +2488,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             const messages = client.getAttribute("data-messages");
                                             const parsedMessages = messages ? JSON.parse(messages) : [];
                                             parsedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    
+
                                             chatOverlay.style.display = "flex";
                                             chatHistory.innerHTML = `
                                             <div class="history-header">
@@ -2521,7 +2521,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 rightOption.classList.add("seg-active");
                                                 leftOption.classList.remove("seg-active");
                                             }
-    
+
                                             const chatSubmit = document.getElementById("submit-btn");
                                             const inputForm = document.getElementById("input-form");
                                             function takeUserInput() {
@@ -2529,16 +2529,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 let userInput = inputField.value.trim();
                                                 const messagesDiv = document.getElementById("messages");
                                                 let message = document.createElement("div");
-    
-    
+
+
                                                 if (userInput === "") return;
                                                 message.innerHTML = userInput;
                                                 message.classList.add("message");
                                                 messagesDiv.appendChild(message);
-    
+
                                                 inputField.value = "";
                                                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    
+
                                                 console.log(userInput)
                                                 $.ajax({
                                                     url: `https://api.lenaai.net/webhook/message/text`,
@@ -2554,21 +2554,21 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     }
                                                 })
                                             }
-    
+
                                             chatSubmit.addEventListener("click", function () {
                                                 takeUserInput();
                                             });
-    
+
                                             inputForm.addEventListener("submit", function (event) {
                                                 event.preventDefault();
                                                 takeUserInput();
                                             });
-    
+
                                             document.querySelector(".seg-ctrl").addEventListener("click", function (event) {
                                                 const rightOption = document.querySelector(".seg-opt-right");
                                                 const leftOption = document.querySelector(".seg-opt-left");
                                                 let toggleAI = true;
-                                            
+
                                                 if (event.target.classList.contains("seg-opt-right")) {
                                                     rightOption.classList.add("seg-active");
                                                     leftOption.classList.remove("seg-active");
@@ -2578,7 +2578,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     rightOption.classList.remove("seg-active");
                                                     toggleAI = true;
                                                 }
-    
+
                                                 $.ajax({
                                                     url: `https://api.lenaai.net/lenaai-auto-reply`,
                                                     method: "POST",
@@ -2597,33 +2597,33 @@ document.addEventListener("DOMContentLoaded", function () {
                                                         console.error("API Error:", error);
                                                     }
                                                 });
-                                            });                                        
-    
+                                            });
+
                                             const messagesDiv = document.getElementById("messages");
                                             let latestTimestamp = "";
                                             parsedMessages.forEach((message) => {
                                                 if (message.bot_response === "" && message.user_message === "") {
                                                     return;
                                                 }
-    
+
                                                 function timeAgo(timestamp) {
                                                     let now = new Date();
                                                     let messageTime = new Date(timestamp);
                                                     let diff = Math.floor((now - messageTime) / 60000);
-                                                
+
                                                     if (diff < 1) return "Just now";
                                                     if (diff < 60) return `${diff} min ago`;
                                                     if (diff < 1440) return `${Math.floor(diff / 60)} hrs ago`;
-                                                
+
                                                     let options = { month: "short", day: "numeric" };
-                                                
+
                                                     if (messageTime.getFullYear() !== now.getFullYear()) {
                                                         options.year = "numeric";
                                                     }
-                                                
+
                                                     return messageTime.toLocaleDateString("en-US", options);
                                                 }
-    
+
                                                 function formatTime(timestamp) {
                                                     let messageTime = new Date(timestamp);
                                                     return messageTime.toLocaleTimeString("en-US", {
@@ -2632,30 +2632,30 @@ document.addEventListener("DOMContentLoaded", function () {
                                                         hour12: true
                                                     });
                                                 }
-            
+
                                                 let userMessage = document.createElement("div");
                                                 let botResponse = document.createElement("div");
-    
+
                                                 let userMessageTime = document.createElement("div");
                                                 let botMessageTime = document.createElement("div");
-    
+
                                                 let cleanMessage = message.bot_response.split('"message":')[0].trim();
                                                 cleanMessage = cleanMessage.replace(/[,"]+$/, "").trim();
-    
+
                                                 userMessageTime.innerHTML = formatTime(message.timestamp);
                                                 userMessageTime.classList.add("message-time");
                                                 botMessageTime.innerHTML = formatTime(message.timestamp);
                                                 botMessageTime.classList.add("message-time");
-    
+
                                                 userMessage.innerHTML = message.user_message;
                                                 userMessage.appendChild(userMessageTime);
-    
+
                                                 botResponse.innerHTML = cleanMessage;
                                                 botResponse.appendChild(botMessageTime);
-    
+
                                                 userMessage.classList.add("message", "sent");
                                                 botResponse.classList.add("message");
-    
+
                                                 let conversationTime = timeAgo(message.timestamp);
                                                 if (latestTimestamp === "" || latestTimestamp !== conversationTime) {
                                                     let timeDiv = document.createElement("div");
@@ -2664,19 +2664,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                                     messagesDiv.appendChild(timeDiv);
                                                     latestTimestamp = conversationTime;
                                                 }
-    
+
                                                 if (message.user_message !== "") {
                                                     messagesDiv.appendChild(userMessage);
                                                 }
                                                 if (message.bot_response !== "") {
                                                     messagesDiv.appendChild(botResponse);
                                                 }
-    
+
                                                 if (message.properties && message.properties !== "") {
                                                     Object.values(message.properties).forEach((property) => {
                                                         let imagesDiv = document.createElement("div");
                                                         imagesDiv.classList.add("images");
-    
+
                                                         let detailsDiv = document.createElement("div");
                                                         detailsDiv.classList.add("property-details");
                                                         detailsDiv.innerHTML = `
@@ -2697,9 +2697,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                                             <p>Delivery Date<span>${property.metadata.deliveryDate || ""}</span></p>
                                                             <p>Finishing<span>${property.metadata.finishing || ""}</span></p>
                                                         `;
-    
+
                                                         imagesDiv.appendChild(detailsDiv);
-    
+
                                                         let propertyImages = property.metadata.images;
                                                         if (Array.isArray(propertyImages) && typeof propertyImages !== "string") {
                                                             propertyImages.forEach(propertyImage => {
@@ -2709,34 +2709,34 @@ document.addEventListener("DOMContentLoaded", function () {
                                                                 imagesDiv.appendChild(image);
                                                             });
                                                         }
-    
+
                                                         messagesDiv.appendChild(imagesDiv);
                                                     })
-    
+
                                                     // chat images drag
                                                     let wasDragging = false;
-    
+
                                                     document.addEventListener("mousedown", function (e) {
                                                         const slider = e.target.closest(".images");
                                                         if (!slider || !slider.contains(e.target)) return;
-    
+
                                                         let startX = e.clientX;
                                                         let scrollLeft = slider.scrollLeft;
-    
+
                                                         slider.classList.add("image-active");
-    
+
                                                         function handleMouseMove(e) {
                                                             wasDragging = true;
                                                             const x = e.clientX;
                                                             const walk = (x - startX) * 1;
                                                             slider.scrollLeft = scrollLeft - walk;
                                                         }
-    
+
                                                         function stopScrolling() {
                                                             slider.classList.remove("image-active");
                                                             document.removeEventListener("mousemove", handleMouseMove);
                                                             document.removeEventListener("mouseup", stopScrolling);
-    
+
                                                             if (wasDragging) {
                                                                 document.addEventListener("click", preventClick, true);
                                                                 setTimeout(() => {
@@ -2745,18 +2745,18 @@ document.addEventListener("DOMContentLoaded", function () {
                                                                 }, 0);
                                                             }
                                                         }
-    
+
                                                         document.addEventListener("mousemove", handleMouseMove);
                                                         document.addEventListener("mouseup", stopScrolling, { once: true });
                                                     });
-                                                    
+
                                                     function preventClick(e) {
                                                         e.stopPropagation();
                                                         e.preventDefault();
                                                     }
                                                 }
                                             })
-    
+
                                             document.querySelector(".close-btn").addEventListener("click", function () {
                                                 chatOverlay.style.display = "none";
                                                 chatHistory.innerHTML = '';
@@ -2770,7 +2770,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 }
                             });
                         }
-                        fetchData();                        
+                        fetchData();
                     },
                     error: function (xhr) {
                         console.error(xhr.responseText);
@@ -2785,21 +2785,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     $(".tab-content").not(".active").hide();
-    
+
     $(".tab-btn").click(function () {
         let tabId = $(this).data("tab");
-        
+
         if ($(this).hasClass("active")) {
             return;
         }
-        
+
         $(".tab-btn").removeClass("active");
         $(this).addClass("active");
-        
+
         let $currentTab = $(".tab-content.active");
         let $newTab = $("#" + tabId);
-        
-        $currentTab.fadeOut(200, function() {
+
+        $currentTab.fadeOut(200, function () {
             $currentTab.removeClass("active");
             $newTab.addClass("active").fadeIn(300);
         });
@@ -2866,65 +2866,523 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Charts
-    const ctxRequirements = document.getElementById('reqChart').getContext('2d');
+    // Metrics
+    const chartContainer = document.querySelector(".chart-container");
+    if (!chartContainer) {
+        console.error("Chart container not found. Please ensure an element with class 'chart-container' exists.");
+        return;
+    }
 
-    new Chart(ctxRequirements, {
-        type: 'bar',
-        data: {
-            labels: ['Category 1', 'Category 2', 'Category 3'],
-            datasets: [
-                {
-                    label: 'Group A',
-                    data: [70, 50, 90],
-                    backgroundColor: '#cbb26a'
-                },
-                {
-                    label: 'Group B',
-                    data: [50, 60, 80],
-                    backgroundColor: '#1E3A8A'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: { beginAtZero: true }
+    chartContainer.innerHTML = '<div class="loading">Loading charts...</div>';
+
+    function generateColorPalette(count) {
+        const baseColors = ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40", "#8BC34A", "#607D8B", "#E91E63", "#3F51B5"];
+        const colors = [...baseColors];
+        
+        if (count > baseColors.length) {
+            for (let i = baseColors.length; i < count; i++) {
+                const hue = (i * 137.5) % 360;
+                colors.push(`hsl(${hue}, 70%, 60%)`);
             }
+        }
+        
+        return colors;
+    }
+
+    function createOutlierDetailCharts(outliers) {
+        Object.keys(outliers).forEach(key => {
+            const outlierData = outliers[key];
+            const columnName = outlierData.column_name;
+            const outlierValues = outlierData.outlier_values;
+            
+            if (!outlierValues || outlierValues.length === 0) {
+                console.warn(`No outlier values for ${columnName}`);
+                return;
+            }
+            
+            const valueFrequency = {};
+            outlierValues.forEach(value => {
+                valueFrequency[value] = (valueFrequency[value] || 0) + 1;
+            });
+            
+            const sortedValues = Object.keys(valueFrequency).sort((a, b) => 
+                valueFrequency[b] - valueFrequency[a]
+            );
+            
+            const labels = sortedValues;
+            const values = sortedValues.map(value => valueFrequency[value]);
+            
+            const detailCard = document.createElement("div");
+            detailCard.className = "chart-card outliers";
+            detailCard.style.padding = "20px";
+            detailCard.style.borderRadius = "45px";
+            detailCard.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+            detailCard.style.backgroundColor = "#f8f9fa";
+            detailCard.style.width = "100%";
+            detailCard.style.minHeight = "100%";
+            
+            const titleElement = document.createElement("h3");
+            titleElement.textContent = `Outlier Values`;
+            titleElement.style.textAlign = "center";
+            titleElement.style.margin = "0 0 15px 0";
+            titleElement.style.fontSize = "18px";
+            detailCard.appendChild(titleElement);
+
+            const statsElement = document.createElement("p");
+            statsElement.textContent = `Total Outliers: ${outlierData.total_outliers} | Unique Values: ${labels.length}`;
+            statsElement.style.textAlign = "center";
+            statsElement.style.margin = "0 0 15px 0";
+            detailCard.appendChild(statsElement);
+            
+            const canvasWrapper = document.createElement("div");
+            canvasWrapper.style.height = "300px";
+            canvasWrapper.style.position = "relative";
+            detailCard.appendChild(canvasWrapper);
+            
+            const canvas = document.createElement("canvas");
+            canvasWrapper.appendChild(canvas);
+            chartContainer.appendChild(detailCard);
+            
+            const colors = labels.map(value => 
+                parseFloat(value) < 0 ? "#FF6384" : "#36A2EB"
+            );
+            
+            new Chart(canvas, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Occurrences",
+                        data: values,
+                        backgroundColor: colors,
+                        barPercentage: 0.6,
+                        maxBarThickness: 80
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { 
+                                display: true, 
+                                text: "Occurrences",
+                                font: {
+                                    size: 16
+                                }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    if (Math.floor(value) === value) {
+                                        return value;
+                                    }
+                                },
+                                stepSize: 1,
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        x: {
+                            title: { 
+                                display: true, 
+                                text: `${columnName}`,
+                                font: {
+                                    size: 16
+                                }
+                            },
+                            ticks: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    return `Occurrences: ${value}`;
+                                }
+                            },
+                            titleFont: {
+                                size: 16
+                            },
+                            bodyFont: {
+                                size: 14
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    function createMissingValuesCharts(missingValuesData, missingPercentageData) {
+        // Ensure all keys are included
+        const allKeys = new Set([
+            ...Object.keys(missingValuesData),
+            ...Object.keys(missingPercentageData)
+        ]);
+    
+        // Convert to an array and sort (optional, for readability)
+        const labels = Array.from(allKeys).sort();
+    
+        // Ensure values exist; use 0 if a key is missing
+        const missingPercentageValues = labels.map(key => missingPercentageData[key] || 0);
+        const missingValuesCounts = labels.map(key => missingValuesData[key] || 0);
+    
+        // Debugging logs
+        console.log("Total Labels:", labels.length, labels);
+        console.log("Total Missing Percentages:", missingPercentageValues.length);
+        console.log("Total Missing Values:", missingValuesCounts.length);
+    
+        const chartContainer = document.querySelector(".chart-container");
+        if (!chartContainer) {
+            console.error("Chart container not found.");
+            return;
+        }
+    
+        const chartCard = document.createElement("div");
+        chartCard.className = "chart-card missing-data";
+        chartCard.style.padding = "20px";
+        chartCard.style.borderRadius = "15px";
+        chartCard.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+        chartCard.style.backgroundColor = "#f8f9fa";
+        chartCard.style.width = "100%";
+        chartContainer.appendChild(chartCard);
+    
+        const titleElement = document.createElement("h3");
+        titleElement.textContent = "Missing Data Analysis";
+        titleElement.style.textAlign = "center";
+        titleElement.style.margin = "0 0 15px 0";
+        titleElement.style.fontSize = "18px";
+        chartCard.appendChild(titleElement);
+    
+        const canvasWrapper = document.createElement("div");
+    
+        // Dynamically increase chart height if too many labels exist
+        const chartHeight = labels.length > 15 ? labels.length * 25 + "px" : "500px";
+        canvasWrapper.style.height = chartHeight;
+        canvasWrapper.style.position = "relative";
+        chartCard.appendChild(canvasWrapper);
+    
+        const canvas = document.createElement("canvas");
+        canvas.classList.add("wide-chart");
+        canvasWrapper.appendChild(canvas);
+    
+        new Chart(canvas, {
+            type: "bar",
+            data: {
+                labels: labels, // Now includes all labels
+                datasets: [
+                    {
+                        label: "Missing Percentage (%)",
+                        data: missingPercentageValues,
+                        backgroundColor: "#36A2EB",
+                        yAxisID: "y",
+                        categoryPercentage: 0.7,  // Adjusted for better spacing
+                        barPercentage: 0.8,       // Adjusted for visibility
+                        maxBarThickness: 50
+                    },
+                    {
+                        label: "Missing Values (Count)",
+                        data: missingValuesCounts,
+                        backgroundColor: "#FF6384",
+                        yAxisID: "y1",
+                        categoryPercentage: 0.7,
+                        barPercentage: 0.8,
+                        maxBarThickness: 50
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Percentage (%)",
+                            font: { size: 14 }
+                        },
+                        position: "left",
+                        ticks: { font: { size: 12 } }
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Missing Values (Count)",
+                            font: { size: 14 }
+                        },
+                        position: "right",
+                        grid: { drawOnChartArea: false },
+                        ticks: { font: { size: 12 } }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Attributes",
+                            font: { size: 14 }
+                        },
+                        ticks: {
+                            font: { size: 12 },
+                            maxRotation: 45,
+                            minRotation: 45,
+                            autoSkip: false  // Ensures all labels are displayed
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `${context.dataset.label}: ${context.raw}`;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: "top",
+                        labels: { font: { size: 14 } }
+                    }
+                }
+            }
+        });
+    }    
+
+    function generateTestOutlierData() {
+        return {
+            "roomsCount": {
+                "column_name": "roomsCount",
+                "total_outliers": 14,
+                "outlier_values": [
+                    10.0, 10.0, 10.0, 10.0, 10.0,  // 5 occurrences of 10.0
+                    12.0, 12.0, 12.0,              // 3 occurrences of 12.0
+                    -999.0, -999.0, -999.0, -999.0, -999.0, -999.0  // 6 occurrences of -999.0
+                ]
+            },
+            "bathroomCount": {
+                "column_name": "bathroomCount",
+                "total_outliers": 11,
+                "outlier_values": [
+                    10.0, 10.0, 10.0,              // 3 occurrences of 10.0
+                    15.0, 15.0,                    // 2 occurrences of 15.0
+                    -999.0, -999.0, -999.0, -999.0, -999.0, -999.0,  // 6 occurrences of -999.0
+                    55, 55, 55, 55, 55, 55, 55, 55, 55
+                ]
+            }
+        };
+    }
+
+    const percentageLabelsPlugin = {
+        id: "percentageLabels",
+        afterDraw(chart) {
+            const ctx = chart.ctx;
+            ctx.save();
+            ctx.font = "500 14px Poppins";
+            ctx.fillStyle = "#000";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            
+            const data = chart.data.datasets[0].data;
+            const total = data.reduce((sum, value) => sum + value, 0);
+            const meta = chart.getDatasetMeta(0);
+            
+            if (!meta || !meta.data || meta.data.length === 0) {
+                return;
+            }
+            
+            meta.data.forEach((arc, index) => {
+                const value = data[index];
+                const percentage = (value / total) * 100;
+                
+                if (percentage < 3) return;
+                
+                try {
+                    const startAngle = arc.startAngle;
+                    const endAngle = arc.endAngle;
+                    const midAngle = startAngle + (endAngle - startAngle) / 2;
+                    
+                    const centerX = chart.chartArea.left + (chart.chartArea.right - chart.chartArea.left) / 2;
+                    const centerY = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
+                    
+                    const radius = Math.min(chart.chartArea.right - chart.chartArea.left, 
+                                           chart.chartArea.bottom - chart.chartArea.top) / 2;
+                    
+                    const distance = radius * 0.67;
+                    const x = centerX + Math.cos(midAngle) * distance;
+                    const y = centerY + Math.sin(midAngle) * distance;
+                    
+                    const percent = percentage.toFixed(1) + "%";
+                    ctx.fillText(percent, x, y);
+                } catch (error) {
+                    console.error("Error drawing percentage:", error);
+                }
+            });
+            ctx.restore();
+        }
+    };
+
+    $.ajax({
+        url: "https://api.lenaai.net/analyze_user_requests",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ "client_id": "ALL" }),
+        timeout: 10000,
+        success: function(response) {
+            chartContainer.innerHTML = '';
+            
+            if (!response || !response.frequent_patterns || !response.frequent_patterns.value) {
+                chartContainer.innerHTML = '<div class="error">Invalid data received</div>';
+                return;
+            }
+            
+            const frequentPatterns = response.frequent_patterns.value;
+            const patternKeys = Object.keys(frequentPatterns);
+            
+            if (patternKeys.length === 0) {
+                chartContainer.innerHTML = '<div class="no-data">No pattern data available</div>';
+                return;
+            }
+
+            // frequent patterns
+            patternKeys.forEach((key) => {
+                if (key === "financialPlans") return;
+                try {
+                    const patternData = frequentPatterns[key];
+                    if (!patternData || typeof patternData !== 'object') {
+                        console.error(`Invalid data for pattern: ${key}`);
+                        return;
+                    }
+                    
+                    const labels = Object.keys(patternData);
+                    const values = Object.values(patternData);
+                    
+                    if (labels.length === 0 || values.length === 0) {
+                        console.warn(`No data for pattern: ${key}`);
+                        return;
+                    }
+                    
+                    const chartCard = document.createElement("div");
+                    chartCard.className = "chart-card frequent-patterns";
+                    chartCard.style.padding = "15px";
+                    chartCard.style.borderRadius = "8px";
+                    chartCard.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+                    chartCard.style.borderRadius = "45px";
+                    chartCard.style.backgroundColor = "#f8f9fa";
+                    
+                    const titleElement = document.createElement("h3");
+                    titleElement.textContent = key;
+                    titleElement.style.textAlign = "center";
+                    titleElement.style.margin = "0 0 15px 0";
+                    chartCard.appendChild(titleElement);
+                    
+                    const canvas = document.createElement("canvas");
+                    chartCard.appendChild(canvas);
+                    chartContainer.appendChild(chartCard);
+                    
+                    const colors = generateColorPalette(labels.length);
+                    
+                    new Chart(canvas, {
+                        type: "pie",
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: values,
+                                backgroundColor: colors
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                legend: { 
+                                    position: "bottom",
+                                    labels: {
+                                        boxWidth: 12,
+                                        padding: 10
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const label = context.label || '';
+                                            const value = context.raw;
+                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            const percentage = ((value / total) * 100).toFixed(1);
+                                            return `${label}: ${value} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        plugins: [percentageLabelsPlugin]
+                    });
+                } catch (error) {
+                    console.error(`Error creating chart for ${key}:`, error);
+                }
+            });
+
+            // outliers
+            const outliers = response.outliers_statistics.value;
+            createOutlierDetailCharts(outliers);
+            // createOutlierDetailCharts(generateTestOutlierData());
+
+            // Missing values with percentage
+            const missingValues = response.missing_values.value;
+            const missingPercentages = response.missing_percentage.value;
+            console.log(missingValues, missingPercentages)
+            createMissingValuesCharts(missingValues, missingPercentages);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            chartContainer.innerHTML = `<div class="error">Error loading data: ${textStatus}</div>`;
+            console.error("API request failed:", errorThrown);
         }
     });
 
-    const ctxActions = document.getElementById('actChart').getContext('2d');
+    const chartSelection = document.querySelector(".chart-selection");
+    const chartNav = document.querySelector(".chart-nav");
+    const allCharts = document.querySelectorAll(".chart-card");
+    const chartButtons = document.querySelectorAll(".chart-tab-btn");
 
-    new Chart(ctxActions, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-            datasets: [{
-                label: 'Dataset 1',
-                data: [70, 50, 90, 60, 80],
-                borderColor: '#1E3A8A',
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                pointRadius: 5,
-                pointBackgroundColor: '#1E3A8A'
-            }]
-        },
-        options: {
-            responsive: false,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: "nearest",
-                intersect: false,
-            },
-            plugins: {
-                tooltip: {
-                    enabled: true,
-                    mode: "index",
-                    intersect: false,
-                }
-            },
-        }
+    // Handle chart button click
+    chartButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const selectedChartClass = this.getAttribute("data-chart");
+            const selectedText = this.innerText;
+
+            // Hide the selection buttons
+            chartSelection.style.display = "none";
+
+            // Update chart-nav text & add back arrow
+            chartNav.innerHTML = `<i class="fa-solid fa-arrow-left"></i><span>${selectedText}</span>`;
+
+            // Hide all charts & show only those matching the selected class
+            allCharts.forEach(chart => chart.style.display = "none");
+            document.querySelectorAll(`.${selectedChartClass}`).forEach(chart => {
+                chart.style.display = "block";
+            });
+        });
+    });
+
+    // Handle back navigation click
+    chartNav.addEventListener("click", function () {
+        // Reset to default home text & icon
+        chartNav.innerHTML = `<i class="fa-solid fa-house"></i> <span>Home</span>`;
+
+        // Hide all charts
+        const allCharts = document.querySelectorAll(".chart-card");
+        allCharts.forEach(chart => chart.style.display = "none");
+
+        // Show the selection buttons again
+        chartSelection.style.display = "grid";
     });
 
     const whatsMessageButton = document.querySelector(".whats-msg");
@@ -2976,16 +3434,16 @@ document.addEventListener("DOMContentLoaded", function () {
             const videoLink = videoInput.value.trim();
             const sheetError = document.querySelector(".sheet-error");
             const vodError = document.querySelector(".vod-error");
-    
+
             const spreadsheetRegex = /^(https?:\/\/)?(www\.)?docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9_-]+(\/(edit|view|copy)?(\?.*)?)?$|[^\s]+\.xls[x]?|[^\s]+\.csv$/;
-    
+
             let isValid = true;
             sheetError.style.display = "none";
             sheetError.innerHTML = "";
 
             vodError.style.display = "none";
             vodError.innerHTML = "";
-    
+
             if (!spreadsheetRegex.test(spreadSheetLink) || spreadSheetLink === "") {
                 sheetError.style.display = "block";
                 sheetError.innerHTML = `Invalid link! Please enter a valid Excel file (.xls, .xlsx, .csv) or a Google Sheets.`;
@@ -2994,7 +3452,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 spreadSheetInput.style.border = "2px solid #cbb26a";
             }
-    
+
             if (!videoLink) {
                 vodError.style.display = "block";
                 vodError.innerHTML = `Invalid link! Please enter a valid link to a downloadable video.`;
@@ -3005,14 +3463,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             if (!isValid) return;
-            
+
             const requestData = {
                 spreadsheet_url: spreadSheetLink,
                 video_url: videoLink,
                 sheet_name: "Sheet1",
                 client_id: clientId
             };
-    
+
             console.log("Sending request:", requestData);
 
             $.ajax({
@@ -3083,16 +3541,16 @@ document.addEventListener("DOMContentLoaded", function () {
             const videoLink = videoInput.value.trim();
             const sheetError = document.querySelector(".sheet-error");
             const vodError = document.querySelector(".vod-error");
-    
+
             const spreadsheetRegex = /^(https?:\/\/)?(www\.)?docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9_-]+(\/(edit|view|copy)?(\?.*)?)?$|[^\s]+\.xls[x]?|[^\s]+\.csv$/;
-    
+
             let isValid = true;
             sheetError.style.display = "none";
             sheetError.innerHTML = "";
 
             vodError.style.display = "none";
             vodError.innerHTML = "";
-    
+
             if (!spreadsheetRegex.test(spreadSheetLink) || spreadSheetLink === "") {
                 sheetError.style.display = "block";
                 sheetError.innerHTML = `Invalid link! Please enter a valid Excel file (.xls, .xlsx, .csv) or a Google Sheets.`;
@@ -3101,7 +3559,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 spreadSheetInput.style.border = "2px solid #cbb26a";
             }
-    
+
             if (!videoLink) {
                 vodError.style.display = "block";
                 vodError.innerHTML = `Invalid link! Please enter a valid link to a downloadable video.`;
@@ -3110,16 +3568,16 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 videoInput.style.border = "2px solid #cbb26a";
             }
-    
+
             if (!isValid) return;
-    
+
             const requestData = {
                 spreadsheet_url: spreadSheetLink,
                 video_url: videoLink,
                 sheet_name: "Sheet1",
                 client_id: clientId
             };
-    
+
             console.log("Sending request:", requestData);
 
             setTimeout(() => {
@@ -3183,7 +3641,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "spreadsheet_url": spreadSheetLink,
                     "sheet_range": "Sheet1"
                 }
-    
+
                 console.log(requestData);
 
                 $.ajax({
