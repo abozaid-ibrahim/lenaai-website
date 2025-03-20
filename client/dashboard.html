@@ -66,36 +66,6 @@
         </div>
     </header>
 
-    <!-- Clients filters
-    <section class="filters">
-        <div class="filters-header">Clients Filters</div>
-        <div class="filters-container">
-            <div class="recent">
-                <i class="bi bi-chat-left-text-fill"></i>
-                Recent Chats
-            </div>
-            <div class="action">
-                <i class="bi bi-exclamation-lg"></i>
-                Needs Action
-            </div>
-            <div class="switch-btn">
-                <label class="switch">
-                    <input type="checkbox" id="switch-status">
-                    <span class="slider"></span>
-                </label>
-                <div class="switch-title">Show Active Only</div>
-            </div>
-            <div class="search">
-                <i class="bi bi-search"></i>
-                <input type="text" id="client-search-bar" placeholder="Search for a client">
-            </div>
-            <div class="whats-msg">
-                <i class="fa-brands fa-whatsapp"></i>
-                Filter Leads
-            </div>
-        </div>
-    </section> -->
-
     <!-- Dashboard taps -->
     <section class="tabs">
         <button class="tab-btn active" data-tab="dashboard"><i class="fa-solid fa-list"></i>Dashboard</button>
@@ -169,9 +139,23 @@
     <!-- Charts section -->
     <section class="chart tab-content" id="analytics">
         <div class="chart-header">Clients Analytics</div>
+        <div class="chart-nav"><i class="fa-solid fa-house"></i>Home</div>
+        <div class="chart-selection">
+            <button class="chart-tab-btn" data-chart="frequent-patterns">
+                <i class="fa-solid fa-chart-pie"></i>Frequent Patterns
+            </button>
+            <button class="chart-tab-btn" data-chart="outliers">
+                <i class="fa-solid fa-chart-simple"></i>Outliers
+            </button>
+            <button class="chart-tab-btn" data-chart="missing-data">
+                <i class="fa-solid fa-chart-simple"></i>Missing Data
+            </button>
+        </div>
+        <div class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading data...</p>
+        </div>
         <div class="chart-container">
-            <canvas id="reqChart"></canvas>
-            <canvas id="actChart"></canvas>
         </div>
     </section>
 
@@ -179,15 +163,6 @@
     <section class="data tab-content" id="units">
         <div class="data-header">Available Units</div>
         <div class="data-tabs">
-            <!-- <ul class="data-titles">
-                <li class="dev-active">All<i class="fa-solid fa-caret-down"></i></li>
-                <li>Talaat Mostafa Group (TMG)<i class="fa-solid fa-caret-down"></i></li>
-                <li>Tatweer Misr<i class="fa-solid fa-caret-down"></i></li>
-                <li>Misr Italia<i class="fa-solid fa-caret-down"></i></li>
-                <li>Mountain view<i class="fa-solid fa-caret-down"></i></li>
-                <li>The Nile Dev<i class="fa-solid fa-caret-down"></i></li>
-                <li>Hassan Allam<i class="fa-solid fa-caret-down"></i></li>
-            </ul> -->
             <div class="data-titles">
                 <div class="units-drop">
                     <div class="value">Filter By Developer<i class="fa-solid fa-chevron-down"></i></div>

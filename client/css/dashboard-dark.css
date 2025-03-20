@@ -400,23 +400,118 @@ a {
 }
 
 .chart-container {
-    display: flex;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(365px, 1fr));
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.chart-container > *:last-child {
+    grid-column: 1 / -1;
 }
 
 .chart-container canvas {
-    background: #a0a0a0;
+    width: 350px !important;
     height: auto !important;
-    width: 550px !important;
-    border-radius: 10px;
-    padding: 10px;
+    margin: auto;
 }
 
-#reqChart,
-#actChart {
+.chart-container .wide-chart {
     width: 100% !important;
-    height: auto;
-    max-width: 600px;
+    height: auto !important;
+    margin: auto;
+}
+
+.chart-card {
+    display: none;
+}
+
+.chart-selection {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    height: 100%;
+}
+
+.chart-tab-btn {
+    background-color: #111;
+    padding: 40px;
+    border-radius: 45px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--secondary-color);
+    transition: all .3s ease;
+    flex: 1;
+}
+
+.chart-tab-btn i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.chart-tab-btn:hover {
+    background-color: var(--secondary-color);
+    color: #111;
+    transform: scale(1.02);
+    cursor: pointer;
+}
+
+.chart-nav {
+    padding: 15px;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 5px;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    background-color: #111;
+    color: var(--secondary-color);
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    transition: all 0.3s ease;
+}
+
+.chart-nav:hover {
+    background-color: var(--secondary-color);
+    color: #111;
+    cursor: pointer;
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    height: 80%;
+    color: var(--secondary-color);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-top: 5px solid var(--secondary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner p {
+    font-size: 16px;
+    margin-top: 10px;
 }
 
 .not-found {
