@@ -2889,6 +2889,190 @@ document.addEventListener("DOMContentLoaded", function () {
         return colors;
     }
 
+    const percentageLabelsPlugin = {
+        id: "percentageLabels",
+        afterDraw(chart) {
+            const ctx = chart.ctx;
+            ctx.save();
+            ctx.font = "500 14px Poppins";
+            ctx.fillStyle = "#000";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            
+            const data = chart.data.datasets[0].data;
+            const total = data.reduce((sum, value) => sum + value, 0);
+            const meta = chart.getDatasetMeta(0);
+            
+            if (!meta || !meta.data || meta.data.length === 0) {
+                return;
+            }
+            
+            meta.data.forEach((arc, index) => {
+                const value = data[index];
+                const percentage = (value / total) * 100;
+                
+                if (percentage < 3) return;
+                
+                try {
+                    const startAngle = arc.startAngle;
+                    const endAngle = arc.endAngle;
+                    const midAngle = startAngle + (endAngle - startAngle) / 2;
+                    
+                    const centerX = chart.chartArea.left + (chart.chartArea.right - chart.chartArea.left) / 2;
+                    const centerY = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
+                    
+                    const radius = Math.min(chart.chartArea.right - chart.chartArea.left, 
+                                           chart.chartArea.bottom - chart.chartArea.top) / 2;
+                    
+                    const distance = radius * 0.67;
+                    const x = centerX + Math.cos(midAngle) * distance;
+                    const y = centerY + Math.sin(midAngle) * distance;
+                    
+                    const percent = percentage.toFixed(1) + "%";
+                    ctx.fillText(percent, x, y);
+                } catch (error) {
+                    console.error("Error drawing percentage:", error);
+                }
+            });
+            ctx.restore();
+        }
+    };
+
+    function createChartCard(key, title) {
+        const chartCard = document.createElement("div");
+        chartCard.className = `chart-card ${title}`;
+        chartCard.style.padding = "15px";
+        chartCard.style.borderRadius = "8px";
+        chartCard.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+        chartCard.style.borderRadius = "45px";
+        chartCard.style.backgroundColor = "#f8f9fa";
+        
+        const titleElement = document.createElement("h3");
+        titleElement.textContent = key;
+        titleElement.style.textAlign = "center";
+        titleElement.style.margin = "0 0 15px 0";
+        chartCard.appendChild(titleElement);
+
+        return chartCard;
+    }
+
+    function createFrequentPatternsCharts(frequentPatterns) {
+        const patternKeys = Object.keys(frequentPatterns);
+            
+        if (patternKeys.length === 0) {
+            chartContainer.innerHTML = '<div class="no-data">No pattern data available</div>';
+            return;
+        }
+
+        // frequent patterns
+        patternKeys.forEach((key) => {
+            if (key === "financialPlans") return;
+            try {
+                const patternData = frequentPatterns[key];
+                if (!patternData || typeof patternData !== 'object') {
+                    console.error(`Invalid data for pattern: ${key}`);
+                    return;
+                }
+                
+                const labels = Object.keys(patternData);
+                const percentageValues = Object.values(patternData)
+                    .map(item => item.percentage)
+
+                const patternValues = Object.values(patternData)
+                    .map(item => item.count)
+                
+                if (labels.length === 0 || percentageValues.length === 0) {
+                    console.warn(`No data for pattern: ${key}`);
+                    return;
+                }
+                
+                // Pie chart card
+                const pieChartCard = createChartCard(key, "frequent-patterns-percentage");
+                const pieCanvas = document.createElement("canvas");
+                pieChartCard.appendChild(pieCanvas);
+                chartContainer.appendChild(pieChartCard);
+
+                // Bar Chart Card
+                const barChartCard = createChartCard(key, "frequent-patterns-value");
+                const barCanvas = document.createElement("canvas");
+                barChartCard.appendChild(barCanvas);
+                chartContainer.appendChild(barChartCard);
+                
+                const colors = generateColorPalette(labels.length);
+                
+                new Chart(pieCanvas, {
+                    type: "pie",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: percentageValues,
+                            backgroundColor: colors
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { 
+                                position: "bottom",
+                                labels: {
+                                    boxWidth: 12,
+                                    padding: 10
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    plugins: [percentageLabelsPlugin]
+                });
+
+                new Chart(barCanvas, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: labels,
+                            data: patternValues,
+                            backgroundColor: colors
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        indexAxis: "y",
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.label}: ${context.raw}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error(`Error creating chart for ${key}:`, error);
+            }
+        });
+    }
+
     function createOutlierDetailCharts(outliers) {
         Object.keys(outliers).forEach(key => {
             const outlierData = outliers[key];
@@ -2900,52 +3084,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             
-            const valueFrequency = {};
-            outlierValues.forEach(value => {
-                valueFrequency[value] = (valueFrequency[value] || 0) + 1;
-            });
-            
-            const sortedValues = Object.keys(valueFrequency).sort((a, b) => 
-                valueFrequency[b] - valueFrequency[a]
-            );
-            
-            const labels = sortedValues;
-            const values = sortedValues.map(value => valueFrequency[value]);
-            
-            const detailCard = document.createElement("div");
-            detailCard.className = "chart-card outliers";
-            detailCard.style.padding = "20px";
-            detailCard.style.borderRadius = "45px";
-            detailCard.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-            detailCard.style.backgroundColor = "#f8f9fa";
-            detailCard.style.width = "100%";
-            detailCard.style.minHeight = "100%";
-            
-            const titleElement = document.createElement("h3");
-            titleElement.textContent = `Outlier Values`;
-            titleElement.style.textAlign = "center";
-            titleElement.style.margin = "0 0 15px 0";
-            titleElement.style.fontSize = "18px";
-            detailCard.appendChild(titleElement);
+            const labels = Object.keys(outlierValues);
+            const values = Object.values(outlierValues);
 
+            const barChartCard = createChartCard("Outliers Values", "outliers");
             const statsElement = document.createElement("p");
             statsElement.textContent = `Total Outliers: ${outlierData.total_outliers} | Unique Values: ${labels.length}`;
             statsElement.style.textAlign = "center";
             statsElement.style.margin = "0 0 15px 0";
-            detailCard.appendChild(statsElement);
+            barChartCard.appendChild(statsElement);
             
             const canvasWrapper = document.createElement("div");
             canvasWrapper.style.height = "300px";
             canvasWrapper.style.position = "relative";
-            detailCard.appendChild(canvasWrapper);
+            barChartCard.appendChild(canvasWrapper);
             
             const canvas = document.createElement("canvas");
             canvasWrapper.appendChild(canvas);
-            chartContainer.appendChild(detailCard);
+            chartContainer.appendChild(barChartCard);
             
-            const colors = labels.map(value => 
-                parseFloat(value) < 0 ? "#FF6384" : "#36A2EB"
-            );
+            const colors = generateColorPalette(labels.length);
             
             new Chart(canvas, {
                 type: "bar",
@@ -3048,53 +3206,46 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
     
-        const chartCard = document.createElement("div");
-        chartCard.className = "chart-card missing-data";
-        chartCard.style.padding = "20px";
-        chartCard.style.borderRadius = "15px";
-        chartCard.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-        chartCard.style.backgroundColor = "#f8f9fa";
-        chartCard.style.width = "100%";
-        chartContainer.appendChild(chartCard);
-    
-        const titleElement = document.createElement("h3");
-        titleElement.textContent = "Missing Data Analysis";
-        titleElement.style.textAlign = "center";
-        titleElement.style.margin = "0 0 15px 0";
-        titleElement.style.fontSize = "18px";
-        chartCard.appendChild(titleElement);
-    
-        const canvasWrapper = document.createElement("div");
-    
-        // Dynamically increase chart height if too many labels exist
+        // Create Percentage Chart
+        const percentageChartCard = createChartCard("Missing Data Percentage (%)", "missing-data");
+        percentageChartCard.classList.add("fill");
+        chartContainer.appendChild(percentageChartCard);
+
+        // Create Values Chart
+        const valuesChartCard = createChartCard("Missing Data Values (Count)", "missing-data");
+        valuesChartCard.classList.add("fill");
+        chartContainer.appendChild(valuesChartCard);
+
+        const percentageCanvasWrapper = document.createElement("div");
+        const ValueCanvasWrapper = document.createElement("div");
+
         const chartHeight = labels.length > 15 ? labels.length * 25 + "px" : "500px";
-        canvasWrapper.style.height = chartHeight;
-        canvasWrapper.style.position = "relative";
-        chartCard.appendChild(canvasWrapper);
+        percentageCanvasWrapper.style.height = chartHeight;
+        percentageCanvasWrapper.style.position = "relative";
+        ValueCanvasWrapper.style.height = chartHeight;
+        ValueCanvasWrapper.style.position = "relative";
+        percentageChartCard.appendChild(percentageCanvasWrapper);
+        valuesChartCard.appendChild(ValueCanvasWrapper);
+
+
+        const percentageCanvas = document.createElement("canvas");
+        percentageCanvas.classList.add("wide-chart");
+        percentageCanvasWrapper.appendChild(percentageCanvas);
+
+        const valuesCanvas = document.createElement("canvas");
+        valuesCanvas.classList.add("wide-chart");
+        ValueCanvasWrapper.appendChild(valuesCanvas);
     
-        const canvas = document.createElement("canvas");
-        canvas.classList.add("wide-chart");
-        canvasWrapper.appendChild(canvas);
-    
-        new Chart(canvas, {
+        new Chart(percentageCanvas, {
             type: "bar",
             data: {
                 labels: labels, // Now includes all labels
                 datasets: [
                     {
-                        label: "Missing Percentage (%)",
+                        label: "Missing Data Percentage (%)",
                         data: missingPercentageValues,
                         backgroundColor: "#36A2EB",
                         yAxisID: "y",
-                        categoryPercentage: 0.7,  // Adjusted for better spacing
-                        barPercentage: 0.8,       // Adjusted for visibility
-                        maxBarThickness: 50
-                    },
-                    {
-                        label: "Missing Values (Count)",
-                        data: missingValuesCounts,
-                        backgroundColor: "#FF6384",
-                        yAxisID: "y1",
                         categoryPercentage: 0.7,
                         barPercentage: 0.8,
                         maxBarThickness: 50
@@ -3113,17 +3264,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             font: { size: 14 }
                         },
                         position: "left",
-                        ticks: { font: { size: 12 } }
-                    },
-                    y1: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: "Missing Values (Count)",
-                            font: { size: 14 }
-                        },
-                        position: "right",
-                        grid: { drawOnChartArea: false },
                         ticks: { font: { size: 12 } }
                     },
                     x: {
@@ -3155,80 +3295,69 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
-    }    
 
-    function generateTestOutlierData() {
-        return {
-            "roomsCount": {
-                "column_name": "roomsCount",
-                "total_outliers": 14,
-                "outlier_values": [
-                    10.0, 10.0, 10.0, 10.0, 10.0,  // 5 occurrences of 10.0
-                    12.0, 12.0, 12.0,              // 3 occurrences of 12.0
-                    -999.0, -999.0, -999.0, -999.0, -999.0, -999.0  // 6 occurrences of -999.0
+        new Chart(valuesCanvas, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "Missing Data Values (Count)",
+                        data: missingValuesCounts,
+                        backgroundColor: "#FF6384",
+                        yAxisID: "y",
+                        categoryPercentage: 0.7,
+                        barPercentage: 0.8,
+                        maxBarThickness: 50
+                    }
                 ]
             },
-            "bathroomCount": {
-                "column_name": "bathroomCount",
-                "total_outliers": 11,
-                "outlier_values": [
-                    10.0, 10.0, 10.0,              // 3 occurrences of 10.0
-                    15.0, 15.0,                    // 2 occurrences of 15.0
-                    -999.0, -999.0, -999.0, -999.0, -999.0, -999.0,  // 6 occurrences of -999.0
-                    55, 55, 55, 55, 55, 55, 55, 55, 55
-                ]
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Values (Count)",
+                            font: { size: 14 }
+                        },
+                        position: "left",
+                        ticks: { font: { size: 12 } }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Attributes",
+                            font: { size: 14 }
+                        },
+                        ticks: {
+                            font: { size: 12 },
+                            maxRotation: 45,
+                            minRotation: 45,
+                            autoSkip: false  // Ensures all labels are displayed
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `${context.dataset.label}: ${context.raw}`;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: "top",
+                        labels: { font: { size: 14 } }
+                    }
+                }
             }
-        };
+        });
     }
 
-    const percentageLabelsPlugin = {
-        id: "percentageLabels",
-        afterDraw(chart) {
-            const ctx = chart.ctx;
-            ctx.save();
-            ctx.font = "500 14px Poppins";
-            ctx.fillStyle = "#000";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            
-            const data = chart.data.datasets[0].data;
-            const total = data.reduce((sum, value) => sum + value, 0);
-            const meta = chart.getDatasetMeta(0);
-            
-            if (!meta || !meta.data || meta.data.length === 0) {
-                return;
-            }
-            
-            meta.data.forEach((arc, index) => {
-                const value = data[index];
-                const percentage = (value / total) * 100;
-                
-                if (percentage < 3) return;
-                
-                try {
-                    const startAngle = arc.startAngle;
-                    const endAngle = arc.endAngle;
-                    const midAngle = startAngle + (endAngle - startAngle) / 2;
-                    
-                    const centerX = chart.chartArea.left + (chart.chartArea.right - chart.chartArea.left) / 2;
-                    const centerY = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
-                    
-                    const radius = Math.min(chart.chartArea.right - chart.chartArea.left, 
-                                           chart.chartArea.bottom - chart.chartArea.top) / 2;
-                    
-                    const distance = radius * 0.67;
-                    const x = centerX + Math.cos(midAngle) * distance;
-                    const y = centerY + Math.sin(midAngle) * distance;
-                    
-                    const percent = percentage.toFixed(1) + "%";
-                    ctx.fillText(percent, x, y);
-                } catch (error) {
-                    console.error("Error drawing percentage:", error);
-                }
-            });
-            ctx.restore();
-        }
-    };
+    let chartsDescriptions = {};
 
     $.ajax({
         url: "https://api.lenaai.net/analyze_user_requests",
@@ -3244,101 +3373,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             
+            // Frequent patterns percentage
             const frequentPatterns = response.frequent_patterns.value;
-            const patternKeys = Object.keys(frequentPatterns);
-            
-            if (patternKeys.length === 0) {
-                chartContainer.innerHTML = '<div class="no-data">No pattern data available</div>';
-                return;
-            }
+            chartsDescriptions["frequent-patterns-percentage"] = response.frequent_patterns.description;
+            const frequentPatternsPercentageTabButton = document.getElementById("frequent-patterns-percentage");
+            frequentPatternsPercentageTabButton.innerHTML += `<p style="font-size: 1.2rem;">(${response.frequent_patterns.title})</p>`;
+            createFrequentPatternsCharts(frequentPatterns);
 
-            // frequent patterns
-            patternKeys.forEach((key) => {
-                if (key === "financialPlans") return;
-                try {
-                    const patternData = frequentPatterns[key];
-                    if (!patternData || typeof patternData !== 'object') {
-                        console.error(`Invalid data for pattern: ${key}`);
-                        return;
-                    }
-                    
-                    const labels = Object.keys(patternData);
-                    const values = Object.values(patternData);
-                    
-                    if (labels.length === 0 || values.length === 0) {
-                        console.warn(`No data for pattern: ${key}`);
-                        return;
-                    }
-                    
-                    const chartCard = document.createElement("div");
-                    chartCard.className = "chart-card frequent-patterns";
-                    chartCard.style.padding = "15px";
-                    chartCard.style.borderRadius = "8px";
-                    chartCard.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-                    chartCard.style.borderRadius = "45px";
-                    chartCard.style.backgroundColor = "#f8f9fa";
-                    
-                    const titleElement = document.createElement("h3");
-                    titleElement.textContent = key;
-                    titleElement.style.textAlign = "center";
-                    titleElement.style.margin = "0 0 15px 0";
-                    chartCard.appendChild(titleElement);
-                    
-                    const canvas = document.createElement("canvas");
-                    chartCard.appendChild(canvas);
-                    chartContainer.appendChild(chartCard);
-                    
-                    const colors = generateColorPalette(labels.length);
-                    
-                    new Chart(canvas, {
-                        type: "pie",
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                data: values,
-                                backgroundColor: colors
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: true,
-                            plugins: {
-                                legend: { 
-                                    position: "bottom",
-                                    labels: {
-                                        boxWidth: 12,
-                                        padding: 10
-                                    }
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            const label = context.label || '';
-                                            const value = context.raw;
-                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                            const percentage = ((value / total) * 100).toFixed(1);
-                                            return `${label}: ${value} (${percentage}%)`;
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        plugins: [percentageLabelsPlugin]
-                    });
-                } catch (error) {
-                    console.error(`Error creating chart for ${key}:`, error);
-                }
-            });
+            // Frequent patterns values
+            chartsDescriptions["frequent-patterns-value"] = response.frequent_patterns.description;
+            const frequentPatternsValueTabButton = document.getElementById("frequent-patterns-value");
+            frequentPatternsValueTabButton.innerHTML += `<p style="font-size: 1.2rem;">(${response.frequent_patterns.title})</p>`;
+            createFrequentPatternsCharts(frequentPatterns);
 
-            // outliers
+            // Outliers
             const outliers = response.outliers_statistics.value;
+            chartsDescriptions["outliers"] = response.outliers_statistics.description;
+            const outliersTabButton = document.getElementById("outliers");
+            outliersTabButton.innerHTML += `<p style="font-size: 1.2rem;">(${response.outliers_statistics.title})</p>`;
             createOutlierDetailCharts(outliers);
-            // createOutlierDetailCharts(generateTestOutlierData());
 
             // Missing values with percentage
             const missingValues = response.missing_values.value;
             const missingPercentages = response.missing_percentage.value;
-            console.log(missingValues, missingPercentages)
+            chartsDescriptions["missing-data"] = response.missing_values.description;
+            const missingDataTabButton = document.getElementById("missing-data");
+            missingDataTabButton.innerHTML += `<p style="font-size: 1.2rem;">(${response.missing_values.title})</p>`;
             createMissingValuesCharts(missingValues, missingPercentages);
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -3352,15 +3412,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const allCharts = document.querySelectorAll(".chart-card");
     const chartButtons = document.querySelectorAll(".chart-tab-btn");
     const loadingSpinner = document.querySelector(".loading-spinner");
+    const chartCollectionDescription = document.querySelector(".description");
 
     chartButtons.forEach(button => {
         button.addEventListener("click", function () {
             const selectedChartClass = this.getAttribute("data-chart");
-            const selectedText = this.innerText;
+            let tempButton = this.cloneNode(true);
+            tempButton.querySelector("p")?.remove();
+            const selectedText = tempButton.textContent.trim();
 
+            chartNav.disabled = true;
             chartSelection.style.display = "none";
             loadingSpinner.style.display = "flex";
             chartContainer.style.display = "none";
+            chartCollectionDescription.style.display = "none";
 
             chartNav.innerHTML = `<i class="fa-solid fa-arrow-left"></i><span>${selectedText}</span>`;
 
@@ -3373,7 +3438,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 loadingSpinner.style.display = "none";
+
+                chartCollectionDescription.style.display = "block";
+                chartCollectionDescription.innerHTML = `${chartsDescriptions[selectedChartClass]}`;
+
                 chartContainer.style.display = "grid";
+                chartNav.disabled = false;
             }, 1000);
         });
     });
@@ -3381,6 +3451,8 @@ document.addEventListener("DOMContentLoaded", function () {
     chartNav.addEventListener("click", function () {
         chartNav.innerHTML = `<i class="fa-solid fa-house"></i> <span>Home</span>`;
         chartContainer.style.display = "none";
+        chartCollectionDescription.style.display = "none";
+        chartNav.disabled = true;
         
         const allCharts = document.querySelectorAll(".chart-card");
         allCharts.forEach(chart => chart.style.display = "none");

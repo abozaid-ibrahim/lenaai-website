@@ -432,7 +432,7 @@ a {
     display: none;
 }
 
-.chart-container > *:last-child {
+.chart-container .fill {
     grid-column: 1 / -1;
 }
 
@@ -446,6 +446,15 @@ a {
     width: 100% !important;
     height: auto !important;
     margin: auto;
+}
+
+.container-wrapper .description {
+    margin: 1.5rem auto 1.5rem auto;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #5f6977;
+    width: 70%;
 }
 
 .chart-card {
@@ -501,6 +510,9 @@ a {
     border-radius: 10px;
     box-shadow: var(--box-shadow);
     transition: all 0.3s ease;
+    border: none;
+    font-size: 1rem;
+    font-family: "Poppins", sans-serif;
 }
 
 .chart-nav:hover {
