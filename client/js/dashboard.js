@@ -3351,37 +3351,40 @@ document.addEventListener("DOMContentLoaded", function () {
     const chartNav = document.querySelector(".chart-nav");
     const allCharts = document.querySelectorAll(".chart-card");
     const chartButtons = document.querySelectorAll(".chart-tab-btn");
+    const loadingSpinner = document.querySelector(".loading-spinner");
 
-    // Handle chart button click
     chartButtons.forEach(button => {
         button.addEventListener("click", function () {
             const selectedChartClass = this.getAttribute("data-chart");
             const selectedText = this.innerText;
 
-            // Hide the selection buttons
             chartSelection.style.display = "none";
+            loadingSpinner.style.display = "flex";
+            chartContainer.style.display = "none";
 
-            // Update chart-nav text & add back arrow
             chartNav.innerHTML = `<i class="fa-solid fa-arrow-left"></i><span>${selectedText}</span>`;
 
-            // Hide all charts & show only those matching the selected class
-            allCharts.forEach(chart => chart.style.display = "none");
-            document.querySelectorAll(`.${selectedChartClass}`).forEach(chart => {
-                chart.style.display = "block";
-            });
+            setTimeout(() => {
+                chartNav.innerHTML = `<i class="fa-solid fa-arrow-left"></i> <span>${selectedText}</span>`;
+
+                allCharts.forEach(chart => chart.style.display = "none");
+                document.querySelectorAll(`.${selectedChartClass}`).forEach(chart => {
+                    chart.style.display = "block";
+                });
+
+                loadingSpinner.style.display = "none";
+                chartContainer.style.display = "grid";
+            }, 1000);
         });
     });
 
-    // Handle back navigation click
     chartNav.addEventListener("click", function () {
-        // Reset to default home text & icon
         chartNav.innerHTML = `<i class="fa-solid fa-house"></i> <span>Home</span>`;
-
-        // Hide all charts
+        chartContainer.style.display = "none";
+        
         const allCharts = document.querySelectorAll(".chart-card");
         allCharts.forEach(chart => chart.style.display = "none");
 
-        // Show the selection buttons again
         chartSelection.style.display = "grid";
     });
 
