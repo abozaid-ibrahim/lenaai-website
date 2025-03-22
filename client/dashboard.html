@@ -91,22 +91,9 @@
                     <i class="bi bi-search"></i>
                     <input type="text" id="client-search-bar" placeholder="Search for a client">
                 </div>
-                <div class="leads-drop">
-                    <div class="value">Filter Leads<i class="fa-solid fa-chevron-down"></i></div>
-                    <ul class="dropdown">
-                        <li class="whats-msg">
-                            <div>
-                                <i class="fa-brands fa-whatsapp"></i>
-                                WhatsApp Leads
-                            </div>
-                        </li>
-                        <li class="telegram-msg">
-                            <div>
-                                <i class="fa-brands fa-telegram"></i>
-                                Telegram Leads
-                            </div>
-                        </li>
-                    </ul>
+                <div class="whats-msg">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    WhatsApp Leads
                 </div>
             </div>
             <div class="overview-container">
@@ -139,15 +126,18 @@
     <!-- Charts section -->
     <section class="chart tab-content" id="analytics">
         <div class="chart-header">Clients Analytics</div>
-        <div class="chart-nav"><i class="fa-solid fa-house"></i>Home</div>
+        <button class="chart-nav"><i class="fa-solid fa-house"></i>Home</button>
         <div class="chart-selection">
-            <button class="chart-tab-btn" data-chart="frequent-patterns">
-                <i class="fa-solid fa-chart-pie"></i>Frequent Patterns
+            <button class="chart-tab-btn" id="frequent-patterns-percentage" data-chart="frequent-patterns-percentage">
+                <i class="fa-solid fa-chart-pie"></i>Frequent Patterns Percentages
             </button>
-            <button class="chart-tab-btn" data-chart="outliers">
+            <button class="chart-tab-btn" id="frequent-patterns-value" data-chart="frequent-patterns-value">
+                <i class="fa-solid fa-chart-bar"></i>Frequent Patterns values
+            </button>
+            <button class="chart-tab-btn" id="outliers" data-chart="outliers">
                 <i class="fa-solid fa-chart-simple"></i>Outliers
             </button>
-            <button class="chart-tab-btn" data-chart="missing-data">
+            <button class="chart-tab-btn" id="missing-data" data-chart="missing-data">
                 <i class="fa-solid fa-chart-simple"></i>Missing Data
             </button>
         </div>
@@ -155,7 +145,10 @@
             <div class="spinner"></div>
             <p>Loading data...</p>
         </div>
-        <div class="chart-container">
+        <div class="container-wrapper">
+            <p class="description"></p>
+            <div class="chart-container">
+            </div>
         </div>
     </section>
 

@@ -163,7 +163,8 @@ a {
 
 .filters-drop,
 .units-drop,
-.leads-drop {
+.leads-drop,
+.import-drop {
     padding: .5rem .9rem;
     margin-right: 1rem;
     border-radius: 26px;
@@ -187,7 +188,8 @@ a {
 
 .filters-drop .value,
 .units-drop .value,
-.leads-drop .value {
+.leads-drop .value,
+.import-drop .value {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -195,7 +197,8 @@ a {
 
 .filters-drop:hover,
 .units-drop:hover,
-.leads-drop:hover {
+.leads-drop:hover,
+.import-drop:hover {
     cursor: pointer;
     background-color: var(--primary-color);
     color: var(--text-color);
@@ -215,7 +218,8 @@ a {
 
 .filters-drop .dropdown li,
 .units-drop .dropdown li,
-.leads-drop .dropdown li {
+.leads-drop .dropdown li,
+.import-drop .dropdown li {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -223,13 +227,15 @@ a {
 }
 
 .filters .dropdown i,
-.leads-drop .dropdown i {
+.leads-drop .dropdown i,
+.import-drop .dropdown i {
     font-size: 1.2rem;
 }
 
 .filters-drop .fa-chevron-down,
 .leads-drop .fa-chevron-down,
-.units-drop .fa-chevron-down {
+.units-drop .fa-chevron-down,
+.import-drop .fa-chevron-down {
     margin-left: auto;
 }
 
@@ -275,17 +281,27 @@ a {
     flex: 1;
 }
 
-.whats-msg,
-.telegram-msg {
+.whats-msg {
     display: flex;
     align-items: center;
     border-radius: 16px;
     font-size: 1rem;
     transition: background-color 0.3s ease;
+    margin-left: auto;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    padding: .5rem 1rem;
+    transition: all .3s ease;
+    box-shadow: var(--box-shadow);
 }
 
-.whats-msg i
-.telegram-msg i {
+.whats-msg:hover {
+    cursor: pointer;
+    background-color: var(--secondary-color);
+    color: var(--primary-color-hover);
+}
+
+.whats-msg i {
     font-size: 1.5rem;
     margin-right: 5px;
 }
@@ -432,7 +448,7 @@ a {
     display: none;
 }
 
-.chart-container > *:last-child {
+.chart-container .fill {
     grid-column: 1 / -1;
 }
 
@@ -446,6 +462,15 @@ a {
     width: 100% !important;
     height: auto !important;
     margin: auto;
+}
+
+.container-wrapper .description {
+    margin: 1.5rem auto 1.5rem auto;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #5f6977;
+    width: 70%;
 }
 
 .chart-card {
@@ -501,6 +526,9 @@ a {
     border-radius: 10px;
     box-shadow: var(--box-shadow);
     transition: all 0.3s ease;
+    border: none;
+    font-size: 1rem;
+    font-family: "Poppins", sans-serif;
 }
 
 .chart-nav:hover {
@@ -786,27 +814,26 @@ a {
 }
 
 .probability {
-    position: absolute;
-    top: 2%;
-    right: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     padding: 6px;
     border-radius: 16px;
     color: #fff;
-    background-color: #000000a8;
-    width: 25%;
+    width: 100%;
+    margin-bottom: .5rem;
 }
 
 .probability h3 {
     margin: 0;
-    margin-bottom: .5rem;
-    font-size: .8rem;
+    font-size: 1rem;
 }
 
 .probability canvas {
     width: 80px !important;
     height: 80px !important;
-    margin: auto;
+    margin-left: 15px;
 }
 
 .req-list {
@@ -1487,7 +1514,8 @@ a {
 .edit-drop .dropdown,
 .filters-drop .dropdown,
 .leads-drop .dropdown,
-.units-drop .dropdown {
+.units-drop .dropdown,
+.import-drop .dropdown {
     left: 0%;
     top: 100%;
 }
@@ -1770,4 +1798,30 @@ a {
 .tag i:hover {
     cursor: pointer;
     color: var(--alt-button-color-hover);
+}
+
+.sheet-link {
+    display: flex;
+    align-items: center;
+    width: 63%;
+    background-color: #3A3F47;
+    border: 2px solid var(--secondary-color);
+    border-radius: 10px;
+}
+
+.sheet-link #spread-sheet {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+}
+
+.sheet-link i {
+    padding: 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.sheet-link i:hover {
+    cursor: pointer;
+    background-color: #ffffff63;
 }
