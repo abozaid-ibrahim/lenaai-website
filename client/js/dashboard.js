@@ -2365,12 +2365,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 <i class="fa-solid close-btn fa-circle-xmark"></i>
                                             </div>
                                             <div class="user-profile">
-                                                <div class="user-image">
-                                                    <img src="../assets/user-default.png">
-                                                    <div class="probability">
-                                                        <h3>Purchase Probability</h3>
-                                                        <canvas id="probabilityChart"></canvas>
-                                                    </div>
+                                                <div class="probability">
+                                                    <h3>Purchase Probability</h3>
+                                                    <canvas id="probabilityChart"></canvas>
                                                 </div>
                                                 <div class="user-info">
                                                     <ul class="req-list">
@@ -3239,7 +3236,7 @@ document.addEventListener("DOMContentLoaded", function () {
         new Chart(percentageCanvas, {
             type: "bar",
             data: {
-                labels: labels, // Now includes all labels
+                labels: labels,
                 datasets: [
                     {
                         label: "Missing Data Percentage (%)",
@@ -3276,7 +3273,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             font: { size: 12 },
                             maxRotation: 45,
                             minRotation: 45,
-                            autoSkip: false  // Ensures all labels are displayed
+                            autoSkip: false
                         }
                     }
                 },
@@ -3336,7 +3333,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             font: { size: 12 },
                             maxRotation: 45,
                             minRotation: 45,
-                            autoSkip: false  // Ensures all labels are displayed
+                            autoSkip: false
                         }
                     }
                 },
@@ -3469,26 +3466,48 @@ document.addEventListener("DOMContentLoaded", function () {
         editOverlay.style.display = "flex";
         editPopup.innerHTML = `
         <div class="history-header">
-            <h1>Send Cold Whats messages Patch</h1>
+            <h1>Send Cold Whats Messages Patch</h1>
             <i class="fa-solid close-btn fa-circle-xmark"></i>
         </div>
         <div class="edit-content">
             <div class="sheet-error" style="display: none;"></div>
             <ul class="edit-details">
                 <li>
-                    Spread Sheet
-                    <input type="text" id="spread-sheet" placeholder="Spread Sheet Link">
+                    Link or File
+                    <div class="sheet-link">
+                        <input type="text" id="spread-sheet" placeholder="Link or upload file">
+                        <input type="file" id="spread-url" placeholder="Spread Sheet Link" style="display: none;">
+                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                    </div> 
                 </li>
                 <div class="vod-error" style="display: none;"></div>
                 <li>
                     Video Link
-                    <input type="text" id="video-link" placeholder="Video Link">
+                    <input type="text" id="video-link" style="border-radius: 10px;" placeholder="Video Link">
                 </li>
             </ul>
             <div class="details-btns">
                 <div class="save">Send</div>
             </div>
         </div>`;
+
+        const leadsFileButton = document.querySelector(".fa-arrow-up-from-bracket");
+        const leadsFileField = document.querySelector("#spread-url");
+        let inputFile = false;
+        leadsFileButton.addEventListener("click", function (event) {
+            event.stopPropagation();
+            inputFile = false;
+            leadsFileField.value = "";
+            leadsFileField.click();
+        });
+
+        leadsFileField.addEventListener("change", function () {
+            const filePath = leadsFileField.value;
+            const spreadSheetInput = document.querySelector("#spread-sheet");
+
+            spreadSheetInput.value = filePath;
+            inputFile = true;
+        });
 
         document.querySelector(".close-btn").addEventListener("click", function () {
             editPopup.classList.remove("delete-popup");
@@ -3503,8 +3522,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // });
 
         document.querySelector(".save").addEventListener("click", function () {
-            const spreadSheetInput = document.querySelector("#spread-sheet");
-            const spreadSheetLink = spreadSheetInput.value.trim();
+            const spreadSheetInput = document.querySelector(".sheet-link");
+            const spreadSheetLink = document.querySelector("#spread-sheet").value.trim();
             const videoInput = document.querySelector("#video-link");
             const videoLink = videoInput.value.trim();
             const sheetError = document.querySelector(".sheet-error");
@@ -3519,11 +3538,14 @@ document.addEventListener("DOMContentLoaded", function () {
             vodError.style.display = "none";
             vodError.innerHTML = "";
 
-            if (!spreadsheetRegex.test(spreadSheetLink) || spreadSheetLink === "") {
+            if (inputFile === true && spreadSheetLink !== "" & spreadSheetLink === leadsFileField.value) {
+                spreadSheetInput.style.border = "2px solid #cbb26a";
+            } else if (!spreadsheetRegex.test(spreadSheetLink) || spreadSheetLink === "") {
                 sheetError.style.display = "block";
                 sheetError.innerHTML = `Invalid link! Please enter a valid Excel file (.xls, .xlsx, .csv) or a Google Sheets.`;
                 spreadSheetInput.style.border = "2px solid red";
                 isValid = false;
+                inputFile = false;
             } else {
                 spreadSheetInput.style.border = "2px solid #cbb26a";
             }
@@ -3539,128 +3561,93 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!isValid) return;
 
-            const requestData = {
-                spreadsheet_url: spreadSheetLink,
-                video_url: videoLink,
-                sheet_name: "Sheet1",
-                client_id: clientId
-            };
+            const editContent = $(".edit-content");
 
-            console.log("Sending request:", requestData);
+            $("#loadingOverlay").remove();
 
-            $.ajax({
-                url: "https://api.lenaai.net/webhook/send-video-using-spreadsheet",
-                method: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(requestData),
-                success: function (response) {
-                    console.log("Request success", response);
-                    editOverlay.style.display = "none";
-                    editPopup.innerHTML = '';
-                },
-                error: function (err) {
-                    console.error("Request failed", err);
-                    sheetError.style.display = "block";
-                    sheetError.innerHTML = "Request failed. Please try again.";
+            editContent.append(`
+                <div id="loadingOverlay" class="loading-overlay">
+                    <div class="spinner-container">
+                        <i id="loadingIcon" class="fa fa-spinner fa-spin"></i>
+                        <p id="loadingText">Processing Data ...</p>
+                    </div>
+                </div>
+            `);
+
+            const overlay = $("#loadingOverlay");
+            const loadingText = $("#loadingText");
+            const loadingIcon = $("#loadingIcon");
+            overlay.removeClass("hidden");
+
+            if (inputFile === true && leadsFileField.files.length > 0) {
+                const formData = new FormData();
+                formData.append("excel_file", leadsFileField.files[0]);
+                formData.append("client_id", clientId);
+                formData.append("media_url", videoLink);
+                formData.append("sheet_name", "Sheet1");
+                for (let [key, value] of formData.entries()) {
+                    console.log(key, value);
                 }
-            });
-        });
-    })
 
-    const telegramMessageButton = document.querySelector(".telegram-msg");
-    telegramMessageButton.addEventListener("click", function () {
-        const editOverlay = document.querySelector(".chat-overlay");
-        const editPopup = document.querySelector(".chat-history");
-
-        editPopup.classList.add("delete-popup");
-        editOverlay.style.display = "flex";
-        editPopup.innerHTML = `
-        <div class="history-header">
-            <h1>Send Cold Telegram messages Patch</h1>
-            <i class="fa-solid close-btn fa-circle-xmark"></i>
-        </div>
-        <div class="edit-content">
-            <div class="sheet-error" style="display: none;"></div>
-            <ul class="edit-details">
-                <li>
-                    Spread Sheet
-                    <input type="text" id="spread-sheet" placeholder="Spread Sheet Link">
-                </li>
-                <div class="vod-error" style="display: none;"></div>
-                <li>
-                    Video Link
-                    <input type="text" id="video-link" placeholder="Video Link">
-                </li>
-            </ul>
-            <div class="details-btns">
-                <div class="save">Send</div>
-            </div>
-        </div>`;
-
-        document.querySelector(".close-btn").addEventListener("click", function () {
-            editPopup.classList.remove("delete-popup");
-            editOverlay.style.display = "none";
-            editPopup.innerHTML = '';
-        });
-
-        // document.querySelector(".cancel").addEventListener("click", function () {
-        //     editPopup.classList.remove("delete-popup");
-        //     editOverlay.style.display = "none";
-        //     editPopup.innerHTML = '';
-        // });
-
-        document.querySelector(".save").addEventListener("click", function () {
-            const spreadSheetInput = document.querySelector("#spread-sheet");
-            const spreadSheetLink = spreadSheetInput.value.trim();
-            const videoInput = document.querySelector("#video-link");
-            const videoLink = videoInput.value.trim();
-            const sheetError = document.querySelector(".sheet-error");
-            const vodError = document.querySelector(".vod-error");
-
-            const spreadsheetRegex = /^(https?:\/\/)?(www\.)?docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9_-]+(\/(edit|view|copy)?(\?.*)?)?$|[^\s]+\.xls[x]?|[^\s]+\.csv$/;
-
-            let isValid = true;
-            sheetError.style.display = "none";
-            sheetError.innerHTML = "";
-
-            vodError.style.display = "none";
-            vodError.innerHTML = "";
-
-            if (!spreadsheetRegex.test(spreadSheetLink) || spreadSheetLink === "") {
-                sheetError.style.display = "block";
-                sheetError.innerHTML = `Invalid link! Please enter a valid Excel file (.xls, .xlsx, .csv) or a Google Sheets.`;
-                spreadSheetInput.style.border = "2px solid red";
-                isValid = false;
+                $.ajax({
+                    url: `https://api.lenaai.net/webhook/send-video-using-spreadsheet-file`,
+                    method: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        console.log(response)
+                        loadingIcon.attr("class", "fa fa-check-circle success");
+                        loadingText.html("Success!");
+                    },
+                    error: function (error) {
+                        loadingIcon.attr("class", "fa fa-times-circle error");
+                        loadingText.html("Failed. Please try again.");
+                    },
+                    complete: function () {
+                        setTimeout(() => overlay.addClass("hidden"), 1500);
+                        setTimeout(() => {
+                            editPopup.classList.remove("delete-popup");
+                            editOverlay.style.display = "none";
+                            editPopup.innerHTML = '';
+                        }, 1500);
+                    }
+                })
             } else {
-                spreadSheetInput.style.border = "2px solid #cbb26a";
+                const requestLinkData = {
+                    spreadsheet_url: spreadSheetLink,
+                    media_url: videoLink,
+                    sheet_name: "Sheet1",
+                    client_id: clientId
+                };
+    
+                console.log("Sending request:", requestLinkData);
+    
+                $.ajax({
+                    url: "https://api.lenaai.net/webhook/send-video-using-spreadsheet",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(requestLinkData),
+                    success: function (response) {
+                        console.log(response)
+                        loadingIcon.attr("class", "fa fa-check-circle success");
+                        loadingText.html("Success!");
+                    },
+                    error: function (err) {
+                        loadingIcon.attr("class", "fa fa-times-circle error");
+                        loadingText.html("Failed. Please try again.");
+                    },
+                    complete: function () {
+                        setTimeout(() => overlay.addClass("hidden"), 1500);
+                        setTimeout(() => {
+                            editOverlay.style.display = "none";
+                            editPopup.innerHTML = '';
+                        }, 1500);
+                    }
+                });
             }
-
-            if (!videoLink) {
-                vodError.style.display = "block";
-                vodError.innerHTML = `Invalid link! Please enter a valid link to a downloadable video.`;
-                videoInput.style.border = "2px solid red";
-                isValid = false;
-            } else {
-                videoInput.style.border = "2px solid #cbb26a";
-            }
-
-            if (!isValid) return;
-
-            const requestData = {
-                spreadsheet_url: spreadSheetLink,
-                video_url: videoLink,
-                sheet_name: "Sheet1",
-                client_id: clientId
-            };
-
-            console.log("Sending request:", requestData);
-
-            setTimeout(() => {
-                editOverlay.style.display = "none";
-                editPopup.innerHTML = '';
-            }, 1000)
         });
-    })
+    });
 
     const importButton = document.querySelector(".import-btn");
     importButton.addEventListener("click", function () {

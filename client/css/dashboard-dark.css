@@ -769,27 +769,27 @@ a {
 }
 
 .probability {
-    position: absolute;
-    top: 2%;
-    right: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     padding: 6px;
     border-radius: 16px;
     color: #fff;
     background-color: #000000a8;
-    width: 25%;
+    width: 100%;
 }
 
 .probability h3 {
     margin: 0;
     margin-bottom: .5rem;
-    font-size: .8rem;
+    font-size: 1rem;
 }
 
 .probability canvas {
     width: 80px !important;
     height: 80px !important;
-    margin: auto;
+    margin-left: 15px;
 }
 
 .req-list {
@@ -1480,17 +1480,27 @@ a {
     margin-right: 20px;
 }
 
-.whats-msg,
-.telegram-msg {
+.whats-msg {
     display: flex;
     align-items: center;
     border-radius: 16px;
     font-size: 1rem;
     transition: background-color 0.3s ease;
+    margin-left: auto;
+    background-color: #111;
+    color: var(--secondary-color);
+    padding: .5rem 1rem;
+    transition: all .3s ease;
+    box-shadow: var(--box-shadow);
 }
 
-.whats-msg i
-.telegram-msg i {
+.whats-msg:hover {
+    cursor: pointer;
+    background-color: var(--secondary-color);
+    color: #111;
+}
+
+.whats-msg i {
     font-size: 1.5rem;
     margin-right: 5px;
 }
@@ -1738,4 +1748,30 @@ a {
 .tag i:hover {
     cursor: pointer;
     color: var(--alt-button-color-hover);
+}
+
+.sheet-link {
+    display: flex;
+    align-items: center;
+    width: 63%;
+    background-color: #3A3F47;
+    border: 2px solid var(--secondary-color);
+    border-radius: 10px;
+}
+
+.sheet-link #spread-sheet {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+}
+
+.sheet-link i {
+    padding: 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.sheet-link i:hover {
+    cursor: pointer;
+    background-color: #ffffff63;
 }
