@@ -497,7 +497,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             detail.classList.add("compound");
                                             detail.innerHTML = `
                                             ${key}
-                                            <i class="fa-solid fa-pen-to-square" style="margin-left: auto; margin-right: 20px;"></i>
+                                            <i class="fa-solid fa-plus" style="margin-left: auto; margin-right: 20px;"></i>
                                             <div class="edit-drop">
                                                 <div class="value">New Compound</div><i class="fa-solid fa-chevron-down"></i>
                                                 <ul class="dropdown">
@@ -558,6 +558,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                             finishing.forEach((type) => {
                                                 detail.querySelector(".dropdown").innerHTML += `<li>${type}</li>`
                                             });
+                                        } else if (key === "Garage Area"){
+                                            detail.innerHTML = `${key}<input type="text" value="0">`;
+                                        } else if (key === "Bathroom Count"){
+                                            detail.innerHTML = `${key}<input type="text" value="1">`;
+                                        } else if (key === "Rooms Count"){
+                                            detail.innerHTML = `${key}<input type="text" value="1">`;
                                         } else {
                                             detail.innerHTML = `${key}<input type="text">`;
                                         }
@@ -573,27 +579,62 @@ document.addEventListener("DOMContentLoaded", function () {
                                         const editDrop = compound.querySelector(".edit-drop");
                                         const icon = compound.querySelector("i");
 
-                                        if (event.target.matches(".fa-pen-to-square")) {
-                                            if (editDrop) {
-                                                compound.dataset.dropdownHTML = editDrop.outerHTML;
-                                                editDrop.remove();
-                                            }
-                                            compound.insertAdjacentHTML("beforeend", `<input type="text" class="value">`);
-                                            icon.classList.remove("fa-pen-to-square");
-                                            icon.classList.add("fa-xmark");
+                                        if (event.target.matches(".fa-plus")) {
+                                            const tagsOverlay = document.querySelector(".tags-overlay");
+                                            const tagsPopup = document.querySelector(".tags-popup");
 
-                                        } else if (event.target.matches(".fa-xmark")) {
-                                            const inputField = compound.querySelector(".value");
-                                            if (inputField) {
-                                                inputField.remove();
-                                            }
+                                            tagsOverlay.style.display = "flex";
+                                            tagsPopup.innerHTML = `
+                                            <div class="history-header">
+                                                <h1>Add New Compound</h1>
+                                                <i class="fa-solid close-btn fa-circle-xmark"></i>
+                                            </div>
+                                            <div class="edit-content">
+                                                <div class="val-error" style="display: none;"></div>
+                                                <ul class="edit-details">
+                                                    <li>
+                                                        Compound Name
+                                                        <input type="text" id="compound-name">
+                                                    </li>
+                                                </ul>
+                                                <div class="details-btns">
+                                                    <div class="save">Add</div>
+                                                </div>
+                                            </div>`;
 
-                                            if (compound.dataset.dropdownHTML) {
-                                                compound.insertAdjacentHTML("beforeend", compound.dataset.dropdownHTML);
-                                            }
+                                            tagsPopup.querySelector(".close-btn").addEventListener("click", function () {
+                                                tagsOverlay.style.display = "none";
+                                                tagsPopup.innerHTML = '';
+                                            });
 
-                                            icon.classList.remove("fa-xmark");
-                                            icon.classList.add("fa-pen-to-square");
+                                            tagsPopup.querySelector(".save").addEventListener("click", function () {
+                                                const error = document.querySelector(".edit-content .val-error");
+                                                const newCompoundName = document.querySelector(".edit-content #compound-name");
+
+                                                error.style.display = "none";
+                                                error.innerHTML = "";
+
+                                                if (!newCompoundName.value.trim()) {
+                                                    error.style.display = "block";
+                                                    error.innerHTML = "Please enter a valid Compound Name.";
+                                                    newCompoundName.style.borderColor = "red";
+                                                    return;
+                                                } else {
+                                                    error.style.display = "none";
+                                                    error.innerHTML = ``;
+                                                    newCompoundName.style.borderColor = "#cbb26a";
+                                                }
+
+                                                const compoundListItem = document.createElement("li");
+                                                const dropdown = editDrop.querySelector(".dropdown");
+                                                
+                                                editDrop.querySelector(".value").textContent = newCompoundName.value;
+                                                compoundListItem.innerHTML = newCompoundName.value;
+                                                dropdown.insertBefore(compoundListItem, dropdown.firstChild);
+
+                                                tagsOverlay.style.display = "none";
+                                                tagsPopup.innerHTML = "";
+                                            });
                                         }
                                     });
 
