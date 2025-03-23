@@ -3621,7 +3621,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     client_id: clientId
                 };
     
-                console.log("Sending request:", requestLinkData);
+                console.log("Sending request", requestLinkData);
     
                 $.ajax({
                     url: "https://api.lenaai.net/webhook/send-video-using-spreadsheet",
