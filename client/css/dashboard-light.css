@@ -1163,7 +1163,7 @@ a {
     position: relative;
 }
 
-.compound .fa-pen-to-square,
+.compound .fa-plus,
 .compound .fa-xmark,
 .payment-plan .fa-plus {
     padding: .7rem;
@@ -1171,7 +1171,7 @@ a {
     font-size: 1rem
 }
 
-.compound .fa-pen-to-square:hover,
+.compound .fa-plus:hover,
 .compound .fa-xmark:hover,
 .payment-plan .fa-plus:hover {
     background-color: #ffffff4f;
