@@ -35,12 +35,11 @@
 <body>
 
     <!-- Header -->
-    <header>
+    <!-- <header>
         <div class="header-container">
             <a href="../index.html" style="display: none;"><img src="../assets/logo.png" alt="LENA AI Logo"
                     class="logo"></a>
             <div class="header-title">AI Efficiency Hub</div>
-            <!-- Navigation -->
             <nav class="navbar">
                 <ul class="nav-list" id="nav-list">
                     <li><a href="../index.html">Home</a></li>
@@ -61,16 +60,24 @@
                 <i class="bi bi-box-arrow-in-right"></i> Sign In
             </button>
             <div class="menu-toggle" id="menu-toggle">
-                <i class="bi bi-list"></i> <!-- Burger Icon -->
+                <i class="bi bi-list"></i>
             </div>
         </div>
-    </header>
+    </header> -->
 
     <!-- Dashboard taps -->
     <section class="tabs">
         <button class="tab-btn active" data-tab="dashboard"><i class="fa-solid fa-list"></i>Dashboard</button>
         <button class="tab-btn" data-tab="analytics"><i class="fa-solid fa-chart-simple"></i>Analytics</button>
         <button class="tab-btn" data-tab="units"><i class="fa-solid fa-house"></i>Units</button>
+        <div class="header">
+            <div id="theme-toggle">
+                <i class="bi bi-moon"></i>
+            </div>
+            <button class="sign-in-btn" id="sign-in">
+                <i class="bi bi-box-arrow-in-right"></i> Sign In
+            </button>
+        </div>
     </section>
 
     <!-- Clients overview -->
@@ -121,6 +128,8 @@
             <div class="req-profile">
             </div>
         </div>
+
+        <span class="tooltip" id="tooltip"></span>
     </section>
 
     <!-- Charts section -->
