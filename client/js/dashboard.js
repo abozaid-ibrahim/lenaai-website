@@ -2095,6 +2095,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 data: JSON.stringify(unitObject),
                                                 success: function (response) {
                                                     console.log("API response", response);
+                                                    loadingIcon.attr("class", "fa fa-check-circle success");
+                                                    loadingText.html("Success!");
                                                     $.ajax({
                                                         url: `https://api.lenaai.net/units/${clientId}`,
                                                         method: "GET",
@@ -2104,21 +2106,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                                         dataType: "json",
                                                         success: function (response) {
                                                             renderUnits(response);
-                                                            loadingIcon.attr("class", "fa fa-check-circle success");
-                                                            loadingText.html("Success!");
-                                                        },
-                                                        error: function (error) {
-                                                            loadingIcon.attr("class", "fa fa-times-circle error");
-                                                            loadingText.html("Failed. Please try again.");
-                                                        },
-                                                        complete: function () {
-                                                            setTimeout(() => overlay.addClass("hidden"), 1500);
-                                                            setTimeout(() => {
-                                                                editOverlay.style.display = "none";
-                                                                editPopup.innerHTML = '';
-                                                            }, 1500);
                                                         }
                                                     })
+                                                },
+                                                error: function (error) {
+                                                    loadingIcon.attr("class", "fa fa-times-circle error");
+                                                    loadingText.html("Failed. Please try again.");
+                                                },
+                                                complete: function () {
+                                                    setTimeout(() => overlay.addClass("hidden"), 1500);
+                                                    setTimeout(() => {
+                                                        editOverlay.style.display = "none";
+                                                        editPopup.innerHTML = '';
+                                                    }, 1500);
                                                 }
                                             })
                                         }
@@ -2337,6 +2337,22 @@ document.addEventListener("DOMContentLoaded", function () {
                                     });
 
                                     const clients = Array.from(document.querySelectorAll(".client"));
+
+                                    document.querySelectorAll(".client-name").forEach((number) => {
+                                        number.addEventListener("click", function (event) {
+                                            event.stopPropagation();
+                                            const text = this.innerText.trim();
+                                            navigator.clipboard.writeText(text).then(() => {
+                                                let tooltip = document.getElementById("tooltip");
+                                                tooltip.innerHTML = `${text} copied to clipboard.`;
+                                                tooltip.classList.add("show-tooltip");
+                                
+                                                setTimeout(() => {
+                                                    tooltip.classList.remove("show-tooltip");
+                                                }, 1500);
+                                            }).catch(err => console.error("Error copying text: ", err));
+                                        });
+                                    });
 
                                     // All Chats filer
                                     const allChatsButton = document.querySelector(".all-chats");
