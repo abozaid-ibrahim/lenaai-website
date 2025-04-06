@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LENA AI</title>
+    <link rel="icon" href="assets/icon.png">
+
+    <!-- Font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+
+    <!-- CSS files -->
+    <link rel="stylesheet" href="css/index.css">
+    <link id="theme-stylesheet" rel="stylesheet" href="css/efficiency_hub_dark.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- JS files -->
+    <script src="js/index.js"></script>
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="../index.html" style="display: none;"><img src="../assets/logo.png" alt="LENA AI Logo" class="logo"></a>
+            <div class="header-title">AI Efficiency Hub</div>
+            <!-- Navigation -->
+            <nav class="navbar">
+                <ul class="nav-list" id="nav-list">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="client/dashboard.html">Client Dashboard</a></li>
+                    <li><a href="#">Job Opportunities</a></li>
+                    <li><a href="properties.html">All Properties</a></li>
+                    <li class="sign-up-sm">
+                        <a href="client/signup.html">
+                            <button>
+                                <i class="bi bi-box-arrow-in-right"></i> Signup
+                            </button>
+                        </a>
+                    </li>
+                    <li class="sign-in-sm">
+                        <a href="client/login.html">
+                            <button>
+                                <i class="bi bi-box-arrow-in-right"></i> Sign In
+                            </button>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div id="theme-toggle">
+                <i class="bi bi-moon"></i>
+            </div>
+            <a href="client/signup.html">
+                <button id="signup">
+                    <i class="bi bi-box-arrow-in-right"></i> Signup
+                </button>
+            </a>
+            <a href="client/login.html">
+                <button class="sign-in-btn" id="sign-in">
+                    <i class="bi bi-box-arrow-in-right"></i> Sign In
+                </button>
+            </a>
+            <div class="menu-toggle" id="menu-toggle">
+                <i class="bi bi-list"></i> <!-- Burger Icon -->
+            </div>
+        </div>
+    </header>
+
+    <section class="content-warpper">
+        <!-- Chat-Bot -->
+    
+        <div class="chatbot">
+            <!-- <div class="chat-header">
+                <i class="fa-brands fa-facebook-f" id="facebook-btn"></i>
+                <h2>
+                    <i class="fa-solid fa-message"></i>
+                    Chat With Us
+                </h2>
+                <i class="fa-solid fa-phone" id="call-btn"></i>
+                <div class="phone-field">
+                    <input type="text" id="phone-no" placeholder="(+20) 147 1234 213">
+                    <i class="fa-solid fa-phone"></i>
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+            </div> -->
+            <div class="chat-engine">
+                <div class="current-engine">
+                    <i class="fa-solid fa-microchip"></i>
+                    <div class="engine-name">Langgraph Chat-bot</div>
+                    <div class="dropdown" id="dropdown-menu">
+                        <ul>
+                            <li class="engine-item">Langgraph Chat-bot</li>
+                            <li class="engine-item">Lena Chat-bot</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="messages">
+                <div class="message">Welcome to Lena Ai How can I help you today?</div>
+            </div>
+            <div class="chat-preview"></div>
+            <div class="input-field">
+                <form id="input-form">
+                    <textarea id="user-input" placeholder="Type Something Here" autocomplete="off"></textarea>
+                    <input type="file" id="file-field">
+                </form>
+                <i class="fa-solid fa-plus" id="attach-btn"></i>
+                <i class="fa-solid fa-paper-plane" id="submit-btn"></i>
+            </div>
+        </div>
+    
+        <!-- Facebook Upload -->
+        <div class="upload-overlay">
+            <div class="fb-upload">
+            </div>
+        </div>
+    
+        <!-- Gallery Popup -->
+        <div class="gallery-overlay">
+            <div class="gallery-content">
+            </div>
+        </div>
+    </section>
+
+    <!-- Hero -->
+
+    <section class="hero">
+        <!-- SLIDER -->
+        <div class="slider">
+            <div class="slider-wrapper">
+                <div class="slide">
+                    <img src="assets/hero_1.jpg" draggable="false">
+                    <div class="content3">
+                        <div class="text3">Make it AI <br> Efficient & Cost-Effective</div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="assets/careers2.png" draggable="false">
+                    <div class="content3">
+                        <div class="text3">Smart Real Estate CRM <br> Automate & Scale Effortlessly</div>
+                    </div>
+                </div>
+            </div>
+    
+            <div id="prev"><i class="fa-solid iconCall fa-circle-chevron-left"></i></div>
+            <div id="next"><i class="fa-solid iconCall fa-circle-chevron-right"></i></div>
+
+            <div class="trial">
+                <button class="chat" aria-label="Try our Chatbot">Try our Chatbot</button>
+                <button class="demo" aria-label="Request a Demo">Request Demo</button>
+            </div>
+    
+            <div class="dots">
+                <span class="slider-dot" aria-label="Slide 1"></span>
+                <span class="slider-dot" aria-label="Slide 2"></span>
+            </div>
+        </div>
+
+        <!-- Demo form -->
+        <div class="demo-overlay">
+            <div class="demo-popup">
+            </div>
+        </div>
+    </section>
+
+    <!-- Video -->
+    <section class="vod">
+        <div class="vod-container">
+            <video id="ai-video">
+                <source src="assets/ai_vod.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <i class="fa-solid fa-circle-play play-btn" id="play-button"></i>
+        </div>
+    </section>
+
+    <!-- Efficiency hub -->
+    <section class="efficiency-hub">
+        <div class="hub-title">AI Efficiency Hub</div>
+        <div class="hub-subheader">Unlock the power of AI to boost productivity and streamline operations effortlessly.</div>
+        <div class="hub-grid">
+            <div class="grid-item">
+                <div class="item-content">
+                    <div class="item-title">Smart Automation</div>
+                    <ul class="item-list">
+                        <li>Chatbot has access to your crm and reply 24/7 to your clients.</li>
+                        <li>Automate replying with ai to the business whatsapp number.</li>
+                    </ul>
+                    <button class="try-btn">Try Now</button>
+                </div>
+                <div class="grid-image">
+                    <img src="assets/Image 84.png" alt="Smart Automation">
+                </div>
+            </div>
+
+            <div class="grid-item">
+                <div class="grid-image">
+                    <img src="assets/Image 85.png" alt="Smart Automation">
+                </div>
+                <div class="item-content">
+                    <div class="item-title">Data Insights</div>
+                    <ul class="item-list">
+                        <li>Customized profile for each client, to have better targetting.</li>
+                        <li>Auto create marketing compains and reply on posts.</li>
+                    </ul>
+                    <button class="try-btn">Try Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Careers -->
+    <section class="vacancies">
+        <div class="hub-title">Careers</div>
+        <div class="hub-subheader">Explore exciting career opportunities and apply to join our team.</div>
+        <div class="jobs-grid">
+            <div class="job-item">
+                <div class="job-details">
+                    <div class="job-title">Machine Learning Developer</div>
+                    <div class="job-description">
+                        <p>What We’re Looking For:</p>
+                        <ul>
+                            <li>At least 6 months of hands-on experience with LangChain.</li>
+                            <li>Proficiency in RAG pipelines and working with knowledge bases like vector databases (e.g., Pinecone,
+                                Weaviate, or FAISS).
+                                Strong understanding of building and deploying AI Agents for tasks such as automation, chatbots, or
+                                data retrieval.</li>
+                            <li>Familiarity with Python and experience integrating APIs into LangChain workflows.</li>
+                            <li>Knowledge of vector databases and retrieval-augmented generation (RAG)</li>
+                            <li>Knowledge of Large Language Models (LLMs) such as OpenAI GPT, Cohere, or similar.</li>
+                        </ul>
+                    </div>
+                    <button class="apply-btn" onclick="window.location.href='mailto:abozaid@lenaai.net'">Apply Now</button>
+                </div>
+                <img src="assets/Image_136.png">
+            </div>
+
+            <div class="job-item">
+                <div class="job-details">
+                    <div class="job-title">Senior Python Developer</div>
+                    <div class="job-description">
+                        <p>What We’re Looking For:</p>
+                        <ul>
+                            <li>Minimun 3 years of experience</li>
+                            <li>Python & FastAPI/Flask</li>
+                            <li>LangChain / GPT-4 API experience</li>
+                            <li>WhatsApp Business & Voice API (Vonage) integration</li>
+                            <li>Cloud database experience (Firebase Firestore)</li>
+                        </ul>
+                    </div>
+                    <button class="apply-btn" onclick="window.location.href='mailto:abozaid@lenaai.net'">Apply Now</button>
+                </div>
+                <img src="assets/Image_135.png">
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>
+            <a href="client/privacy.html">Privacy Policy</a>
+        </p>
+        <p>Company Address: 505 Siac Building, ARCHPLAN Square, New Capital, Cairo.</p>
+        <p>Contact Info: <a href="https://wa.me/+201016080323">01016080323</a></p>
+        <p>CTO: Abozaid Ibrahim</p>
+        <p><a href="https://www.linkedin.com/company/lenaai-net/">Linkedin</a></p>
+    </footer>
+    
+    <!-- Chatbot pop up -->
+    <i class="fa-solid fa-message" id="popup"></i>
+</body>
+
+</html>
