@@ -9,6 +9,7 @@ export default function middleware(request) {
   if (path === '/') {
     return NextResponse.redirect(new URL('/dashbord', request.url));
   }
+  // 
 
   // Continue with the request for all other paths
   return NextResponse.next();
