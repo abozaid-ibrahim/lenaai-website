@@ -10,7 +10,7 @@ const Privacy = () => {
       <section className="mb-6">
         <h2 className="text-2xl font-semibold text-gray-800 mb-3">1. Introduction</h2>
         <p className="text-gray-600">
-          Welcome to Lena AI, a technology provider specializing in AI solutions and WhatsApp integration 
+          Welcome to LenaAI, a technology provider specializing in AI solutions and WhatsApp integration 
           for client communication in Egypt. This Privacy Policy explains how we collect, use, and protect 
           your information when you use our services, Lena Will be your property consultant that buys your dream home
         </p>
