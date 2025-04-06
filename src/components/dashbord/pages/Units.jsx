@@ -63,7 +63,7 @@ const realEstateData = [
   }
 ];
 
-const RealEstateListings = () => {
+const RealEstateListings = ({initialData}) => {
   const [selectedEstate, setSelectedEstate] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [developerFilter, setDeveloperFilter] = useState('all'); // Changed from priceFilter
@@ -72,9 +72,11 @@ const RealEstateListings = () => {
   const itemsPerPage = 8;
 
   // Filter estates based on search and developer filter
-  const filteredEstates = realEstateData.filter(estate => {
-    const matchesSearch = estate.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                        estate.location.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredEstates = initialData ? initialData.filter(estate => {
+    const matchesSearch = 
+      (estate.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) || 
+      (estate.compound?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (estate.city?.toLowerCase() || '').includes(searchTerm.toLowerCase());
     
     let matchesDeveloper = true;
     if (developerFilter !== 'all') {
@@ -82,10 +84,10 @@ const RealEstateListings = () => {
     }
     
     return matchesSearch && matchesDeveloper;
-  });
+  }) : [];
 
   // Get unique developers for filter dropdown
-  const developers = [...new Set(realEstateData.map(estate => estate.developer))];
+  const developers = [...new Set(initialData ? initialData.filter(estate => estate.developer).map(estate => estate.developer) : realEstateData.map(estate => estate.developer))];
 
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -197,18 +199,24 @@ const RealEstateListings = () => {
               <div key={estate.id} className="flex flex-col">
                 {/* Estate Card with fixed height */}
                 <div 
-                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-[400px] flex flex-col cursor-pointer"
+                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-[450px] flex flex-col cursor-pointer"
                   onClick={() => handleCardClick(estate.id)}
                 >
-                  <div className="relative h-64">
-                    <img 
-                      src={estate.image.src} 
-                      alt={estate.name} 
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold shadow-md">
-                      {estate.price}
-                    </div>
+                  <div className="relative h-56">
+                    {estate.images && estate.images.length > 0 ? (
+                      <img 
+                        src={estate.images[0].url} 
+                        alt={estate.name || estate.compound || "Property"} 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img 
+                        src={im.src} 
+                        alt={estate.name || estate.compound || "Property"} 
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                  
                     <div className="absolute bottom-4 right-4 flex space-x-2">
                       <button 
                         onClick={(e) => handleUpdateEstate(estate.id, e)}
@@ -229,17 +237,40 @@ const RealEstateListings = () => {
                   
                   <div className="p-4 flex-grow flex flex-col justify-between">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">{estate.name}</h3>
+                      <h3 className="text-xl font-bold text-gray-800 mb-1 line-clamp-1 rtl:text-right">
+                        {estate.compound || estate.name || "Unnamed Property"}
+                      </h3>
+                      <div className="flex items-center text-gray-700 mb-2">
+                        <MapPin className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
+                        <span className="line-clamp-1">{estate.city || "Location not specified"}</span>
+                      </div>
                     </div>
                     
-                    <div className="flex flex-col gap-4 mt-auto">
-                      <div className="flex items-center text-gray-700">
-                        <MapPin className="w-4 h-4 mr-2 text-gray-500" />
-                        {estate.location}
-                      </div>
+                    <div className="flex flex-col gap-2 mt-auto">
+                  
+                      {estate.bathrooms && (
+                        <div className="text-sm text-gray-600 rtl:text-right">
+                          <span className="font-medium">Bathrooms:</span> {estate.bathrooms}
+                        </div>
+                      )}
+                      {estate.finishing && (
+                        <div className="text-sm text-gray-600 rtl:text-right">
+                          <span className="font-medium">Finishing:</span> {estate.finishing}
+                        </div>
+                      )}
+                      {estate.buildingType && (
+                        <div className="text-sm text-gray-600 rtl:text-right">
+                          <span className="font-medium">Building Type:</span> {estate.buildingType}
+                        </div>
+                      )}
+                      {estate.downPayment && (
+                        <div className="text-sm text-gray-600 rtl:text-right">
+                          <span className="font-medium">Down Payment:</span> {estate.downPayment}
+                        </div>
+                      )}
                       
-                      <Link href={"/dashbord/units/1"} 
-                        className="w-full py-2 px-4 bg-primary  text-white rounded-md font-medium transition duration-300 flex items-center justify-center text-sm"
+                      <Link href={`/dashbord/units/${estate.id}`} 
+                        className="w-full py-2 px-4 bg-primary text-white rounded-md font-medium transition duration-300 flex items-center justify-center text-sm mt-2"
                       >
                         <Eye className="mr-2 w-4 h-4" />
                         View Details
@@ -247,15 +278,12 @@ const RealEstateListings = () => {
                     </div>
                   </div>
                 </div>
-                
-                
-              
               </div>
             ))}
           </div>
         )}
         
-        {/* Improved Modern Pagination */}
+        {/* Pagination remains the same */}
         {filteredEstates.length > 0 && (
           <div className="mt-10 flex justify-center">
             <nav className="flex items-center bg-white px-4 py-3 rounded-xl shadow-lg">
