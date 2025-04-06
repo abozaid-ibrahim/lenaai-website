@@ -1,4 +1,5 @@
 "use client"
+export const dynamic = 'force-dynamic';
 import React, { useState } from 'react';
 import im from "../../../../public/images/building1.jpg"
 import { Eye, Edit, Trash2, MapPin, Plus, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
