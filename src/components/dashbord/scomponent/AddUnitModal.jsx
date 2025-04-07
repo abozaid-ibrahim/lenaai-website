@@ -323,6 +323,18 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
               </div>
 
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Floor</label>
+                <input
+                  type="number"
+                  name="floor"
+                  value={formik.values.floor}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                />
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Land Area (m²)</label>
                 <input
                   type="number"

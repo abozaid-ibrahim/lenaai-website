@@ -82,6 +82,7 @@ export const useUnitForm = (onClose, onSave) => {
       try {
         // إرسال البيانات إلى نقطة النهاية add-unit
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/add-unit/`, preparedFormData);
+        console.log("preparedFormData0,", preparedFormData)
         
         if (response.status === 200 || response.status === 201) {
           toast.success("تم إضافة الوحدة بنجاح");
