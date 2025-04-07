@@ -1,13 +1,20 @@
 "use server"
 
 import axios from "axios";
-import { getClientIdCookie } from "./cookieActions";
+import { cookies } from 'next/headers';
+
+// استخدام cookies API من Next.js للصول على الكوكي من الخادم
+export async function getClientIdFromCookie() {
+  // cookies() doesn't need to be awaited as it's not a Promise
+  const cookieStore = cookies();
+  return cookieStore.get('clientId')?.value || 'DREAM_HOMES'; // قيمة افتراضية إذا لم يتم العثور على الكوكي
+}
 
 // Fetch units using axios
 export async function fetchUnits() {
   try {
-    // Get the clientId from the separate cookie action
-    const clientId = await getClientIdCookie();
+    // الحصول على clientId من الكوكي مباشرة
+    const clientId = await getClientIdFromCookie();
     
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/units/${clientId}`, {
       headers: {
@@ -22,11 +29,9 @@ export async function fetchUnits() {
     return { error: error.message };
   }
 }
+
 export async function fetchcombounds() {
   try {
-    // Get the clientId from the separate cookie action
-    
-    
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/projects/`, {
       headers: {
         'Content-Type': 'application/json',

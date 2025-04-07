@@ -1,175 +1,63 @@
 "use client"
-import React, { useState } from 'react';
+import React from 'react';
 import { X, Upload, MapPin, Trash2 } from 'lucide-react';
-import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { useCompoundForm } from '../hooks/useCompoundForm';
 
 const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    developer_name: '',
-    city: '',
-    country: 'Egypt',
-    area: 0,
-    gated: false,
-    video_url: '',
-    google_map_link: '',
-    master_plan: null
-  });
-
-  const [newDeveloper, setNewDeveloper] = useState(false);
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [deletingImage, setDeletingImage] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: type === 'checkbox' ? checked : value 
-    }));
-  };
-
-  const handleFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
-
-  const resetFileInput = () => {
-    const fileInput = document.getElementById('masterPlanImage');
-    if (fileInput) fileInput.value = '';
-  };
-
-  const removeSelectedFile = () => {
-    setSelectedFile(null);
-    resetFileInput();
-  };
-
-  const handleImageUpload = async () => {
-    // if (!selectedFile) return;
-    
-    setUploadingImage(true);
-    try {
-      const imageFormData = new FormData();
-      imageFormData.append('file', selectedFile);
-      
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/images/`, imageFormData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      
-      const uploadedImage = Array.isArray(response.data) ? response.data[0] : response.data;
-      setFormData(prev => ({ ...prev, master_plan: uploadedImage }));
-      setSelectedFile(null);
-      resetFileInput();
-      
-      toast.success("Master plan uploaded successfully");
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      toast.error("Failed to upload image");
-    } finally {
-      setUploadingImage(false);
-    }
-  };
-
-  const removeUploadedImage = async () => {
-    setDeletingImage(true);
-    try {
-      // Delete from API
-      await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/images/${formData.master_plan.fileId}`);
-      
-      // Remove from state after successful API deletion
-      setFormData(prev => ({ ...prev, master_plan: null }));
-      toast.success("Image deleted successfully");
-    } catch (error) {
-      console.error('Error deleting image:', error);
-      toast.error("Failed to delete image");
-    } finally {
-      setDeletingImage(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    try {
-      // Create a new object with the correct format for submission
-      const submissionData = {
-        ...formData,
-        // Use the URL property from master_plan object if it exists
-        master_plan: formData.master_plan ? formData.master_plan.url : null
-      };
-      
-      // Send POST request to the projects endpoint
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/projects/`, 
-        submissionData,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      
-      // Call the onSave function provided by the parent component with the response data
-      if (onSave) {
-        onSave(response.data);
-      }
-      
-      // Show success message
-      toast.success("Compound added successfully");
-      
-      // Close the modal
-      onClose();
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast.error(error.response?.data?.message || "Failed to add compound");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const {
+    formik,
+    newDeveloper,
+    uploadingImage,
+    selectedFile,
+    deletingImage,
+    fileInputRef,
+    handleFileSelect,
+    removeSelectedFile,
+    handleImageUpload,
+    removeUploadedImage,
+    setNewDeveloper
+  } = useCompoundForm(onClose, onSave);
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center overflow-y-auto p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-[#d4b978] z-10 px-6 py-4 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-800">Add New Compound</h2>
+        <div className="sticky top-0 bg-primary z-10 px-6 py-4 flex justify-between items-center">
+          <h2 className="text-2xl font-bold text-white">Add New Compound</h2>
           <button 
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-[#c4aa68] transition-colors"
-            disabled={isSubmitting}
+            className="p-2 rounded-full  transition-colors"
+            disabled={formik.isSubmitting}
           >
-            <X className="w-6 h-6 text-gray-800" />
+            <X className="w-6 h-6 text-white" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={formik.handleSubmit} className="p-6 space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Compound Name</label>
             <input
               type="text"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
-              required
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.name && formik.errors.name ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
             />
+            {formik.touched.name && formik.errors.name && (
+              <div className="text-red-500 text-xs mt-1">{formik.errors.name}</div>
+            )}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea
               name="description"
-              value={formData.description}
-              onChange={handleChange}
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
               rows="3"
             />
@@ -179,23 +67,28 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
             <select
               name="country"
-              value={formData.country}
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              value={formik.values.country}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.country && formik.errors.country ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
             >
               <option value="Egypt">Egypt</option>
               <option value="UAE">UAE</option>
               <option value="Saudi Arabia">Saudi Arabia</option>
             </select>
+            {formik.touched.country && formik.errors.country && (
+              <div className="text-red-500 text-xs mt-1">{formik.errors.country}</div>
+            )}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
             <select
               name="city"
-              value={formData.city}
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              value={formik.values.city}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.city && formik.errors.city ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
             >
               <option value="">Select City</option>
               <option value="Cairo">Cairo</option>
@@ -203,6 +96,9 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               <option value="مدينتي">مدينتي</option>
               <option value="New Cairo">New Cairo</option>
             </select>
+            {formik.touched.city && formik.errors.city && (
+              <div className="text-red-500 text-xs mt-1">{formik.errors.city}</div>
+            )}
           </div>
 
           <div>
@@ -210,10 +106,14 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
             <input
               type="number"
               name="area"
-              value={formData.area}
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              value={formik.values.area}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.area && formik.errors.area ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
             />
+            {formik.touched.area && formik.errors.area && (
+              <div className="text-red-500 text-xs mt-1">{formik.errors.area}</div>
+            )}
           </div>
 
           <div>
@@ -221,8 +121,9 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
             <input
               type="url"
               name="video_url"
-              value={formData.video_url}
-              onChange={handleChange}
+              value={formik.values.video_url}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="https://youtube.com/..."
             />
@@ -234,8 +135,9 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               <input
                 type="url"
                 name="google_map_link"
-                value={formData.google_map_link}
-                onChange={handleChange}
+                value={formik.values.google_map_link}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 className="w-full px-4 py-2 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="https://maps.google.com/..."
               />
@@ -255,9 +157,10 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               <div className="flex gap-2">
                 <select
                   name="developer_name"
-                  value={formData.developer_name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  value={formik.values.developer_name}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`w-full px-4 py-2 rounded-lg border ${formik.touched.developer_name && formik.errors.developer_name ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
                 >
                   <option value="">Select Developer</option>
                   {developers.length > 0 ? (
@@ -267,7 +170,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                   ) : (
                     <>
                       <option value="Talaat Mostafa Group (TMG) - طلعت مصطفى">Talaat Mostafa Group (TMG) - طلعت مصطفى</option>
-                      <option value="SODIC">SODIC</option>
+                      <option value="Madinaty">Madinaty</option>
                       <option value="Emaar">Emaar</option>
                       <option value="Palm Hills">Palm Hills</option>
                     </>
@@ -286,9 +189,10 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                 <input
                   type="text"
                   name="developer_name"
-                  value={formData.developer_name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  value={formik.values.developer_name}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`w-full px-4 py-2 rounded-lg border ${formik.touched.developer_name && formik.errors.developer_name ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
                   placeholder="Enter developer name"
                 />
                 <button 
@@ -299,6 +203,9 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                   Select
                 </button>
               </div>
+            )}
+            {formik.touched.developer_name && formik.errors.developer_name && (
+              <div className="text-red-500 text-xs mt-1">{formik.errors.developer_name}</div>
             )}
           </div>
 
@@ -311,10 +218,11 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                 accept="image/*"
                 onChange={handleFileSelect}
                 className="hidden"
+                ref={fileInputRef}
               />
               
               {/* When no file is selected or uploaded */}
-              {!selectedFile && !formData.master_plan && (
+              {!selectedFile && !formik.values.master_plan && (
                 <label 
                   htmlFor="masterPlanImage"
                   className="cursor-pointer flex flex-col items-center justify-center py-3"
@@ -351,7 +259,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               )}
               
               {/* When file is already uploaded */}
-              {formData.master_plan && (
+              {formik.values.master_plan && (
                 <div className="py-3">
                   <div className="flex items-center justify-center gap-2 mb-3">
                     <div className="flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-lg">
@@ -381,8 +289,8 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               type="checkbox"
               id="gated"
               name="gated"
-              checked={formData.gated}
-              onChange={handleChange}
+              checked={formik.values.gated}
+              onChange={formik.handleChange}
               className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
             />
             <label htmlFor="gated" className="ml-2 text-sm font-medium text-gray-700">
@@ -393,10 +301,16 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
           <div className="pt-4">
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3 bg-[#d4b978] hover:bg-[#c4aa68] text-gray-800 font-medium rounded-lg transition-colors shadow-md disabled:opacity-50"
+              disabled={formik.isSubmitting}
+              className="w-full py-3 bg-primary  text-white font-medium rounded-lg transition-colors shadow-md disabled:opacity-50"
+              onClick={(e) => {
+                if (!formik.values.master_plan) {
+                  e.preventDefault();
+                  toast.error("يجب رفع صورة المخطط الرئيسي قبل حفظ المجمع");
+                }
+              }}
             >
-              {isSubmitting ? 'جاري الحفظ...' : 'Save Compound'}
+              {formik.isSubmitting ? 'جاري الحفظ...' : 'Save Compound'}
             </button>
           </div>
         </form>

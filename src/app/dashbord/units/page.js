@@ -7,7 +7,7 @@ const page = async () => {
   // Fetch units data using the server action
   const unitsData = await fetchUnits();
   const comboundata = await fetchcombounds();
-  console.log(comboundata)
+  
   return (
     <div>
       <Units initialData={unitsData}  comboundata={comboundata}/>
