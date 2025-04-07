@@ -63,15 +63,16 @@ const realEstateData = [
   }
 ];
 
-const RealEstateListings = ({initialData}) => {
+const RealEstateListings = ({initialData, comboundata}) => {
   const [selectedEstate, setSelectedEstate] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [developerFilter, setDeveloperFilter] = useState('all'); // Changed from priceFilter
+  const [compoundFilter, setCompoundFilter] = useState('all'); // إضافة فلتر للمجمعات
   const [currentPage, setCurrentPage] = useState(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const itemsPerPage = 8;
 
-  // Filter estates based on search and developer filter
+  // Filter estates based on search, developer filter, and compound filter
   const filteredEstates = initialData ? initialData.filter(estate => {
     const matchesSearch = 
       (estate.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) || 
@@ -83,7 +84,12 @@ const RealEstateListings = ({initialData}) => {
       matchesDeveloper = estate.developer === developerFilter;
     }
     
-    return matchesSearch && matchesDeveloper;
+    let matchesCompound = true;
+    if (compoundFilter !== 'all') {
+      matchesCompound = estate.compound === compoundFilter;
+    }
+    
+    return matchesSearch && matchesDeveloper && matchesCompound;
   }) : [];
 
   // Get unique developers for filter dropdown
@@ -172,8 +178,20 @@ const RealEstateListings = ({initialData}) => {
                 onChange={(e) => setDeveloperFilter(e.target.value)}
               >
                 <option value="all">All Developers</option>
-                {developers.map(developer => (
-                  <option key={developer} value={developer}>{developer}</option>
+                {developers.map((developer, index) => (
+                  <option key={`developer-${index}-${developer}`} value={developer}>{developer}</option>
+                ))}
+              </select>
+              
+              {/* إضافة فلتر المجمعات السكنية */}
+              <select 
+                className="flex-1 min-w-[180px] px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                value={compoundFilter}
+                onChange={(e) => setCompoundFilter(e.target.value)}
+              >
+                <option value="all">All Compounds</option>
+                {comboundata && comboundata.map((compound, index) => (
+                  <option key={`compound-${index}-${compound.name}`} value={compound.name}>{compound.name}</option>
                 ))}
               </select>
               
@@ -195,8 +213,8 @@ const RealEstateListings = ({initialData}) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {currentItems.map((estate) => (
-              <div key={estate.id} className="flex flex-col">
+            {currentItems.map((estate,idx) => (
+              <div key={idx} className="flex flex-col">
                 {/* Estate Card with fixed height */}
                 <div 
                   className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-[450px] flex flex-col cursor-pointer"
@@ -297,7 +315,7 @@ const RealEstateListings = ({initialData}) => {
               
               {getPaginationNumbers().map(pageNumber => (
                 <button
-                  key={pageNumber}
+                  key={`page-${pageNumber}`}
                   onClick={() => setCurrentPage(pageNumber)}
                   className={`mx-1 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 ${
                     currentPage === pageNumber
@@ -322,6 +340,7 @@ const RealEstateListings = ({initialData}) => {
         
         {/* Add Unit Modal */}
         <AddUnitModal 
+        comboundata={comboundata}
           isOpen={isAddModalOpen} 
           onClose={() => setIsAddModalOpen(false)} 
           onSave={handleSaveUnit}
