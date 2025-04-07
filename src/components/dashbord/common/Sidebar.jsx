@@ -14,9 +14,7 @@ const Sidebar = () => {
     setIsOpen(!isOpen);
   };
   
-  const showtost = () => {
-    toast.success("jnjdsk")
-  }
+ 
 
   // Make the function available globally
   if (typeof window !== 'undefined') {
@@ -54,7 +52,7 @@ const Sidebar = () => {
               <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <span onClick={()=>showtost()} className="text-lg font-semibold text-primary">AI Efficiency Hub</span>
+          <Link href={"/web"} onClick={()=>showtost()} className="text-lg font-semibold text-primary">AI Efficiency Hub</Link>
         </div>
         
         {/* Navigation Menu */}

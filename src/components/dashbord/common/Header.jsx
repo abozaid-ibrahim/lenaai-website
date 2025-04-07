@@ -44,7 +44,7 @@ const Header = () => {
         <div className="relative hidden sm:block">
           <button 
             className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none"
-            onClick={() => window.location.href = '/messages'}
+            onClick={() => window.location.href = ''}
           >
             <MessageSquare className="h-6 w-6" />
           </button>
@@ -53,7 +53,7 @@ const Header = () => {
         <div className="relative">
           <button 
             className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none"
-            onClick={() => window.location.href = '/notifications'}
+            onClick={() => window.location.href = ''}
           >
             <Bell className="h-6 w-6" />
             <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
@@ -63,7 +63,7 @@ const Header = () => {
         <div className="flex items-center">
           <button 
             className="flex items-center focus:outline-none"
-            onClick={() => window.location.href = '/profile'}
+            onClick={() => window.location.href = ''}
           >
             <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
               <User className="h-5 w-5 text-blue-600" />

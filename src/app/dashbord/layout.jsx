@@ -12,7 +12,6 @@ const Layout = ({ children }) => {
       <div className="flex-1 flex flex-col overflow-hidden  lg:pl-0">
         {/* Top Navigation */}
         <Header />
-
         {/* Main Content */}
         <main className=" overflow-y-auto p-4 bg-gray-100">
           {children}

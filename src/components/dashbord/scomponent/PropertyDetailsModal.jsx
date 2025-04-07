@@ -144,7 +144,7 @@ const PropertyDetailsModal = ({ isOpen, onClose, property }) => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Total Price</p>
-                    <p className="text-sm font-medium">{property.totalPrice}</p>
+                    <p className="text-sm font-medium">{property?.totalPrice || "N/A"}</p>
                   </div>
                 </div>
               </div>
