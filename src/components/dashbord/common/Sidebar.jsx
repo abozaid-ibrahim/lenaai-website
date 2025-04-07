@@ -42,7 +42,7 @@ const Sidebar = () => {
       ></div>
 
       {/* Sidebar content */}
-      <div className={`w-56 bg-white text-gray-700 h-screen flex flex-col fixed lg:static z-10 transition-all duration-300 shadow-md ${
+      <div className={`w-56 bg-white text-gray-700 flex flex-col fixed lg:static z-10 transition-all duration-300 shadow-md ${
         isOpen ? 'left-0' : '-left-64 lg:left-0'
       }`}>
         {/* Logo/Brand */}
