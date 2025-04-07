@@ -149,7 +149,7 @@ const RealEstateListings = ({initialData, comboundata}) => {
     }
     return pages;
   };
-
+  
   return (
     <div className="min-h-screen p-6 bg-gray-50">
       <div className="max-w-7xl mx-auto">
@@ -287,7 +287,7 @@ const RealEstateListings = ({initialData, comboundata}) => {
                         </div>
                       )}
                       
-                      <Link href={`/dashbord/units/${estate.id}`} 
+                      <Link href={`/dashbord/units/${estate.unitId}`} 
                         className="w-full py-2 px-4 bg-primary text-white rounded-md font-medium transition duration-300 flex items-center justify-center text-sm mt-2"
                       >
                         <Eye className="mr-2 w-4 h-4" />

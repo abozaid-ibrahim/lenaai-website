@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'ik.imagekit.io',
+                pathname: '/lenaai/**',
+            },
+        ],
+    },
+};
 
 // export default nextConfig;
 // module.exports = {

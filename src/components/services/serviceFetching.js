@@ -1,5 +1,6 @@
 import { getClientIdCookie } from "./cookieActions";
 import axiosInstance from "@/utils/axiosInstance";
+
 import axios from "axios";
 import { cookies } from 'next/headers';
 
@@ -23,12 +24,13 @@ export async function fetchUnits() {
     });
 
     return response.data;
-    
+
   } catch (error) {
     console.error("Failed to fetch units:", error.message);
     return { error: error.message };
   }
 }
+
 
 export async function fetchcombounds() {
   try {
@@ -66,6 +68,7 @@ export async function fetchcombounds() {
 //   }
 // }
 
+
 export async function fetchUnitById(id) {
   try {
     const response = await axiosInstance.get(`/units_details/${id}`);
@@ -81,7 +84,7 @@ export async function updateUnit(unit) {
   try {
     console.log("request unit", unit);
 
-    const response = await axiosInstance.post(/update-unit/, unit);
+    const response = await axiosInstance.post(`/update-unit/`, unit);
     console.log("response", response);
     return response.data;
   } catch (error) {
