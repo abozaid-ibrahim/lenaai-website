@@ -3,11 +3,13 @@ import axiosInstance from "@/utils/axiosInstance";
 
 import axios from "axios";
 
-import { getClientIdFromCookie } from "@/utils/cookieUtils";
+
 
 // استخدام cookies API من Next.js للصول على الكوكي من الخادم
 export async function getClientIdFromCookie() {
-return 'DREAM_HOMES';
+  // cookies() doesn't need to be awaited as it's not a Promise
+  // const cookieStore = cookies();
+  // return cookieStore.get('clientId')?.value || 'DREAM_HOMES'; // قيمة افتراضية إذا لم يتم العثور على الكوكي
 }
 
 // Fetch units using axios
@@ -15,7 +17,7 @@ export async function fetchUnits() {
   try {
     const clientId = await getClientIdFromCookie();
     
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/units/${clientId}`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/units/DREAM_HOMES`, {
       headers: {
         'Content-Type': 'application/json',
       },
