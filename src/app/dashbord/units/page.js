@@ -1,15 +1,16 @@
 import Units from '@/components/dashbord/pages/Units'
-import { fetchUnits } from '@/components/services/serviceFetching';
+import { fetchcombounds, fetchUnits } from '@/components/services/serviceFetching';
 import React from 'react'
 
 
 const page = async () => {
   // Fetch units data using the server action
   const unitsData = await fetchUnits();
-  console.log(unitsData)
+  const comboundata = await fetchcombounds();
+  console.log(comboundata)
   return (
     <div>
-      <Units initialData={unitsData} />
+      <Units initialData={unitsData}  comboundata={comboundata}/>
     </div>
   )
 }

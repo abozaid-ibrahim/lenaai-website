@@ -63,7 +63,7 @@ const realEstateData = [
   }
 ];
 
-const RealEstateListings = ({initialData}) => {
+const Units = ({initialData,comboundata}) => {
   const [selectedEstate, setSelectedEstate] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [developerFilter, setDeveloperFilter] = useState('all'); // Changed from priceFilter
@@ -182,7 +182,7 @@ const RealEstateListings = ({initialData}) => {
                 className="flex-shrink-0 w-full sm:w-auto px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md flex items-center justify-center transition duration-300"
               >
                 <Plus className="w-5 h-5 mr-2" />
-                Add Building
+                Add unit
               </button>
             </div>
           </div>
@@ -322,6 +322,7 @@ const RealEstateListings = ({initialData}) => {
         
         {/* Add Unit Modal */}
         <AddUnitModal 
+        comboundata={comboundata}
           isOpen={isAddModalOpen} 
           onClose={() => setIsAddModalOpen(false)} 
           onSave={handleSaveUnit}
@@ -331,4 +332,4 @@ const RealEstateListings = ({initialData}) => {
   );
 };
 
-export default RealEstateListings;
+export default Units;
