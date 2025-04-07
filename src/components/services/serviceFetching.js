@@ -3,6 +3,7 @@ import axiosInstance from "@/utils/axiosInstance";
 
 import axios from "axios";
 import { cookies } from 'next/headers';
+import { getClientIdFromCookie } from "@/utils/cookieUtils";
 
 // استخدام cookies API من Next.js للصول على الكوكي من الخادم
 export async function getClientIdFromCookie() {
@@ -14,7 +15,6 @@ export async function getClientIdFromCookie() {
 // Fetch units using axios
 export async function fetchUnits() {
   try {
-    // الحصول على clientId من الكوكي مباشرة
     const clientId = await getClientIdFromCookie();
     
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/units/${clientId}`, {
@@ -24,13 +24,12 @@ export async function fetchUnits() {
     });
 
     return response.data;
-
+    
   } catch (error) {
     console.error("Failed to fetch units:", error.message);
     return { error: error.message };
   }
 }
-
 
 export async function fetchcombounds() {
   try {
