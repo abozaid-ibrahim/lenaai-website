@@ -83,7 +83,7 @@ export async function deleteUnit(id) {
 // You can add your other service fetching functions below
 export async function fetchUsersData() {
   try {
-    const response = await axiosInstance.get(`/dashboard/DREAM_HOMES`);
+    const response = await axiosInstance.get(`/dashboard/DREAM_HOMES?limit=${1}`);
     return response.data.users;
   } catch (error) {
     console.error("Failed to fetch users data by clientId:", error.message);
