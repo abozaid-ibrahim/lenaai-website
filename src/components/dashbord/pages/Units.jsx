@@ -4,7 +4,7 @@ import im from "../../../../public/images/building1.jpg"
 import { Eye, Edit, Trash2, MapPin, Plus, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import AddUnitModal from '../scomponent/AddUnitModal';
 import Link from 'next/link';
-
+import { useRouter } from 'next/navigation';
 // Sample data - replace with your actual data
 const realEstateData = [
   {
@@ -63,7 +63,8 @@ const realEstateData = [
   }
 ];
 
-const RealEstateListings = ({initialData, comboundata}) => {
+const RealEstateListings = ({ initialData, comboundata }) => {
+  const navigate = useRouter();
   const [selectedEstate, setSelectedEstate] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [developerFilter, setDeveloperFilter] = useState('all'); // Changed from priceFilter
@@ -74,21 +75,21 @@ const RealEstateListings = ({initialData, comboundata}) => {
 
   // Filter estates based on search, developer filter, and compound filter
   const filteredEstates = initialData ? initialData.filter(estate => {
-    const matchesSearch = 
-      (estate.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) || 
+    const matchesSearch =
+      (estate.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (estate.compound?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
       (estate.city?.toLowerCase() || '').includes(searchTerm.toLowerCase());
-    
+
     let matchesDeveloper = true;
     if (developerFilter !== 'all') {
       matchesDeveloper = estate.developer === developerFilter;
     }
-    
+
     let matchesCompound = true;
     if (compoundFilter !== 'all') {
       matchesCompound = estate.compound === compoundFilter;
     }
-    
+
     return matchesSearch && matchesDeveloper && matchesCompound;
   }) : [];
 
@@ -149,7 +150,7 @@ const RealEstateListings = ({initialData, comboundata}) => {
     }
     return pages;
   };
-  
+
   return (
     <div className="min-h-screen p-6 bg-gray-50">
       <div className="max-w-7xl mx-auto">
@@ -158,7 +159,7 @@ const RealEstateListings = ({initialData, comboundata}) => {
           <h1 className="text-3xl font-bold text-gray-800">Real Estate Properties</h1>
           <p className="text-gray-600 mt-2">Explore our exclusive listings</p>
         </div>
-        
+
         {/* Search and Filters */}
         <div className="mb-8 bg-white rounded-lg shadow-md p-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -172,7 +173,7 @@ const RealEstateListings = ({initialData, comboundata}) => {
               />
             </div>
             <div className="flex flex-wrap items-center gap-4">
-              <select 
+              <select
                 className="flex-1 min-w-[180px] px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 value={developerFilter}
                 onChange={(e) => setDeveloperFilter(e.target.value)}
@@ -182,9 +183,9 @@ const RealEstateListings = ({initialData, comboundata}) => {
                   <option key={`developer-${index}-${developer}`} value={developer}>{developer}</option>
                 ))}
               </select>
-              
+
               {/* إضافة فلتر المجمعات السكنية */}
-              <select 
+              <select
                 className="flex-1 min-w-[180px] px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 value={compoundFilter}
                 onChange={(e) => setCompoundFilter(e.target.value)}
@@ -194,8 +195,8 @@ const RealEstateListings = ({initialData, comboundata}) => {
                   <option key={`compound-${index}-${compound.name}`} value={compound.name}>{compound.name}</option>
                 ))}
               </select>
-              
-              <button 
+
+              <button
                 onClick={handleAddBuilding}
                 className="flex-shrink-0 w-full sm:w-auto px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md flex items-center justify-center transition duration-300"
               >
@@ -205,7 +206,7 @@ const RealEstateListings = ({initialData, comboundata}) => {
             </div>
           </div>
         </div>
-        
+
         {/* Real Estate Cards */}
         {filteredEstates.length === 0 ? (
           <div className="text-center py-10">
@@ -213,37 +214,37 @@ const RealEstateListings = ({initialData, comboundata}) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {currentItems.map((estate,idx) => (
+            {currentItems.map((estate, idx) => (
               <div key={idx} className="flex flex-col">
                 {/* Estate Card with fixed height */}
-                <div 
+                <div
                   className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-[450px] flex flex-col cursor-pointer"
                   onClick={() => handleCardClick(estate.id)}
                 >
                   <div className="relative h-56">
                     {estate.images && estate.images.length > 0 ? (
-                      <img 
-                        src={estate.images[0].url} 
-                        alt={estate.name || estate.compound || "Property"} 
+                      <img
+                        src={estate.images[0].url}
+                        alt={estate.name || estate.compound || "Property"}
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <img 
-                        src={im.src} 
-                        alt={estate.name || estate.compound || "Property"} 
+                      <img
+                        src={im.src}
+                        alt={estate.name || estate.compound || "Property"}
                         className="w-full h-full object-cover"
                       />
                     )}
-                  
+
                     <div className="absolute bottom-4 right-4 flex space-x-2">
-                      <button 
+                      <button
                         onClick={(e) => handleUpdateEstate(estate.id, e)}
                         className="bg-white text-primary hover:bg-blue-100 p-2 rounded-full shadow-md transition duration-300"
                         title="Update"
                       >
                         <Edit className="w-5 h-5" />
                       </button>
-                      <button 
+                      <button
                         onClick={(e) => handleDeleteEstate(estate.id, e)}
                         className="bg-white text-red-600 hover:bg-red-100 p-2 rounded-full shadow-md transition duration-300"
                         title="Delete"
@@ -252,7 +253,7 @@ const RealEstateListings = ({initialData, comboundata}) => {
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="p-4 flex-grow flex flex-col justify-between">
                     <div>
                       <h3 className="text-xl font-bold text-gray-800 mb-1 line-clamp-1 rtl:text-right">
@@ -263,9 +264,9 @@ const RealEstateListings = ({initialData, comboundata}) => {
                         <span className="line-clamp-1">{estate.city || "Location not specified"}</span>
                       </div>
                     </div>
-                    
+
                     <div className="flex flex-col gap-2 mt-auto">
-                  
+
                       {estate.bathrooms && (
                         <div className="text-sm text-gray-600 rtl:text-right">
                           <span className="font-medium">Bathrooms:</span> {estate.bathrooms}
@@ -286,13 +287,13 @@ const RealEstateListings = ({initialData, comboundata}) => {
                           <span className="font-medium">Down Payment:</span> {estate.downPayment}
                         </div>
                       )}
-                      
-                      <Link href={`/dashbord/units/${estate.unitId}`} 
+
+                      <button onClick={() => navigate.push(`/dashbord/units/${estate.unitId}`)}
                         className="w-full py-2 px-4 bg-primary text-white rounded-md font-medium transition duration-300 flex items-center justify-center text-sm mt-2"
                       >
                         <Eye className="mr-2 w-4 h-4" />
                         View Details
-                      </Link>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -300,34 +301,33 @@ const RealEstateListings = ({initialData, comboundata}) => {
             ))}
           </div>
         )}
-        
+
         {/* Pagination remains the same */}
         {filteredEstates.length > 0 && (
           <div className="mt-10 flex justify-center">
             <nav className="flex items-center bg-white px-4 py-3 rounded-xl shadow-lg">
-              <button 
+              <button
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
                 className={`mx-1 p-2 rounded-full ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-primary hover:bg-primary/10 border border-gray-200'} transition-all duration-300 flex items-center justify-center`}
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              
+
               {getPaginationNumbers().map(pageNumber => (
                 <button
                   key={`page-${pageNumber}`}
                   onClick={() => setCurrentPage(pageNumber)}
-                  className={`mx-1 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 ${
-                    currentPage === pageNumber
+                  className={`mx-1 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 ${currentPage === pageNumber
                       ? 'bg-primary text-white font-medium shadow-md transform scale-110'
                       : 'text-gray-700 hover:bg-primary/10 border border-gray-200'
-                  }`}
+                    }`}
                 >
                   {pageNumber}
                 </button>
               ))}
-              
-              <button 
+
+              <button
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
                 className={`mx-1 p-2 rounded-full ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-primary hover:bg-primary/10 border border-gray-200'} transition-all duration-300 flex items-center justify-center`}
@@ -337,12 +337,12 @@ const RealEstateListings = ({initialData, comboundata}) => {
             </nav>
           </div>
         )}
-        
+
         {/* Add Unit Modal */}
-        <AddUnitModal 
-        comboundata={comboundata}
-          isOpen={isAddModalOpen} 
-          onClose={() => setIsAddModalOpen(false)} 
+        <AddUnitModal
+          comboundata={comboundata}
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
           onSave={handleSaveUnit}
         />
       </div>
