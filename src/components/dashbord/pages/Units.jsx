@@ -184,7 +184,7 @@ const RealEstateListings = ({ initialData, comboundata }) => {
                 ))}
               </select>
 
-              {/* إضافة فلتر المجمعات السكنية */}
+              
               <select
                 className="flex-1 min-w-[180px] px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 value={compoundFilter}
@@ -236,22 +236,7 @@ const RealEstateListings = ({ initialData, comboundata }) => {
                       />
                     )}
 
-                    <div className="absolute bottom-4 right-4 flex space-x-2">
-                      <button
-                        onClick={(e) => handleUpdateEstate(estate.id, e)}
-                        className="bg-white text-primary hover:bg-blue-100 p-2 rounded-full shadow-md transition duration-300"
-                        title="Update"
-                      >
-                        <Edit className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={(e) => handleDeleteEstate(estate.id, e)}
-                        className="bg-white text-red-600 hover:bg-red-100 p-2 rounded-full shadow-md transition duration-300"
-                        title="Delete"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    </div>
+                    
                   </div>
 
                   <div className="p-4 flex-grow flex flex-col justify-between">

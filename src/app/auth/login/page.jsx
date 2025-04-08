@@ -1,9 +1,10 @@
+import Login from '@/components/dashbord/pages/Login'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-      login
+      <Login />
     </div>
   )
 }

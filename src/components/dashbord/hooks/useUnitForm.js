@@ -6,6 +6,8 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation';
+import { addUnit, deleteImage, uploadImages } from '@/components/services/serviceFetching';
+// import { uploadImages, deleteImage, addUnit } from '@/components/services/serviceFetching';
 
 export const useUnitForm = (onClose, onSave) => {
   const router = useRouter();
@@ -80,30 +82,27 @@ export const useUnitForm = (onClose, onSave) => {
       };
       
       try {
-        // إرسال البيانات إلى نقطة النهاية add-unit
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/add-unit/`, preparedFormData);
-        console.log("preparedFormData0,", preparedFormData)
+        // استخدام وظيفة addUnit من serviceFetching
+        const response = await addUnit(preparedFormData);
         
-        if (response.status === 200 || response.status === 201) {
-          toast.success("تم إضافة الوحدة بنجاح");
-          onSave(preparedFormData);
-          router.refresh(); // Refresh the data without page reload
-          
-          // Reset form to initial values with a new UUID
-          formik.resetForm();
-          formik.setFieldValue('unitId', uuidv4());
-          formik.setFieldValue('buildingType', 'Apartment');
-          formik.setFieldValue('purpose', 'Buy');
-          formik.setFieldValue('view', 'Lagoon');
-          formik.setFieldValue('country', 'Egypt');
-          formik.setFieldValue('clientId', 'DREAM_HOMES');
-          formik.setFieldValue('images', []);
-          
-          onClose();
-        }
+        toast.success("unit added successfuly");
+        onSave(preparedFormData);
+        router.refresh(); // Refresh the data without page reload
+        
+        // Reset form to initial values with a new UUID
+        formik.resetForm();
+        formik.setFieldValue('unitId', uuidv4());
+        formik.setFieldValue('buildingType', 'Apartment');
+        formik.setFieldValue('purpose', 'Buy');
+        formik.setFieldValue('view', 'Lagoon');
+        formik.setFieldValue('country', 'Egypt');
+        formik.setFieldValue('clientId', 'DREAM_HOMES');
+        formik.setFieldValue('images', []);
+        
+        onClose();
       } catch (error) {
         console.error('Error adding unit:', error);
-        toast.error(error.response?.data?.message || "فشل في إضافة الوحدة");
+        toast.error(error.message || "فشل في إضافة الوحدة");
       }
     }
   });
@@ -139,25 +138,22 @@ export const useUnitForm = (onClose, onSave) => {
         formDataToUpload.append('file', file);
       });
       
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/images/`, formDataToUpload, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      // استخدام وظيفة uploadImages من serviceFetching
+      const uploadedImages = await uploadImages(formDataToUpload);
       
-      // Make sure we handle both array and single object responses
-      const uploadedImages = Array.isArray(response.data) ? response.data : [response.data];
+      // التعامل مع الاستجابة
+      const imagesArray = Array.isArray(uploadedImages) ? uploadedImages : [uploadedImages];
       
       // Update formik values
-      formik.setFieldValue('images', [...formik.values.images, ...uploadedImages]);
+      formik.setFieldValue('images', [...formik.values.images, ...imagesArray]);
       
-      toast.success(`${uploadedImages.length} images uploaded successfully`);
+      toast.success(`${imagesArray.length} images uploaded successfully`);
       setSelectedFiles([]);
       resetFileInput();
       
     } catch (error) {
       console.error('Error uploading images:', error);
-      toast.error("Failed to upload images");
+      toast.error(`Failed to upload images: ${error.message || "Unknown error"}`);
     } finally {
       setUploadingImages(false);
     }
@@ -169,8 +165,8 @@ export const useUnitForm = (onClose, onSave) => {
 
   const removeUploadedImage = async (index, imageId) => {
     try {
-      // Delete from API
-      await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/images/${imageId}`);
+      // استخدام وظيفة deleteImage من serviceFetching
+      await deleteImage(imageId);
       
       // Remove from formik state after successful API deletion
       const updatedImages = [...formik.values.images];
@@ -180,7 +176,7 @@ export const useUnitForm = (onClose, onSave) => {
       toast.success("Image deleted successfully");
     } catch (error) {
       console.error('Error deleting image:', error);
-      toast.error("Failed to delete image");
+      toast.error(`Failed to delete image: ${error.message || "Unknown error"}`);
     }
   };
 

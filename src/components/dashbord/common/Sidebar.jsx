@@ -52,7 +52,7 @@ const Sidebar = () => {
               <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <Link href={"/web"} onClick={()=>showtost()} className="text-lg font-semibold text-primary">AI Efficiency Hub</Link>
+          <Link href={"/web"}  className="text-lg font-semibold text-primary">AI Efficiency Hub</Link>
         </div>
         
         {/* Navigation Menu */}
