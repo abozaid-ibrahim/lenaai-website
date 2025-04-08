@@ -68,7 +68,7 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
   const [selectedEstate, setSelectedEstate] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [developerFilter, setDeveloperFilter] = useState('all'); // Changed from priceFilter
-  const [compoundFilter, setCompoundFilter] = useState('all'); // إضافة فلتر للمجمعات
+  const [compoundFilter, setCompoundFilter] = useState('all'); // Add filter for compounds
   const [currentPage, setCurrentPage] = useState(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const itemsPerPage = 8;

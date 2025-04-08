@@ -61,7 +61,7 @@ export const useUnitForm = (onClose, onSave) => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      // التحقق من وجود صور قبل إرسال البيانات
+      // Check for images before sending data
       if (values.images.length === 0) {
         toast.error("يجب عليك رفع الصور على السيرفر أولاً");
         return;
@@ -82,7 +82,7 @@ export const useUnitForm = (onClose, onSave) => {
       };
       
       try {
-        // استخدام وظيفة addUnit من serviceFetching
+        // Use addUnit function from serviceFetching
         const response = await addUnit(preparedFormData);
         
         toast.success("unit added successfuly");
@@ -138,10 +138,10 @@ export const useUnitForm = (onClose, onSave) => {
         formDataToUpload.append('file', file);
       });
       
-      // استخدام وظيفة uploadImages من serviceFetching
+      // Use uploadImages function from serviceFetching
       const uploadedImages = await uploadImages(formDataToUpload);
       
-      // التعامل مع الاستجابة
+      // Handle response
       const imagesArray = Array.isArray(uploadedImages) ? uploadedImages : [uploadedImages];
       
       // Update formik values
@@ -165,7 +165,7 @@ export const useUnitForm = (onClose, onSave) => {
 
   const removeUploadedImage = async (index, imageId) => {
     try {
-      // استخدام وظيفة deleteImage من serviceFetching
+      // Use deleteImage function from serviceFetching
       await deleteImage(imageId);
       
       // Remove from formik state after successful API deletion

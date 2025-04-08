@@ -6,13 +6,13 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { uploadImages, deleteImage, addCompound } from '@/components/services/serviceFetching';
 
-// تعريف مخطط التحقق باستخدام Yup
+// Define validation schema using Yup
 const validationSchema = Yup.object({
-  name: Yup.string().required('اسم المجمع مطلوب'),
-  developer_name: Yup.string().required('اسم المطور مطلوب'),
-  city: Yup.string().required('المدينة مطلوبة'),
-  country: Yup.string().required('الدولة مطلوبة'),
-  area: Yup.number().typeError('المساحة يجب أن تكون رقم').min(0, 'المساحة لا يمكن أن تكون سالبة'),
+  name: Yup.string().required('Name of the compound is required'),
+  developer_name: Yup.string().required('Developer name is required'),
+  city: Yup.string().required('City is required'),
+  country: Yup.string().required('Country is required'),
+  area: Yup.number().typeError('Area must be a number').min(0, 'Area cannot be negative'),
 });
 
 export const useCompoundForm = (onClose, onSave) => {
@@ -38,9 +38,9 @@ export const useCompoundForm = (onClose, onSave) => {
     },
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      // التحقق من وجود صورة المخطط الرئيسي
+      // Check for main layout image
       if (!values.master_plan) {
-        toast.error("يجب رفع صورة المخطط الرئيسي قبل حفظ المجمع");
+        toast.error("Main layout image must be uploaded before saving the compound");
         setSubmitting(false);
         return;
       }
@@ -51,7 +51,7 @@ export const useCompoundForm = (onClose, onSave) => {
           master_plan: values.master_plan ? values.master_plan.url : null
         };
         
-        // استخدام وظيفة addCompound من serviceFetching
+        // Use addCompound function from serviceFetching
         const response = await addCompound(submissionData);
         router.refresh();
         
@@ -100,7 +100,7 @@ export const useCompoundForm = (onClose, onSave) => {
       const imageFormData = new FormData();
       imageFormData.append('file', selectedFile);
       
-      // استخدام وظيفة uploadImages من serviceFetching
+      // Use uploadImages function from serviceFetching
       const uploadedImages = await uploadImages(imageFormData);
       
       const uploadedImage = Array.isArray(uploadedImages) ? uploadedImages[0] : uploadedImages;
@@ -122,7 +122,7 @@ export const useCompoundForm = (onClose, onSave) => {
     
     setDeletingImage(true);
     try {
-      // استخدام وظيفة deleteImage من serviceFetching
+      // Use deleteImage function from serviceFetching
       await deleteImage(formik.values.master_plan.fileId);
       
       // Remove from state after successful API deletion
