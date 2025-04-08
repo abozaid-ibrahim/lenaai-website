@@ -63,7 +63,7 @@ const realEstateData = [
   }
 ];
 
-const RealEstateListings = ({ initialData, comboundata }) => {
+const RealEstateListings = ({ initialData, comboundata, developersData }) => {
   const navigate = useRouter();
   const [selectedEstate, setSelectedEstate] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -94,7 +94,7 @@ const RealEstateListings = ({ initialData, comboundata }) => {
   }) : [];
 
   // Get unique developers for filter dropdown
-  const developers = [...new Set(initialData ? initialData.filter(estate => estate.developer).map(estate => estate.developer) : realEstateData.map(estate => estate.developer))];
+  const developers = [...new Set(developersData ? developersData.map(developer => developer.name) : initialData.filter(estate => estate.developer).map(estate => estate.developer))];
 
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage;

@@ -1,22 +1,50 @@
 "use client"
 import React, { useState } from 'react';
 import { Search, Filter, MessageSquare, Phone, Home, Calendar, CheckCircle, X, Eye, ChevronDown } from 'lucide-react';
+import formatDateForDisplay from '@/utils/formateDate';
 import PropertyDetailsModal from '../scomponent/PropertyDetailsModal';
 
-const RealEstateDashboard = () => {
+const RealEstateDashboard = ({ userData }) => {
   // Sample data
-  const initialLeads = [
-    { id: 1, name: "Ibrahim AboZaid", phone: "+201019903333", date: "26-03-2025", requirements: "Three Bedroom", messageCount: 19, status: "Ongoing Chat" },
-    { id: 2, name: "Nader Altalla", phone: "+201019902895", date: "24-03-2025", requirements: "Apartment", messageCount: 22, status: "Not Interested" },
-    { id: 3, name: "Mosa AlSayed", phone: "+201019902779", date: "24-03-2025", requirements: "Townhouse", messageCount: 11, status: "Missing Info" },
-    { id: 4, name: "Amer AlAshi", phone: "+201019902822", date: "23-03-2025", requirements: "Villa", messageCount: 5, status: "Property View" },
-    { id: 5, name: "Fahed Dader", phone: "+201019902666", date: "22-03-2025", requirements: "Twin House", messageCount: 31, status: "Office Visit" },
-    { id: 6, name: "Mohammed Ali", phone: "+201032786912", date: "20-03-2025", requirements: "Chalet", messageCount: 3, status: "Qualified Lead" },
-    { id: 7, name: "Momen Zedan", phone: "+201016080323", date: "18-03-2025", requirements: "Penthouse", messageCount: 9, status: "Book Viewing" },
-    { id: 8, name: "Ahmed Mortaja", phone: "+201157745463", date: "14-03-2025", requirements: "Studio Apartment", messageCount: 10, status: "Schedule Call" },
-    { id: 9, name: "Marwan Issa", phone: "+201016775323", date: "08-03-2025", requirements: "Cottage", messageCount: 8, status: "Make a Call" },
-    { id: 10, name: "Yasser Abed", phone: "+201016774444", date: "06-03-2025", requirements: "Mansion", messageCount: 25, status: "Not Qualified" }
-  ];
+  let chatHistory = {};
+  let userRequirements = {};
+  const structuredUserData = userData.map((user) => {
+
+    // adding user chat history
+    const messages = user.conversation
+    chatHistory[user.phoneNumber] = messages;
+
+    // adding user requirements
+    userRequirements[user.phoneNumber] = user.requirements;
+
+    // adding date
+    const lastMessage = messages[messages.length - 1];
+
+    // adding action
+    const userAction = user.actions.action ? user.actions.action : "No Action";
+
+    return {
+      phone: user.phoneNumber,
+      date: formatDateForDisplay(lastMessage.timestamp),
+      requirements: "Requirements",
+      messageCount: messages.length,
+      status: userAction
+    }
+
+  }) 
+  console.log(userData);
+  // const initialLeads = [
+  //   { id: 1, name: "Ibrahim AboZaid", phone: "+201019903333", date: "26-03-2025", requirements: "Three Bedroom", messageCount: 19, status: "Ongoing Chat" },
+  //   { id: 2, name: "Nader Altalla", phone: "+201019902895", date: "24-03-2025", requirements: "Apartment", messageCount: 22, status: "Not Interested" },
+  //   { id: 3, name: "Mosa AlSayed", phone: "+201019902779", date: "24-03-2025", requirements: "Townhouse", messageCount: 11, status: "Missing Info" },
+  //   { id: 4, name: "Amer AlAshi", phone: "+201019902822", date: "23-03-2025", requirements: "Villa", messageCount: 5, status: "Property View" },
+  //   { id: 5, name: "Fahed Dader", phone: "+201019902666", date: "22-03-2025", requirements: "Twin House", messageCount: 31, status: "Office Visit" },
+  //   { id: 6, name: "Mohammed Ali", phone: "+201032786912", date: "20-03-2025", requirements: "Chalet", messageCount: 3, status: "Qualified Lead" },
+  //   { id: 7, name: "Momen Zedan", phone: "+201016080323", date: "18-03-2025", requirements: "Penthouse", messageCount: 9, status: "Book Viewing" },
+  //   { id: 8, name: "Ahmed Mortaja", phone: "+201157745463", date: "14-03-2025", requirements: "Studio Apartment", messageCount: 10, status: "Schedule Call" },
+  //   { id: 9, name: "Marwan Issa", phone: "+201016775323", date: "08-03-2025", requirements: "Cottage", messageCount: 8, status: "Make a Call" },
+  //   { id: 10, name: "Yasser Abed", phone: "+201016774444", date: "06-03-2025", requirements: "Mansion", messageCount: 25, status: "Not Qualified" }
+  // ];
 
   // Sample property details data
   const propertyDetails = {
@@ -94,7 +122,7 @@ const RealEstateDashboard = () => {
     }
   };
 
-  const [leads, setLeads] = useState(initialLeads);
+  const [leads, setLeads] = useState(structuredUserData);
   const [activeTab, setActiveTab] = useState('All Chats');
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -113,15 +141,6 @@ const RealEstateDashboard = () => {
     const property = propertyDetails[requirement] || propertyDetails["Apartment"]; // Fallback
     setSelectedProperty(property);
     setIsModalOpen(true);
-  };
-
-  // Function to format date for display
-  const formatDateForDisplay = (dateStr) => {
-    const date = new Date(dateStr);
-    const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'short' });
-    const year = date.getFullYear().toString().substr(-2);
-    return `${day} ${month} ${year}`;
   };
 
   // Handle date filter changes
@@ -164,25 +183,25 @@ const RealEstateDashboard = () => {
   // Get status color and icon
   const getStatusStyle = (status) => {
     switch (status) {
-      case 'Ongoing Chat':
+      case 'Follow up later':
         return { bgColor: 'bg-gray-100 text-gray-700', icon: <MessageSquare size={14} className="mr-1" /> };
-      case 'Not Interested':
+      case 'Not interested':
         return { bgColor: 'bg-gray-200 text-gray-700', icon: <X size={14} className="mr-1" /> };
-      case 'Missing Info':
+      case 'Missing requirement':
         return { bgColor: 'bg-orange-500 text-white', icon: <Filter size={14} className="mr-1" /> };
-      case 'Property View':
+      case 'Property view':
         return { bgColor: 'bg-blue-200 text-blue-700', icon: <Eye size={14} className="mr-1" /> };
-      case 'Office Visit':
+      case 'Office visit':
         return { bgColor: 'bg-green-100 text-green-700', icon: <Home size={14} className="mr-1" /> };
-      case 'Qualified Lead':
+      case 'Qualified lead':
         return { bgColor: 'bg-teal-500 text-white', icon: <CheckCircle size={14} className="mr-1" /> };
       case 'Book Viewing':
         return { bgColor: 'bg-red-500 text-white', icon: <Calendar size={14} className="mr-1" /> };
       case 'Schedule Call':
         return { bgColor: 'bg-blue-400 text-white', icon: <Calendar size={14} className="mr-1" /> };
-      case 'Make a Call':
+      case 'Make a call':
         return { bgColor: 'bg-green-600 text-white', icon: <Phone size={14} className="mr-1" /> };
-      case 'Not Qualified':
+      case 'Not qualified':
         return { bgColor: 'bg-gray-500 text-white', icon: <X size={14} className="mr-1" /> };
       default:
         return { bgColor: 'bg-gray-100', icon: null };
