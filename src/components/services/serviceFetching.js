@@ -1,5 +1,4 @@
 import axiosInstance from "@/utils/axiosInstance";
-import axios from "axios";
 
 // Fetch units using axios
 export async function fetchUnits() {
@@ -36,7 +35,6 @@ export async function uploadImages(formData) {
   }
 }
 
-// إضافة وظيفة حذف الصور
 export async function deleteImage(imageId) {
   try {
     const response = await axiosInstance.delete(`/images/${imageId}`);
@@ -81,6 +79,26 @@ export async function deleteUnit(id) {
   }
 }
 
+// You can add your other service fetching functions below
+export async function fetchUsersData() {
+  try {
+    const response = await axiosInstance.get(`/dashboard/DREAM_HOMES?limit=${1}`);
+    return response.data.users;
+  } catch (error) {
+    console.error("Failed to fetch users data by clientId:", error.message);
+    return { error: error.message };
+  }
+}
+
+export async function fetchDevelopers() {
+  try {
+    const response = await axiosInstance.get(`/developers/`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch developers data:", error.message);
+    return { error: error.message };
+  }
+}
 // Add this function to your serviceFetching.js file
 
 export async function addUnit(unitData) {
