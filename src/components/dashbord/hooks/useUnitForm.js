@@ -139,7 +139,7 @@ export const useUnitForm = (onClose, onSave) => {
         formDataToUpload.append('file', file);
       });
       
-      const response = await axios.post(`https://api.lenaai.net/images/`, formDataToUpload, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/images/`, formDataToUpload, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
