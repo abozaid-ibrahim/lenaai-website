@@ -1,9 +1,10 @@
 "use client"
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { uploadImages, deleteImage, addCompound } from '@/components/services/serviceFetching';
 
 // تعريف مخطط التحقق باستخدام Yup
 const validationSchema = Yup.object({
@@ -15,6 +16,7 @@ const validationSchema = Yup.object({
 });
 
 export const useCompoundForm = (onClose, onSave) => {
+  const router = useRouter();
   const [newDeveloper, setNewDeveloper] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -49,20 +51,13 @@ export const useCompoundForm = (onClose, onSave) => {
           master_plan: values.master_plan ? values.master_plan.url : null
         };
         
-        // Send POST request to the projects endpoint
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/projects/`, 
-          submissionData,
-          {
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
+        // استخدام وظيفة addCompound من serviceFetching
+        const response = await addCompound(submissionData);
+        router.refresh();
         
         // Call the onSave function provided by the parent component with the response data
         if (onSave) {
-          onSave(response.data);
+          onSave(response);
         }
         
         // Show success message
@@ -72,7 +67,7 @@ export const useCompoundForm = (onClose, onSave) => {
         onClose();
       } catch (error) {
         console.error('Error submitting form:', error);
-        toast.error(error.response?.data?.message || "Failed to add compound");
+        toast.error(error.message || "Failed to add compound");
       } finally {
         setSubmitting(false);
       }
@@ -105,13 +100,10 @@ export const useCompoundForm = (onClose, onSave) => {
       const imageFormData = new FormData();
       imageFormData.append('file', selectedFile);
       
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/images/`, imageFormData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      // استخدام وظيفة uploadImages من serviceFetching
+      const uploadedImages = await uploadImages(imageFormData);
       
-      const uploadedImage = Array.isArray(response.data) ? response.data[0] : response.data;
+      const uploadedImage = Array.isArray(uploadedImages) ? uploadedImages[0] : uploadedImages;
       formik.setFieldValue('master_plan', uploadedImage);
       setSelectedFile(null);
       resetFileInput();
@@ -119,7 +111,7 @@ export const useCompoundForm = (onClose, onSave) => {
       toast.success("Master plan uploaded successfully");
     } catch (error) {
       console.error('Error uploading image:', error);
-      toast.error("Failed to upload image");
+      toast.error(error.message || "Failed to upload image");
     } finally {
       setUploadingImage(false);
     }
@@ -130,15 +122,15 @@ export const useCompoundForm = (onClose, onSave) => {
     
     setDeletingImage(true);
     try {
-      // Delete from API
-      await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/images/${formik.values.master_plan.fileId}`);
+      // استخدام وظيفة deleteImage من serviceFetching
+      await deleteImage(formik.values.master_plan.fileId);
       
       // Remove from state after successful API deletion
       formik.setFieldValue('master_plan', null);
       toast.success("Image deleted successfully");
     } catch (error) {
       console.error('Error deleting image:', error);
-      toast.error("Failed to delete image");
+      toast.error(error.message || "Failed to delete image");
     } finally {
       setDeletingImage(false);
     }

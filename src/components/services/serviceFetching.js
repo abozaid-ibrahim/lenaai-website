@@ -3,50 +3,48 @@ import axiosInstance from "@/utils/axiosInstance";
 // Fetch units using axios
 export async function fetchUnits() {
   try {
-    
     const response = await axiosInstance.get(`units/DREAM_HOMES`);
-
     return response.data;
-
   } catch (error) {
     console.error("Failed to fetch units:", error.message);
     return { error: error.message };
   }
 }
-
 
 export async function fetchcombounds() {
   try {
     const response = await axiosInstance.get(`projects/`);
-
     return response.data;
-    
   } catch (error) {
     console.error("Failed to fetch units:", error.message);
     return { error: error.message };
   }
 }
 
-// Fetch units using axios
-// export async function fetchUnits() {
-//   try {
-//     // Get the clientId from the separate cookie action
-//     const clientId = await getClientIdCookie();
+export async function uploadImages(formData) {
+  try {
+    const response = await axiosInstance.post(`/images/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to upload images:", error.message);
+    return { error: error.message };
+  }
+}
 
-//     const response = await axiosInstance.get(`/units/${clientId}`, {
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     });
-
-//     return response.data;
-
-//   } catch (error) {
-//     console.error("Failed to fetch units:", error.message);
-//     return { error: error.message };
-//   }
-// }
-
+// إضافة وظيفة حذف الصور
+export async function deleteImage(imageId) {
+  try {
+    const response = await axiosInstance.delete(`/images/${imageId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to delete image:", error.message);
+    return { error: error.message };
+  }
+}
 
 export async function fetchUnitById(id) {
   try {
@@ -59,12 +57,8 @@ export async function fetchUnitById(id) {
 }
 
 export async function updateUnit(unit) {
-  console.log("unit", unit);
   try {
-    console.log("request unit", unit);
-
     const response = await axiosInstance.post(`/update-unit/`, unit);
-    console.log("response", response);
     return response.data;
   } catch (error) {
     console.error("Failed to update unit:", error.message);
@@ -106,4 +100,28 @@ export async function fetchDevelopers() {
     return { error: error.message };
   }
 }
-// You can add your other service fetching functions below
+// Add this function to your serviceFetching.js file
+
+export async function addUnit(unitData) {
+  try {
+    const response = await axiosInstance.post(`/add-unit/`, unitData);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to add unit:", error.message);
+    throw { message: error.response?.data?.message || error.message };
+  }
+}
+
+export async function addCompound(compoundData) {
+  try {
+    const response = await axiosInstance.post(`/projects/`, compoundData);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to add compound:", error.message);
+    throw { message: error.response?.data?.message || error.message };
+  }
+}
+
+export async function fetchData() {
+  // Your fetching logic here
+}

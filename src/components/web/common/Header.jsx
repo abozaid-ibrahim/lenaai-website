@@ -26,7 +26,7 @@ const Header = () => {
             <Link href="/" className="hover:text-blue-200 transition-colors">
               Home
             </Link>
-            <Link href="" className="hover:text-blue-200 transition-colors">
+            <Link href="/dashbord" className="hover:text-blue-200 transition-colors">
               Client Dashboard
             </Link>
             <Link href="" className="hover:text-blue-200 transition-colors">
@@ -41,10 +41,10 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
         
             {/* <LanguageSwitcher /> */}
-            <Link href="/dashbord" className="text-white border border-blue-400 px-5 py-1.5 rounded-full hover:border-blue-200 hover:text-blue-200 transition-all duration-300">
+            {/* <Link href="/dashbord" className="text-white border border-blue-400 px-5 py-1.5 rounded-full hover:border-blue-200 hover:text-blue-200 transition-all duration-300">
               Signup
-            </Link>
-            <Link href="/dashbord" className="text-yellow-400 border border-yellow-400 px-5 py-1.5 rounded-full hover:border-yellow-200 hover:text-yellow-200 transition-all duration-300">
+            </Link> */}
+            <Link href="/auth/login" className="text-yellow-400 border border-yellow-400 px-5 py-1.5 rounded-full hover:border-yellow-200 hover:text-yellow-200 transition-all duration-300">
               Sign In
             </Link>
           </div>
