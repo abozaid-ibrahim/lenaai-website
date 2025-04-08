@@ -93,7 +93,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               <option value="">Select City</option>
               <option value="Cairo">Cairo</option>
               <option value="Alexandria">Alexandria</option>
-              <option value="مدينتي">مدينتي</option>
+              <option value="Madinaty">Madinaty</option>
               <option value="New Cairo">New Cairo</option>
             </select>
             {formik.touched.city && formik.errors.city && (
@@ -169,7 +169,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                     ))
                   ) : (
                     <>
-                      <option value="Talaat Mostafa Group (TMG) - طلعت مصطفى">Talaat Mostafa Group (TMG) - طلعت مصطفى</option>
+                      <option value="Talaat Mostafa Group (TMG)">Talaat Mostafa Group (TMG)</option>
                       <option value="Madinaty">Madinaty</option>
                       <option value="Emaar">Emaar</option>
                       <option value="Palm Hills">Palm Hills</option>
@@ -228,8 +228,8 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                   className="cursor-pointer flex flex-col items-center justify-center py-3"
                 >
                   <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                  <span className="text-sm text-gray-500">لم يتم اختيار أي ملف</span>
-                  <span className="text-xs text-gray-400 mt-1">اختيار ملف</span>
+                  <span className="text-sm text-gray-500">No file selected</span>
+                  <span className="text-xs text-gray-400 mt-1">Choose a file</span>
                 </label>
               )}
               
@@ -253,7 +253,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                     disabled={uploadingImage}
                     className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 disabled:opacity-50"
                   >
-                    {uploadingImage ? 'جاري الرفع...' : 'رفع الصورة'}
+                    {uploadingImage ? 'Uploading...' : 'Upload Image'}
                   </button>
                 </div>
               )}
@@ -263,7 +263,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                 <div className="py-3">
                   <div className="flex items-center justify-center gap-2 mb-3">
                     <div className="flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 rounded-lg">
-                      <span className="text-sm">✓ تم رفع الصورة بنجاح</span>
+                      <span className="text-sm">✓ Image uploaded successfully</span>
                     </div>
                     <button
                       type="button"
@@ -273,7 +273,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                       title="Delete image"
                     >
                       {deletingImage ? (
-                        <span className="text-xs">جاري الحذف...</span>
+                        <span className="text-xs">Deleting...</span>
                       ) : (
                         <Trash2 className="w-4 h-4" />
                       )}
@@ -306,11 +306,11 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               onClick={(e) => {
                 if (!formik.values.master_plan) {
                   e.preventDefault();
-                  toast.error("يجب رفع صورة المخطط الرئيسي قبل حفظ المجمع");
+                  toast.error("You must upload the main layout image before saving the compound");
                 }
               }}
             >
-              {formik.isSubmitting ? 'جاري الحفظ...' : 'Save Compound'}
+              {formik.isSubmitting ? 'Saving...' : 'Save Compound'}
             </button>
           </div>
         </form>

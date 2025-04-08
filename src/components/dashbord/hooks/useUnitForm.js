@@ -14,15 +14,15 @@ export const useUnitForm = (onClose, onSave) => {
   
   // Define validation schema using Yup
   const validationSchema = Yup.object({
-    unitTitle: Yup.string().required('عنوان الوحدة مطلوب'),
-    compound: Yup.string().required('اسم المجمع مطلوب'),
-    buildingType: Yup.string().required('نوع المبنى مطلوب'),
-    purpose: Yup.string().required('الغرض مطلوب'),
-    country: Yup.string().required('البلد مطلوب'),
-    city: Yup.string().required('المدينة مطلوبة'),
-    totalPrice: Yup.number().positive('يجب أن يكون السعر أكبر من صفر').required('السعر الإجمالي مطلوب'),
-    roomsCount: Yup.number().positive('يجب أن يكون عدد الغرف أكبر من صفر').required('عدد الغرف مطلوب'),
-    bathroomCount: Yup.number().positive('يجب أن يكون عدد الحمامات أكبر من صفر').required('عدد الحمامات مطلوب'),
+    unitTitle: Yup.string().required('Unit title is required'),
+    compound: Yup.string().required('Compound name is required'),
+    buildingType: Yup.string().required('Building type is required'),
+    purpose: Yup.string().required('Purpose is required'),
+    country: Yup.string().required('Country is required'),
+    city: Yup.string().required('City is required'),
+    totalPrice: Yup.number().positive('Price must be greater than zero').required('Total price is required'),
+    roomsCount: Yup.number().positive('Number of rooms must be greater than zero').required('Number of rooms is required'),
+    bathroomCount: Yup.number().positive('Number of bathrooms must be greater than zero').required('Number of bathrooms is required'),
   });
 
   const [isAddCompoundModalOpen, setIsAddCompoundModalOpen] = useState(false);
@@ -63,7 +63,7 @@ export const useUnitForm = (onClose, onSave) => {
     onSubmit: async (values) => {
       // Check for images before sending data
       if (values.images.length === 0) {
-        toast.error("يجب عليك رفع الصور على السيرفر أولاً");
+        toast.error("You must upload images to the server first");
         return;
       }
       
@@ -102,7 +102,7 @@ export const useUnitForm = (onClose, onSave) => {
         onClose();
       } catch (error) {
         console.error('Error adding unit:', error);
-        toast.error(error.message || "فشل في إضافة الوحدة");
+        toast.error(error.message || "Failed to add unit");
       }
     }
   });
