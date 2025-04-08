@@ -24,27 +24,14 @@ const RealEstateDashboard = ({ userData }) => {
     const userAction = user.actions.action ? user.actions.action : "No Action";
 
     return {
+      id: user.phoneNumber,
       phone: user.phoneNumber,
       date: formatDateForDisplay(lastMessage.timestamp),
       requirements: "Requirements",
       messageCount: messages.length,
       status: userAction
     }
-
-  }) 
-  console.log(userData);
-  // const initialLeads = [
-  //   { id: 1, name: "Ibrahim AboZaid", phone: "+201019903333", date: "26-03-2025", requirements: "Three Bedroom", messageCount: 19, status: "Ongoing Chat" },
-  //   { id: 2, name: "Nader Altalla", phone: "+201019902895", date: "24-03-2025", requirements: "Apartment", messageCount: 22, status: "Not Interested" },
-  //   { id: 3, name: "Mosa AlSayed", phone: "+201019902779", date: "24-03-2025", requirements: "Townhouse", messageCount: 11, status: "Missing Info" },
-  //   { id: 4, name: "Amer AlAshi", phone: "+201019902822", date: "23-03-2025", requirements: "Villa", messageCount: 5, status: "Property View" },
-  //   { id: 5, name: "Fahed Dader", phone: "+201019902666", date: "22-03-2025", requirements: "Twin House", messageCount: 31, status: "Office Visit" },
-  //   { id: 6, name: "Mohammed Ali", phone: "+201032786912", date: "20-03-2025", requirements: "Chalet", messageCount: 3, status: "Qualified Lead" },
-  //   { id: 7, name: "Momen Zedan", phone: "+201016080323", date: "18-03-2025", requirements: "Penthouse", messageCount: 9, status: "Book Viewing" },
-  //   { id: 8, name: "Ahmed Mortaja", phone: "+201157745463", date: "14-03-2025", requirements: "Studio Apartment", messageCount: 10, status: "Schedule Call" },
-  //   { id: 9, name: "Marwan Issa", phone: "+201016775323", date: "08-03-2025", requirements: "Cottage", messageCount: 8, status: "Make a Call" },
-  //   { id: 10, name: "Yasser Abed", phone: "+201016774444", date: "06-03-2025", requirements: "Mansion", messageCount: 25, status: "Not Qualified" }
-  // ];
+  })
 
   // Sample property details data
   const propertyDetails = {
@@ -175,7 +162,7 @@ const RealEstateDashboard = ({ userData }) => {
     return true;
   }).filter(lead => {
     if (!searchTerm) return true;
-    return lead.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    return lead.phone.toLowerCase().includes(searchTerm.toLowerCase()) || 
            lead.requirements.toLowerCase().includes(searchTerm.toLowerCase()) || 
            lead.phone.includes(searchTerm);
   });

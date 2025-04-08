@@ -1,7 +1,5 @@
 import axiosInstance from "@/utils/axiosInstance";
 
-import axios from "axios";
-
 // Fetch units using axios
 export async function fetchUnits() {
   try {
