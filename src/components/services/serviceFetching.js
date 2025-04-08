@@ -35,7 +35,6 @@ export async function uploadImages(formData) {
   }
 }
 
-// إضافة وظيفة حذف الصور
 export async function deleteImage(imageId) {
   try {
     const response = await axiosInstance.delete(`/images/${imageId}`);
