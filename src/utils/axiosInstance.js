@@ -3,8 +3,8 @@ import axios from "axios";
 const axiosInstance = axios.create({
   baseURL: "https://api.lenaai.net",
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 axiosInstance.interceptors.request.use(

@@ -10,7 +10,7 @@ const AddUnitModal = ({
   onClose,
   onSave,
   comboundata,
-  developersData
+  developersData,
 }) => {
   const {
     formik,
@@ -29,7 +29,7 @@ const AddUnitModal = ({
     handleAddPaymentPlan,
     handleRemovePaymentPlan,
     handleDragOver,
-    handleCompoundSave
+    handleCompoundSave,
   } = useUnitForm(onClose, onSave);
 
   if (!isOpen) return null;

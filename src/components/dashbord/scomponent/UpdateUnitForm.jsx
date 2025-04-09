@@ -26,7 +26,7 @@ const UpdateUnitForm = ({ unit, onSubmit, onCancel }) => {
     clientId: "",
     clientName: "",
     dataSource: "",
-    images: []
+    images: [],
   });
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const UpdateUnitForm = ({ unit, onSubmit, onCancel }) => {
         clientName: unit.clientName || "",
         dataSource: unit.dataSource || "",
         images: unit.images || [],
-        updatedAt: unit.updatedAt || ""
+        updatedAt: unit.updatedAt || "",
       });
     }
   }, [unit]);
@@ -65,7 +65,7 @@ const UpdateUnitForm = ({ unit, onSubmit, onCancel }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -78,19 +78,19 @@ const UpdateUnitForm = ({ unit, onSubmit, onCancel }) => {
       size: file.size,
       fileType: file.type,
       width: 0, // These will be updated when the image loads
-      height: 0
+      height: 0,
     }));
 
     setFormData((prev) => ({
       ...prev,
-      images: [...prev.images, ...imageObjects]
+      images: [...prev.images, ...imageObjects],
     }));
   };
 
   const handleRemoveImage = (index) => {
     setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter((_, i) => i !== index)
+      images: prev.images.filter((_, i) => i !== index),
     }));
   };
 

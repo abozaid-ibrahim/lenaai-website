@@ -8,7 +8,7 @@ import {
   BarChart2,
   Home,
   LogOut,
-  TableRowsSplit
+  TableRowsSplit,
 } from "lucide-react";
 import toast from "react-hot-toast";
 

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import {
   addUnit,
   deleteImage,
-  uploadImages
+  uploadImages,
 } from "@/components/services/serviceFetching";
 import Cookies from "js-cookie";
 // import { uploadImages, deleteImage, addUnit } from '@/components/services/serviceFetching';
@@ -51,7 +51,7 @@ export const useUnitForm = (onClose, onSave) => {
     finishing: Yup.string().required("Finishing type is required"),
     developer: Yup.string().required("Developer is required"),
     dataSource: Yup.string().required("Data source is required"),
-    paymentPlans: Yup.string().required("Payment plans are required")
+    paymentPlans: Yup.string().required("Payment plans are required"),
   });
 
   const [isAddCompoundModalOpen, setIsAddCompoundModalOpen] = useState(false);
@@ -86,7 +86,7 @@ export const useUnitForm = (onClose, onSave) => {
       totalPrice: "",
       paymentPlans: "",
       garageArea: "",
-      images: []
+      images: [],
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -107,7 +107,7 @@ export const useUnitForm = (onClose, onSave) => {
         gardenSize: values.gardenSize ? Number(values.gardenSize) : 0,
         downPayment: values.downPayment ? Number(values.downPayment) : 0,
         totalPrice: values.totalPrice ? Number(values.totalPrice) : 0,
-        garageArea: values.garageArea ? Number(values.garageArea) : 0
+        garageArea: values.garageArea ? Number(values.garageArea) : 0,
       };
 
       try {
@@ -133,7 +133,7 @@ export const useUnitForm = (onClose, onSave) => {
         console.error("Error adding unit:", error);
         toast.error(error.message || "فشل في إضافة الوحدة");
       }
-    }
+    },
   });
 
   // Generate new UUID when modal opens
@@ -275,6 +275,6 @@ export const useUnitForm = (onClose, onSave) => {
     handleAddPaymentPlan,
     handleRemovePaymentPlan,
     handleDragOver,
-    handleCompoundSave
+    handleCompoundSave,
   };
 };

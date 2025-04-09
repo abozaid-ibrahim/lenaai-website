@@ -16,7 +16,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developersData }) => {
     removeSelectedFile,
     handleImageUpload,
     removeUploadedImage,
-    setNewDeveloper
+    setNewDeveloper,
   } = useCompoundForm(onClose, onSave);
 
   if (!isOpen) return null;

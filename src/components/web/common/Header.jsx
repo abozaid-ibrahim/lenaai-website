@@ -5,7 +5,7 @@ import { Menu, X, Globe } from "lucide-react";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import {
   getClientid,
-  removeClientId
+  removeClientId,
 } from "@/components/services/clientCookies";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";

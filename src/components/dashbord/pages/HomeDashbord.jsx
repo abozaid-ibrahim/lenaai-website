@@ -10,7 +10,7 @@ import {
   CheckCircle,
   X,
   Eye,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
 import formatDateForDisplay from "@/utils/formateDate";
 import PropertyDetailsModal from "../scomponent/PropertyDetailsModal";
@@ -41,7 +41,7 @@ const RealEstateDashboard = ({ users }) => {
       totalPrice: "1,500,000 EGP",
       contactName: "Dream House Agent",
       lastUpdate: "01-04-2025",
-      forRentSale: "Rent"
+      forRentSale: "Rent",
     },
     Apartment: {
       title: "Modern Apartment in New Cairo",
@@ -59,7 +59,7 @@ const RealEstateDashboard = ({ users }) => {
       totalPrice: "2,000,000 EGP",
       contactName: "SODIC Development",
       lastUpdate: "28-03-2025",
-      forRentSale: "Sale"
+      forRentSale: "Sale",
     },
     Townhouse: {
       title: "Luxury Townhouse in Sheikh Zayed",
@@ -77,7 +77,7 @@ const RealEstateDashboard = ({ users }) => {
       totalPrice: "5,000,000 EGP",
       contactName: "Palm Hills Developments",
       lastUpdate: "15-03-2025",
-      forRentSale: "Sale"
+      forRentSale: "Sale",
     },
     Villa: {
       title: "Spacious Villa in Katameya Heights",
@@ -95,8 +95,8 @@ const RealEstateDashboard = ({ users }) => {
       totalPrice: "10,000,000 EGP",
       contactName: "Emaar Properties",
       lastUpdate: "20-03-2025",
-      forRentSale: "Sale"
-    }
+      forRentSale: "Sale",
+    },
   };
 
   // const [leads, setLeads] = useState(initialLeads);
@@ -207,52 +207,52 @@ const RealEstateDashboard = ({ users }) => {
       case "Follow up later":
         return {
           bgColor: "bg-gray-100 text-gray-700",
-          icon: <MessageSquare size={14} className="mr-1" />
+          icon: <MessageSquare size={14} className="mr-1" />,
         };
       case "Not interested":
         return {
           bgColor: "bg-gray-200 text-gray-700",
-          icon: <X size={14} className="mr-1" />
+          icon: <X size={14} className="mr-1" />,
         };
       case "Missing requirement":
         return {
           bgColor: "bg-orange-500 text-white",
-          icon: <Filter size={14} className="mr-1" />
+          icon: <Filter size={14} className="mr-1" />,
         };
       case "Property view":
         return {
           bgColor: "bg-blue-200 text-blue-700",
-          icon: <Eye size={14} className="mr-1" />
+          icon: <Eye size={14} className="mr-1" />,
         };
       case "Office visit":
         return {
           bgColor: "bg-green-100 text-green-700",
-          icon: <Home size={14} className="mr-1" />
+          icon: <Home size={14} className="mr-1" />,
         };
       case "Qualified lead":
         return {
           bgColor: "bg-teal-500 text-white",
-          icon: <CheckCircle size={14} className="mr-1" />
+          icon: <CheckCircle size={14} className="mr-1" />,
         };
       case "Book Viewing":
         return {
           bgColor: "bg-red-500 text-white",
-          icon: <Calendar size={14} className="mr-1" />
+          icon: <Calendar size={14} className="mr-1" />,
         };
       case "Schedule Call":
         return {
           bgColor: "bg-blue-400 text-white",
-          icon: <Calendar size={14} className="mr-1" />
+          icon: <Calendar size={14} className="mr-1" />,
         };
       case "Make a call":
         return {
           bgColor: "bg-green-600 text-white",
-          icon: <Phone size={14} className="mr-1" />
+          icon: <Phone size={14} className="mr-1" />,
         };
       case "Not qualified":
         return {
           bgColor: "bg-gray-500 text-white",
-          icon: <X size={14} className="mr-1" />
+          icon: <X size={14} className="mr-1" />,
         };
       default:
         return { bgColor: "bg-gray-100", icon: null };
