@@ -10,20 +10,27 @@ export default function UnitDetails({ unit }) {
   const [updatedUnit, setUpdatedUnit] = useState(unit);
   const router = useRouter();
 
-  const handleDeleteUnit = async () => {
-    await deleteUnit(unit.unitId);
-    toast.success("Unit deleted successfully");
-    router.back();
-  };
-  const handleUpdateUnit = async (updatedUnit) => {
-    console.log("updatedUnit", updatedUnit);
-    let newUnit = await updateUnit(updatedUnit);
-    console.log(newUnit);
-    setIsUpdateModalOpen(false);
-    toast.success("Unit updated successfully");
-    // setUpdatedUnit(newUnit);
-    router.refresh();
-  };
+    const handleDeleteUnit = async () => {
+        toast(
+            <div className='flex flex-col gap-4 text-black rounded-md'>
+                <p>Are you sure you want to delete this unit?</p>
+                <button className='bg-red-500 text-white px-4 py-2 rounded-md' onClick={() => {
+                    deleteUnit(unit.unitId);
+                    toast.dismiss();
+                    router.push('/dashbord/units');
+                }}>Delete</button>
+            </div>
+        )
+    }
+    const handleUpdateUnit = async (updatedUnit) => {
+        console.log("updatedUnit", updatedUnit);
+        let newUnit = await updateUnit(updatedUnit);
+        console.log(newUnit);
+        setIsUpdateModalOpen(false);
+        toast.success('Unit updated successfully');
+        // setUpdatedUnit(newUnit);
+        router.refresh();
+    };
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
