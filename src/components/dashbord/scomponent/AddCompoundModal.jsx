@@ -4,7 +4,7 @@ import { X, Upload, MapPin, Trash2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useCompoundForm } from '../hooks/useCompoundForm';
 
-const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
+const AddCompoundModal = ({ isOpen, onClose, onSave, developersData }) => {
   const {
     formik,
     newDeveloper,
@@ -28,7 +28,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
           <h2 className="text-2xl font-bold text-white">Add New Compound</h2>
           <button 
             onClick={onClose}
-            className="p-2 rounded-full  transition-colors"
+            className="p-2 rounded-full transition-colors"
             disabled={formik.isSubmitting}
           >
             <X className="w-6 h-6 text-white" />
@@ -58,9 +58,12 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               value={formik.values.description}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.description && formik.errors.description ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
               rows="3"
             />
+            {formik.touched.description && formik.errors.description && (
+              <div className="text-red-500 text-xs mt-1">{formik.errors.description}</div>
+            )}
           </div>
 
           <div>
@@ -124,9 +127,12 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               value={formik.values.video_url}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.video_url && formik.errors.video_url ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
               placeholder="https://youtube.com/..."
             />
+            {formik.touched.video_url && formik.errors.video_url && (
+              <div className="text-red-500 text-xs mt-1">{formik.errors.video_url}</div>
+            )}
           </div>
 
           <div>
@@ -138,7 +144,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                 value={formik.values.google_map_link}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-2 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                className={`w-full px-4 py-2 rounded-l-lg border ${formik.touched.google_map_link && formik.errors.google_map_link ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
                 placeholder="https://maps.google.com/..."
               />
               <button 
@@ -149,6 +155,9 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                 <MapPin className="w-5 h-5 text-gray-600" />
               </button>
             </div>
+            {formik.touched.google_map_link && formik.errors.google_map_link && (
+              <div className="text-red-500 text-xs mt-1">{formik.errors.google_map_link}</div>
+            )}
           </div>
 
           <div>
@@ -163,9 +172,9 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                   className={`w-full px-4 py-2 rounded-lg border ${formik.touched.developer_name && formik.errors.developer_name ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
                 >
                   <option value="">Select Developer</option>
-                  {developers.length > 0 ? (
-                    developers.map(dev => (
-                      <option key={dev.id} value={dev.name}>{dev.name}</option>
+                  {developersData && developersData.length > 0 ? (
+                    developersData.map((dev, index) => (
+                      <option key={index} value={dev.name}>{dev.name}</option>
                     ))
                   ) : (
                     <>
@@ -211,7 +220,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Master Plan Image</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+            <div className={`border-2 border-dashed ${formik.touched.master_plan && formik.errors.master_plan ? 'border-red-500' : 'border-gray-300'} rounded-lg p-4 text-center`}>
               <input
                 type="file"
                 id="masterPlanImage"
@@ -282,6 +291,9 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                 </div>
               )}
             </div>
+            {formik.touched.master_plan && formik.errors.master_plan && (
+              <div className="text-red-500 text-xs mt-1">{formik.errors.master_plan}</div>
+            )}
           </div>
 
           <div className="flex items-center">
@@ -302,13 +314,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
             <button
               type="submit"
               disabled={formik.isSubmitting}
-              className="w-full py-3 bg-primary  text-white font-medium rounded-lg transition-colors shadow-md disabled:opacity-50"
-              onClick={(e) => {
-                if (!formik.values.master_plan) {
-                  e.preventDefault();
-                  toast.error("يجب رفع صورة المخطط الرئيسي قبل حفظ المجمع");
-                }
-              }}
+              className="w-full py-3 bg-primary text-white font-medium rounded-lg transition-colors shadow-md disabled:opacity-50"
             >
               {formik.isSubmitting ? 'جاري الحفظ...' : 'Save Compound'}
             </button>

@@ -1,9 +1,20 @@
+
 import axiosInstance from "@/utils/axiosInstance";
+import Cookies from "js-cookie";
+import { getClientid } from "./clientCookies";
+
+// Function to get client_id from cookies safely
+
+  // For server-side, fetch the cookie from an API route
+ 
 
 // Fetch units using axios
 export async function fetchUnits() {
+  const clientId = await getClientid();
+ 
   try {
-    const response = await axiosInstance.get(`units/DREAM_HOMES`);
+    
+    const response = await axiosInstance.get(`units/${clientId}`);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch units:", error.message);
