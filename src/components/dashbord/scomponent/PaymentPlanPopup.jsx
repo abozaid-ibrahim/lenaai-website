@@ -1,18 +1,18 @@
-"use client"
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+"use client";
+import React, { useState } from "react";
+import { X } from "lucide-react";
 
 const PaymentPlanPopup = ({ isOpen, onClose, onAdd }) => {
-  const [years, setYears] = useState('');
-  const [amount, setAmount] = useState('');
+  const [years, setYears] = useState("");
+  const [amount, setAmount] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!years || !amount) return;
-    
+
     onAdd(`${years}-Years Plan: ${amount} EGP`);
-    setYears('');
-    setAmount('');
+    setYears("");
+    setAmount("");
     onClose();
   };
 
@@ -23,14 +23,19 @@ const PaymentPlanPopup = ({ isOpen, onClose, onAdd }) => {
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Add Payment Plan</h3>
-          <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100">
+          <button
+            onClick={onClose}
+            className="p-1 rounded-full hover:bg-gray-100"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Years</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Years
+            </label>
             <input
               type="number"
               value={years}
@@ -40,9 +45,11 @@ const PaymentPlanPopup = ({ isOpen, onClose, onAdd }) => {
               min="1"
             />
           </div>
-          
+
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Amount (EGP)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Amount (EGP)
+            </label>
             <input
               type="number"
               value={amount}
@@ -52,7 +59,7 @@ const PaymentPlanPopup = ({ isOpen, onClose, onAdd }) => {
               min="1"
             />
           </div>
-          
+
           <div className="flex justify-end">
             <button
               type="button"
