@@ -1,43 +1,57 @@
-"use client"
-import { useState, useRef, useEffect } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import { v4 as uuidv4 } from 'uuid';
-import { useRouter } from 'next/navigation';
-import { addUnit, deleteImage, uploadImages } from '@/components/services/serviceFetching';
-import Cookies from 'js-cookie';
+"use client";
+import { useState, useRef, useEffect } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/navigation";
+import {
+  addUnit,
+  deleteImage,
+  uploadImages,
+} from "@/components/services/serviceFetching";
+import Cookies from "js-cookie";
 // import { uploadImages, deleteImage, addUnit } from '@/components/services/serviceFetching';
 
 export const useUnitForm = (onClose, onSave) => {
   const router = useRouter();
-  
+
   // Get client_id from cookies
-  const clientId = Cookies.get('client_id') || 'DREAM_HOMES';
-  
+  const clientId = Cookies.get("client_id") || "DREAM_HOMES";
+
   // Define validation schema using Yup
   const validationSchema = Yup.object({
-    unitTitle: Yup.string().required('Unit title is required'),
-    compound: Yup.string().required('Compound is required'),
-    buildingType: Yup.string().required('Building type is required'),
-    purpose: Yup.string().required('Purpose is required'),
-    country: Yup.string().required('Country is required'),
-    city: Yup.string().required('City is required'),
-    view: Yup.string().required('View is required'),
-    totalPrice: Yup.number().positive('Price must be greater than zero').required('Total price is required'),
-    downPayment: Yup.number().positive('Down payment must be greater than zero').required('Down payment is required'),
-    deliveryDate: Yup.string().required('Delivery date is required'),
-    roomsCount: Yup.number().positive('Rooms count must be greater than zero').required('Rooms count is required'),
-    bathroomCount: Yup.number().positive('Bathroom count must be greater than zero').required('Bathroom count is required'),
-    floor: Yup.number().required('Floor is required'),
-    landArea: Yup.number().positive('Land area must be greater than zero').required('Land area is required'),
-    gardenSize: Yup.number().required('Garden size is required'),
-    garageArea: Yup.number().required('Garage area is required'),
-    finishing: Yup.string().required('Finishing type is required'),
-    developer: Yup.string().required('Developer is required'),
-    dataSource: Yup.string().required('Data source is required'),
-    paymentPlans: Yup.string().required('Payment plans are required'),
+    unitTitle: Yup.string().required("Unit title is required"),
+    compound: Yup.string().required("Compound is required"),
+    buildingType: Yup.string().required("Building type is required"),
+    purpose: Yup.string().required("Purpose is required"),
+    country: Yup.string().required("Country is required"),
+    city: Yup.string().required("City is required"),
+    view: Yup.string().required("View is required"),
+    totalPrice: Yup.number()
+      .positive("Price must be greater than zero")
+      .required("Total price is required"),
+    downPayment: Yup.number()
+      .positive("Down payment must be greater than zero")
+      .required("Down payment is required"),
+    deliveryDate: Yup.string().required("Delivery date is required"),
+    roomsCount: Yup.number()
+      .positive("Rooms count must be greater than zero")
+      .required("Rooms count is required"),
+    bathroomCount: Yup.number()
+      .positive("Bathroom count must be greater than zero")
+      .required("Bathroom count is required"),
+    floor: Yup.number().required("Floor is required"),
+    landArea: Yup.number()
+      .positive("Land area must be greater than zero")
+      .required("Land area is required"),
+    gardenSize: Yup.number().required("Garden size is required"),
+    garageArea: Yup.number().required("Garage area is required"),
+    finishing: Yup.string().required("Finishing type is required"),
+    developer: Yup.string().required("Developer is required"),
+    dataSource: Yup.string().required("Data source is required"),
+    paymentPlans: Yup.string().required("Payment plans are required"),
   });
 
   const [isAddCompoundModalOpen, setIsAddCompoundModalOpen] = useState(false);
@@ -49,30 +63,30 @@ export const useUnitForm = (onClose, onSave) => {
   // Initialize formik
   const formik = useFormik({
     initialValues: {
-      buildingType: 'Apartment',
-      purpose: 'Buy',
-      compound: '',
-      view: 'Lagoon',
-      country: 'Egypt',
-      city: '',
+      buildingType: "Apartment",
+      purpose: "Buy",
+      compound: "",
+      view: "Lagoon",
+      country: "Egypt",
+      city: "",
       clientName: clientId,
       clientId: clientId,
-      developer: '',
+      developer: "",
       unitId: uuidv4(),
-      unitTitle: '',
-      deliveryDate: '',
-      bathroomCount: '',
-      floor: '',
-      roomsCount: '',
-      landArea: '',
-      gardenSize: '',
-      finishing: '',
-      dataSource: '',
-      downPayment: '',
-      totalPrice: '',
-      paymentPlans: '',
-      garageArea: '',
-      images: []
+      unitTitle: "",
+      deliveryDate: "",
+      bathroomCount: "",
+      floor: "",
+      roomsCount: "",
+      landArea: "",
+      gardenSize: "",
+      finishing: "",
+      dataSource: "",
+      downPayment: "",
+      totalPrice: "",
+      paymentPlans: "",
+      garageArea: "",
+      images: [],
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -81,7 +95,7 @@ export const useUnitForm = (onClose, onSave) => {
         toast.error("يجب عليك رفع الصور على السيرفر أولاً");
         return;
       }
-      
+
       // Convert numeric fields to numbers
       const preparedFormData = {
         ...values,
@@ -95,113 +109,118 @@ export const useUnitForm = (onClose, onSave) => {
         totalPrice: values.totalPrice ? Number(values.totalPrice) : 0,
         garageArea: values.garageArea ? Number(values.garageArea) : 0,
       };
-      
+
       try {
         // استخدام وظيفة addUnit من serviceFetching
         const response = await addUnit(preparedFormData);
-        
+
         toast.success("unit added successfuly");
         onSave(preparedFormData);
         router.refresh(); // Refresh the data without page reload
-        
+
         // Reset form to initial values with a new UUID
         formik.resetForm();
-        formik.setFieldValue('unitId', uuidv4());
-        formik.setFieldValue('buildingType', 'Apartment');
-        formik.setFieldValue('purpose', 'Buy');
-        formik.setFieldValue('view', 'Lagoon');
-        formik.setFieldValue('country', 'Egypt');
-        formik.setFieldValue('clientId', 'DREAM_HOMES');
-        formik.setFieldValue('images', []);
-        
+        formik.setFieldValue("unitId", uuidv4());
+        formik.setFieldValue("buildingType", "Apartment");
+        formik.setFieldValue("purpose", "Buy");
+        formik.setFieldValue("view", "Lagoon");
+        formik.setFieldValue("country", "Egypt");
+        formik.setFieldValue("clientId", "DREAM_HOMES");
+        formik.setFieldValue("images", []);
+
         onClose();
       } catch (error) {
-        console.error('Error adding unit:', error);
+        console.error("Error adding unit:", error);
         toast.error(error.message || "فشل في إضافة الوحدة");
       }
-    }
+    },
   });
 
   // Generate new UUID when modal opens
   useEffect(() => {
-    formik.setFieldValue('unitId', uuidv4());
+    formik.setFieldValue("unitId", uuidv4());
   }, []);
 
   // Reset file input to allow reselecting the same file
   const resetFileInput = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   const handleFileSelection = (files, replace = false) => {
     if (!files || files.length === 0) return;
-    
+
     // Convert FileList to Array
     const newFiles = Array.from(files);
-    
+
     // Store the selected files without uploading immediately
     if (replace) {
       // Replace existing selection with new files
       setSelectedFiles(newFiles);
     } else {
       // Add to existing selection
-      setSelectedFiles(prev => [...prev, ...newFiles]);
+      setSelectedFiles((prev) => [...prev, ...newFiles]);
     }
   };
 
   const handleImageUpload = async () => {
     if (selectedFiles.length === 0) return;
-    
+
     setUploadingImages(true);
-    
+
     try {
       const formDataToUpload = new FormData();
-      
+
       // Add all files with the same key 'file'
-      selectedFiles.forEach(file => {
-        formDataToUpload.append('file', file);
+      selectedFiles.forEach((file) => {
+        formDataToUpload.append("file", file);
       });
-      
+
       // استخدام وظيفة uploadImages من serviceFetching
       const uploadedImages = await uploadImages(formDataToUpload);
-      
+
       // التعامل مع الاستجابة
-      const imagesArray = Array.isArray(uploadedImages) ? uploadedImages : [uploadedImages];
-      
+      const imagesArray = Array.isArray(uploadedImages)
+        ? uploadedImages
+        : [uploadedImages];
+
       // Update formik values
-      formik.setFieldValue('images', [...formik.values.images, ...imagesArray]);
-      
+      formik.setFieldValue("images", [...formik.values.images, ...imagesArray]);
+
       toast.success(`${imagesArray.length} images uploaded successfully`);
       setSelectedFiles([]);
       resetFileInput();
-      
     } catch (error) {
-      console.error('Error uploading images:', error);
-      toast.error(`Failed to upload images: ${error.message || "Unknown error"}`);
+      console.error("Error uploading images:", error);
+      toast.error(
+        `Failed to upload images: ${error.message || "Unknown error"}`
+      );
     } finally {
       setUploadingImages(false);
     }
   };
 
   const removeSelectedFile = (index) => {
-    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const removeUploadedImage = async (index, imageId) => {
     try {
       // استخدام وظيفة deleteImage من serviceFetching
       await deleteImage(imageId);
-      
+
       // Remove from formik state after successful API deletion
       const updatedImages = [...formik.values.images];
       updatedImages.splice(index, 1);
-      formik.setFieldValue('images', updatedImages);
-      
+      formik.setFieldValue("images", updatedImages);
+
       toast.success("Image deleted successfully");
     } catch (error) {
-      console.error('Error deleting image:', error);
-      toast.error(`Failed to delete image: ${error.message || "Unknown error"}`);
+      console.error("Error deleting image:", error);
+      toast.error(
+        `Failed to delete image: ${error.message || "Unknown error"}`
+      );
     }
   };
 
@@ -215,16 +234,16 @@ export const useUnitForm = (onClose, onSave) => {
   const handleAddPaymentPlan = (planText) => {
     const currentPlans = formik.values.paymentPlans;
     formik.setFieldValue(
-      'paymentPlans', 
+      "paymentPlans",
       currentPlans ? `${currentPlans}, ${planText}` : planText
     );
   };
 
   // Update the handleRemovePaymentPlan function to work with string
   const handleRemovePaymentPlan = (index) => {
-    const plansArray = formik.values.paymentPlans.split(', ');
+    const plansArray = formik.values.paymentPlans.split(", ");
     plansArray.splice(index, 1);
-    formik.setFieldValue('paymentPlans', plansArray.join(', '));
+    formik.setFieldValue("paymentPlans", plansArray.join(", "));
   };
 
   const handleDragOver = (e) => {
@@ -233,7 +252,10 @@ export const useUnitForm = (onClose, onSave) => {
 
   const handleCompoundSave = (compoundData) => {
     // Set the newly created compound name to the unit's compound field
-    formik.setFieldValue('compound', compoundData.name || compoundData.compoundName);
+    formik.setFieldValue(
+      "compound",
+      compoundData.name || compoundData.compoundName
+    );
   };
 
   return {
@@ -253,6 +275,6 @@ export const useUnitForm = (onClose, onSave) => {
     handleAddPaymentPlan,
     handleRemovePaymentPlan,
     handleDragOver,
-    handleCompoundSave
+    handleCompoundSave,
   };
 };

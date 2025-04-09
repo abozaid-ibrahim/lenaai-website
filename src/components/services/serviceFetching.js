@@ -1,19 +1,16 @@
-
 import axiosInstance from "@/utils/axiosInstance";
 import Cookies from "js-cookie";
 import { getClientid } from "./clientCookies";
 
 // Function to get client_id from cookies safely
 
-  // For server-side, fetch the cookie from an API route
- 
+// For server-side, fetch the cookie from an API route
 
 // Fetch units using axios
 export async function fetchUnits() {
   const clientId = await getClientid();
- 
+
   try {
-    
     const response = await axiosInstance.get(`units/${clientId}`);
     return response.data;
   } catch (error) {
@@ -36,8 +33,8 @@ export async function uploadImages(formData) {
   try {
     const response = await axiosInstance.post(`/images/`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        "Content-Type": "multipart/form-data",
+      },
     });
     return response.data;
   } catch (error) {
@@ -79,7 +76,7 @@ export async function updateUnit(unit) {
 export async function deleteUnit(id) {
   try {
     const response = await axiosInstance.delete(`/delete-unit`, {
-      params: {
+      headers: {
         unitId: id
       }
     });
@@ -95,12 +92,12 @@ export async function fetchUsers(cursor) {
   try {
     const params = {
       limit: 5,
-    }
+    };
     if (cursor) {
       params.cursor = cursor;
     }
     const response = await axiosInstance.get(`dashboard/ALL`, {
-      params: params
+      params: params,
     });
     return response.data;
   } catch (error) {
@@ -140,13 +137,12 @@ export async function addCompound(compoundData) {
   }
 }
 
-
 export async function loginUser(formData) {
   try {
-    const response = await axiosInstance.post('/login', formData, {
+    const response = await axiosInstance.post("/login", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        "Content-Type": "multipart/form-data",
+      },
     });
     return response.data;
   } catch (error) {
@@ -161,10 +157,10 @@ export async function fetchData() {
 
 export async function getChatHistory(userId) {
   try {
-    const response = await axiosInstance.get(`history/DREAM_HOMES/${userId}`);
+    const response = await axiosInstance.get(`history/ALL/${userId}`);
     return response.data;
   } catch (error) {
-    console.error("Failed to get chat history:", error.message);
+    console.error("Failed to fetch data:", error.message);
     return { error: error.message };
   }
 }

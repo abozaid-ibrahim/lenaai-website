@@ -1,12 +1,12 @@
-"use client"
-import React, { useState } from 'react';
-import { Search, Bell, User, MessageSquare, Menu } from 'lucide-react';
-import { LanguageSwitcher } from '../../i18n/LanguageSwitcher';
+"use client";
+import React, { useState } from "react";
+import { Search, Bell, User, MessageSquare, Menu } from "lucide-react";
+import { LanguageSwitcher } from "../../i18n/LanguageSwitcher";
 
 const Header = () => {
   const handleMenuClick = () => {
     // Call the global toggleSidebar function
-    if (typeof window !== 'undefined' && window.toggleSidebar) {
+    if (typeof window !== "undefined" && window.toggleSidebar) {
       window.toggleSidebar();
     }
   };
@@ -15,14 +15,14 @@ const Header = () => {
     <header className="bg-white shadow-sm p-4  md:ml-4 flex justify-between items-center mt-2 md:mt-0">
       <div className="flex items-center gap-3">
         <div className="block lg:hidden">
-          <button 
+          <button
             className="p-1 rounded-md hover:bg-gray-100"
             onClick={handleMenuClick}
           >
             <Menu className="h-6 w-6 text-gray-700" />
           </button>
         </div>
-        
+
         <div className="relative hidden sm:block">
           <input
             type="text"
@@ -37,38 +37,40 @@ const Header = () => {
           <Search className="h-5 w-5 text-gray-400" />
         </div>
       </div>
-      
+
       <div className="flex items-center space-x-2 sm:space-x-4">
         <LanguageSwitcher />
-        
+
         <div className="relative hidden sm:block">
-          <button 
+          <button
             className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none"
-            onClick={() => window.location.href = ''}
+            onClick={() => (window.location.href = "")}
           >
             <MessageSquare className="h-6 w-6" />
           </button>
         </div>
-        
+
         <div className="relative">
-          <button 
+          <button
             className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none"
-            onClick={() => window.location.href = ''}
+            onClick={() => (window.location.href = "")}
           >
             <Bell className="h-6 w-6" />
             <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
           </button>
         </div>
-        
+
         <div className="flex items-center">
-          <button 
+          <button
             className="flex items-center focus:outline-none"
-            onClick={() => window.location.href = ''}
+            onClick={() => (window.location.href = "")}
           >
             <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
               <User className="h-5 w-5 text-blue-600" />
             </div>
-            <span className="ml-2 text-sm font-medium text-gray-700 hidden sm:inline">User123</span>
+            <span className="ml-2 text-sm font-medium text-gray-700 hidden sm:inline">
+              User123
+            </span>
           </button>
         </div>
       </div>
