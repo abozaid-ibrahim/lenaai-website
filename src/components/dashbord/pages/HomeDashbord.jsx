@@ -6,6 +6,7 @@ import PropertyDetailsModal from '../scomponent/PropertyDetailsModal';
 import { fetchUsers } from '@/components/services/serviceFetching';
 import { useRouter } from 'next/navigation';
 const RealEstateDashboard = ({ users }) => {
+
   // Sample data
   const router = useRouter();
   const [usersData, setUsersData] = useState(users.users);

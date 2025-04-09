@@ -12,6 +12,7 @@ const page = async() => {
     <>
     <HomeDashbord users={users}/>
    </>
+
   )
 }
 
