@@ -20,22 +20,22 @@ const Login = () => {
           <div className="p-8">
             <form onSubmit={formik.handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Address
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+                  Username
                 </label>
                 <input
-                  id="email"
-                  type="email"
-                  {...formik.getFieldProps('email')}
+                  id="username"
+                  type="text"
+                  {...formik.getFieldProps('username')}
                   className={`w-full px-4 py-3 rounded-lg border ${
-                    formik.touched.email && formik.errors.email 
+                    formik.touched.username && formik.errors.username 
                       ? 'border-red-500 focus:ring-red-500' 
                       : 'border-gray-300 focus:ring-primary'
                   } focus:outline-none focus:ring-2 focus:border-transparent transition`}
-                  placeholder="Enter your email"
+                  placeholder="Enter your username"
                 />
-                {formik.touched.email && formik.errors.email && (
-                  <div className="text-red-500 text-sm mt-1">{formik.errors.email}</div>
+                {formik.touched.username && formik.errors.username && (
+                  <div className="text-red-500 text-sm mt-1">{formik.errors.username}</div>
                 )}
               </div>
               
