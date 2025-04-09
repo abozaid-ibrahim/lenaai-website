@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import ReactDOM from "react-dom";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -63,7 +64,7 @@ const Dialog = ({
 
     return () => {
       document.body.style.overflow = "";
-      document.removeEventListener("");
+      document.removeEventListener("keydown", onkeyDown);
     };
   }, [isOpen]);
 
