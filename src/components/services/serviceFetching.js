@@ -129,6 +129,13 @@ export async function addCompound(compoundData) {
   }
 }
 
-export async function fetchData() {
-  // Your fetching logic here
+
+export async function getChatHistory(userId) {
+  try {
+    const response = await axiosInstance.get(`history/DREAM_HOMES/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to get chat history:", error.message);
+    return { error: error.message };
+  }
 }

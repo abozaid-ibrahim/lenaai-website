@@ -6,13 +6,13 @@ export const metadata = {
   title: 'Home',
   description: 'Home page',
 }
-const page = async () => {
-  const userData = await fetchUsers();
-  console.log("userData", userData);
+const page = async() => {
+  const users = await fetchUsers();
   return (
     <>
-      <HomeDashbord users={userData} />
-    </>
+    <HomeDashbord users={users}/>
+   </>
+
   )
 }
 
