@@ -18,15 +18,26 @@ export const useUnitForm = (onClose, onSave) => {
   
   // Define validation schema using Yup
   const validationSchema = Yup.object({
-    unitTitle: Yup.string().required('عنوان الوحدة مطلوب'),
-    compound: Yup.string().required('اسم المجمع مطلوب'),
-    buildingType: Yup.string().required('نوع المبنى مطلوب'),
-    purpose: Yup.string().required('الغرض مطلوب'),
-    country: Yup.string().required('البلد مطلوب'),
-    city: Yup.string().required('المدينة مطلوبة'),
-    totalPrice: Yup.number().positive('يجب أن يكون السعر أكبر من صفر').required('السعر الإجمالي مطلوب'),
-    roomsCount: Yup.number().positive('يجب أن يكون عدد الغرف أكبر من صفر').required('عدد الغرف مطلوب'),
-    bathroomCount: Yup.number().positive('يجب أن يكون عدد الحمامات أكبر من صفر').required('عدد الحمامات مطلوب'),
+    unitTitle: Yup.string().required('Unit title is required'),
+    compound: Yup.string().required('Compound is required'),
+    buildingType: Yup.string().required('Building type is required'),
+    purpose: Yup.string().required('Purpose is required'),
+    country: Yup.string().required('Country is required'),
+    city: Yup.string().required('City is required'),
+    view: Yup.string().required('View is required'),
+    totalPrice: Yup.number().positive('Price must be greater than zero').required('Total price is required'),
+    downPayment: Yup.number().positive('Down payment must be greater than zero').required('Down payment is required'),
+    deliveryDate: Yup.string().required('Delivery date is required'),
+    roomsCount: Yup.number().positive('Rooms count must be greater than zero').required('Rooms count is required'),
+    bathroomCount: Yup.number().positive('Bathroom count must be greater than zero').required('Bathroom count is required'),
+    floor: Yup.number().required('Floor is required'),
+    landArea: Yup.number().positive('Land area must be greater than zero').required('Land area is required'),
+    gardenSize: Yup.number().required('Garden size is required'),
+    garageArea: Yup.number().required('Garage area is required'),
+    finishing: Yup.string().required('Finishing type is required'),
+    developer: Yup.string().required('Developer is required'),
+    dataSource: Yup.string().required('Data source is required'),
+    paymentPlans: Yup.string().required('Payment plans are required'),
   });
 
   const [isAddCompoundModalOpen, setIsAddCompoundModalOpen] = useState(false);
@@ -123,10 +134,20 @@ export const useUnitForm = (onClose, onSave) => {
     }
   };
 
-  const handleFileSelection = (files) => {
+  const handleFileSelection = (files, replace = false) => {
     if (!files || files.length === 0) return;
+    
+    // Convert FileList to Array
+    const newFiles = Array.from(files);
+    
     // Store the selected files without uploading immediately
-    setSelectedFiles(prev => [...prev, ...Array.from(files)]);
+    if (replace) {
+      // Replace existing selection with new files
+      setSelectedFiles(newFiles);
+    } else {
+      // Add to existing selection
+      setSelectedFiles(prev => [...prev, ...newFiles]);
+    }
   };
 
   const handleImageUpload = async () => {

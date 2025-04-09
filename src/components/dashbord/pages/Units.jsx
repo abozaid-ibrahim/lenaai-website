@@ -325,6 +325,7 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
 
         {/* Add Unit Modal */}
         <AddUnitModal
+        developersData={developersData}
           comboundata={comboundata}
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}

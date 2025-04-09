@@ -5,7 +5,7 @@ import AddCompoundModal from './AddCompoundModal';
 import PaymentPlanPopup from './PaymentPlanPopup';
 import { useUnitForm } from '../hooks/useUnitForm';
 
-const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
+const AddUnitModal = ({ isOpen, onClose, onSave, comboundata,developersData }) => {
   const {
     formik,
     isAddCompoundModalOpen,
@@ -42,29 +42,13 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
         </div>
 
         <form onSubmit={formik.handleSubmit} className="p-6">
-          {/* Client Information */}
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">Client Information</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Client Name</label>
-                <input
-                  type="text"
-                  name="clientName"
-                  value={formik.values.clientName}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
-              </div>
-              {/* Client ID is hidden and set to DREAM_HOMES */}
-              <input
-                type="hidden"
-                name="clientId"
-                value="DREAM_HOMES"
-              />
-            </div>
-          </div>
+          {/* Client Information - Removed clientName field */}
+          {/* Hidden clientId field is maintained */}
+          <input
+            type="hidden"
+            name="clientId"
+            value={formik.values.clientId}
+          />
 
           {/* Property Details Section */}
           <div className="mb-8">
@@ -152,11 +136,19 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                   value={formik.values.purpose}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${
+                    formik.touched.purpose && formik.errors.purpose 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-primary'
+                  } focus:border-transparent`}
                 >
                   <option value="Buy">Buy</option>
                   <option value="Rent">Rent</option>
+                  <option value="sell">sell</option>
                 </select>
+                {formik.touched.purpose && formik.errors.purpose && (
+                  <p className="mt-1 text-sm text-red-500">{formik.errors.purpose}</p>
+                )}
               </div>
 
               <div>
@@ -185,13 +177,20 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                   value={formik.values.view}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${
+                    formik.touched.view && formik.errors.view 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-primary'
+                  } focus:border-transparent`}
                 >
                   <option value="Lagoon">Lagoon</option>
                   <option value="Garden">Garden</option>
                   <option value="Pool">Pool</option>
                   <option value="Street">Street</option>
                 </select>
+                {formik.touched.view && formik.errors.view && (
+                  <p className="mt-1 text-sm text-red-500">{formik.errors.view}</p>
+                )}
               </div>
             </div>
           </div>
@@ -208,8 +207,15 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                   value={formik.values.downPayment}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${
+                    formik.touched.downPayment && formik.errors.downPayment 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-primary'
+                  } focus:border-transparent`}
                 />
+                {formik.touched.downPayment && formik.errors.downPayment && (
+                  <p className="mt-1 text-sm text-red-500">{formik.errors.downPayment}</p>
+                )}
               </div>
 
               <div>
@@ -220,8 +226,15 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                   value={formik.values.deliveryDate}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${
+                    formik.touched.deliveryDate && formik.errors.deliveryDate 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-primary'
+                  } focus:border-transparent`}
                 />
+                {formik.touched.deliveryDate && formik.errors.deliveryDate && (
+                  <p className="mt-1 text-sm text-red-500">{formik.errors.deliveryDate}</p>
+                )}
               </div>
 
               <div>
@@ -276,6 +289,9 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                     ))
                   )}
                 </div>
+                {formik.touched.paymentPlans && formik.errors.paymentPlans && (
+                  <p className="mt-1 text-sm text-red-500">{formik.errors.paymentPlans}</p>
+                )}
               </div>
             </div>
           </div>
@@ -330,8 +346,15 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                   value={formik.values.floor}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${
+                    formik.touched.floor && formik.errors.floor 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-primary'
+                  } focus:border-transparent`}
                 />
+                {formik.touched.floor && formik.errors.floor && (
+                  <p className="mt-1 text-sm text-red-500">{formik.errors.floor}</p>
+                )}
               </div>
 
               <div>
@@ -342,8 +365,15 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                   value={formik.values.landArea}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${
+                    formik.touched.landArea && formik.errors.landArea 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-primary'
+                  } focus:border-transparent`}
                 />
+                {formik.touched.landArea && formik.errors.landArea && (
+                  <p className="mt-1 text-sm text-red-500">{formik.errors.landArea}</p>
+                )}
               </div>
 
               <div>
@@ -354,8 +384,15 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                   value={formik.values.gardenSize}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${
+                    formik.touched.gardenSize && formik.errors.gardenSize 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-primary'
+                  } focus:border-transparent`}
                 />
+                {formik.touched.gardenSize && formik.errors.gardenSize && (
+                  <p className="mt-1 text-sm text-red-500">{formik.errors.gardenSize}</p>
+                )}
               </div>
 
               <div>
@@ -366,8 +403,15 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                   value={formik.values.garageArea}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${
+                    formik.touched.garageArea && formik.errors.garageArea 
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 focus:ring-primary'
+                  } focus:border-transparent`}
                 />
+                {formik.touched.garageArea && formik.errors.garageArea && (
+                  <p className="mt-1 text-sm text-red-500">{formik.errors.garageArea}</p>
+                )}
               </div>
             </div>
           </div>
@@ -402,11 +446,11 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
                   <option value="">Select Developer</option>
-                  <option value="Madinaty">Madinaty</option>
-                  <option value="SODIC">SODIC</option>
-                  <option value="Emaar">Emaar</option>
-                  <option value="Palm Hills">Palm Hills</option>
-                  <option value="Madinet Nasr Housing">Madinet Nasr Housing</option>
+                  {developersData && developersData.map((developer, index) => (
+                    <option key={index} value={developer.name}>
+                      {developer.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -443,23 +487,31 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
                 className="hidden" 
                 id="image-upload"
                 ref={fileInputRef}
-                onChange={(e) => handleFileSelection(e.target.files)}
+                onChange={(e) => {
+                  // When "Change Images" is clicked, replace existing selection with new files
+                  if (selectedFiles.length > 0 && e.target.files.length > 0) {
+                    handleFileSelection(e.target.files, true); // Pass true to indicate replacement
+                  } else {
+                    handleFileSelection(e.target.files);
+                  }
+                }}
                 onClick={(e) => {
                   // This clears the input value when the user clicks on it
                   // allowing the same file to be selected again
                   e.target.value = '';
                 }}
+                disabled={formik.values.images.length > 0}
               />
               <label 
                 htmlFor="image-upload" 
-                className="mt-4 inline-block px-4 py-2 bg-primary text-white rounded-lg cursor-pointer hover:bg-primary/90 transition-colors mr-2"
+                className={`mt-4 inline-block px-4 py-2 ${formik.values.images.length > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary cursor-pointer hover:bg-primary/90'} text-white rounded-lg transition-colors mr-2`}
               >
-                Select Files
+                {formik.values.images.length > 0 ? 'Images Uploaded' : selectedFiles.length > 0 ? 'Change Images' : 'Select Files'}
               </label>
             </div>
             
             {/* Display selected files waiting to be uploaded */}
-            {selectedFiles.length > 0 && (
+            {selectedFiles.length > 0 && formik.values.images.length === 0 && (
               <div className="mt-4">
                 <div className="flex justify-between items-center mb-2">
                   <h4 className="text-sm font-medium text-gray-700">Selected Images:</h4>
@@ -533,6 +585,7 @@ const AddUnitModal = ({ isOpen, onClose, onSave, comboundata }) => {
 
       {/* Add Compound Modal */}
       <AddCompoundModal 
+      developersData={developersData}
         isOpen={isAddCompoundModalOpen}
         onClose={() => setIsAddCompoundModalOpen(false)}
         onSave={handleCompoundSave}

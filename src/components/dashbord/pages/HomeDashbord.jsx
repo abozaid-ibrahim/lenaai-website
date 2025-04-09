@@ -10,8 +10,8 @@ const RealEstateDashboard = ({ users }) => {
   // Sample data
   const router = useRouter();
   const [usersData, setUsersData] = useState(users.users);
-  const [hasMore, setHasMore] = useState(users.pagination.has_more);
-  const [nextCursor, setNextCursor] = useState(users.pagination.next_cursor);
+  const [hasMore, setHasMore] = useState(users?.pagination?.has_more);
+  const [nextCursor, setNextCursor] = useState(users?.pagination?.next_cursor);
   const [previousCursor, setPreviousCursor] = useState(null);
   // Sample property details data
   const propertyDetails = {
@@ -332,7 +332,7 @@ const RealEstateDashboard = ({ users }) => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {usersData.map((user) => {
+                    {usersData?.map((user) => {
                       const lastMessage = user.conversation?.[0]?.user_message || '';
                       const lastActivity = new Date(user.lastActivity).toLocaleDateString();
                       const requirements = user.requirements?.userBuildingType?.[0] || 'Not specified';
@@ -384,7 +384,7 @@ const RealEstateDashboard = ({ users }) => {
           </div>
 
           {/* Pagination controls */}
-          {usersData.length > 0 && (
+          {usersData?.length > 0 && (
             <div className="flex justify-end items-center mt-4">
               <div className="flex gap-2">
                 <button
