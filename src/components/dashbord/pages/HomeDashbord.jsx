@@ -8,7 +8,6 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const RealEstateDashboard = ({ userData }) => {
-  // Sample data
   let chatHistory = {};
   let userRequirements = {};
   const structuredUserData = userData?.map((user) => {
