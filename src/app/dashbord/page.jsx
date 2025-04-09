@@ -6,14 +6,14 @@ export const metadata = {
   title: 'Home',
   description: 'Home page',
 }
-const page = async() => {
+const Page = async () => {
   const users = await fetchUsers();
   return (
     <>
-    <HomeDashbord users={users}/>
-   </>
+      <HomeDashbord users={users.data} />
+    </>
 
   )
 }
 
-export default page
+export default Page;
