@@ -7,10 +7,14 @@ import toast from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation';
 import { addUnit, deleteImage, uploadImages } from '@/components/services/serviceFetching';
+import Cookies from 'js-cookie';
 // import { uploadImages, deleteImage, addUnit } from '@/components/services/serviceFetching';
 
 export const useUnitForm = (onClose, onSave) => {
   const router = useRouter();
+  
+  // Get client_id from cookies
+  const clientId = Cookies.get('client_id') || 'DREAM_HOMES';
   
   // Define validation schema using Yup
   const validationSchema = Yup.object({
@@ -40,8 +44,8 @@ export const useUnitForm = (onClose, onSave) => {
       view: 'Lagoon',
       country: 'Egypt',
       city: '',
-      clientName: '',
-      clientId: 'DREAM_HOMES',
+      clientName: clientId,
+      clientId: clientId,
       developer: '',
       unitId: uuidv4(),
       unitTitle: '',

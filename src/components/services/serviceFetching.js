@@ -121,6 +121,20 @@ export async function addCompound(compoundData) {
   }
 }
 
+export async function loginUser(formData) {
+  try {
+    const response = await axiosInstance.post('/login', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Login failed:", error.message);
+    throw { message: error.response?.data?.message || error.message };
+  }
+}
+
 export async function fetchData() {
   // Your fetching logic here
 }
