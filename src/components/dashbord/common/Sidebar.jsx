@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Moon, LayoutDashboard, BarChart2, Home, LogOut, TableRowsSplit } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { Moon, LayoutDashboard, BarChart2, Home, LogOut } from 'lucide-react';
 import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
+
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,13 +16,15 @@ const Sidebar = () => {
     setIsOpen(!isOpen);
   };
 
- 
+  const handleLogout =  () => {
+    Cookies.remove("client_id");
+
+    window.location.reload();
+    toast.success("Logout Successful");
+  };
 
   // Make the function available globally
-  if (typeof window !== 'undefined') {
-    window.toggleSidebar = toggleSidebar;
-  }
-
+ 
   // Function to check if a link is active
   const isLinkActive = (path) => {
     if (path === '/dashbord' && pathname === '/dashbord') {
@@ -29,6 +32,10 @@ const Sidebar = () => {
     }
     return pathname.startsWith(path) && path !== '/dashbord';
   };
+  if (typeof window !== 'undefined') {
+    window.toggleSidebar = toggleSidebar;
+  }
+
 
   return (
     <>
@@ -82,14 +89,14 @@ const Sidebar = () => {
         
         {/* Bottom Section */}
         <div className="mt-auto border-t border-gray-200 pt-2 pb-4">
-          <Link href="" className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md mx-2 mb-1 transition-colors">
+          <button onClick={handleLogout} className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md mx-2 mb-1 transition-colors">
             <Moon className="h-5 w-5 mr-3" />
             <span>Dark Mode</span>
-          </Link>
+          </button>
           
           <div className="mx-2 border-t border-gray-200 my-2"></div>
           
-          <button  className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md mx-2 transition-colors">
+          <button onClick={handleLogout}  className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md mx-2 transition-colors">
             <LogOut className="h-5 w-5 mr-3" />
             <span>Log Out</span>
           </button>
