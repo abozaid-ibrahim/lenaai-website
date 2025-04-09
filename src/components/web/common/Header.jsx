@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Globe } from "lucide-react";
-import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import {
   getClientid,
   removeClientId,
