@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Moon, LayoutDashboard, BarChart2, Home, LogOut, TableRowsSplit } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +14,13 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
-  
+  const handleLogout = async () => {
+    
+    Cookies.remove("client_id")
+    
+    window.location.reload()   
+    toast.success("Logout Successful")
+ }
  
 
   // Make the function available globally
@@ -88,10 +95,10 @@ const Sidebar = () => {
           
           <div className="mx-2 border-t border-gray-200 my-2"></div>
           
-          <Link href="" className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md mx-2 transition-colors">
+          <button onClick={handleLogout} className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md mx-2 transition-colors">
             <LogOut className="h-5 w-5 mr-3" />
             <span>Log Out</span>
-          </Link>
+          </button>
         </div>
       </div>
     </>
