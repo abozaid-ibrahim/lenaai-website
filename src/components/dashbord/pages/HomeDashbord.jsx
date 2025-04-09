@@ -3,36 +3,17 @@ import React, { useState } from 'react';
 import { Search, Filter, MessageSquare, Phone, Home, Calendar, CheckCircle, X, Eye, ChevronDown } from 'lucide-react';
 import formatDateForDisplay from '@/utils/formateDate';
 import PropertyDetailsModal from '../scomponent/PropertyDetailsModal';
-
-const RealEstateDashboard = ({ userData }) => {
+import { fetchUsers } from '@/components/services/serviceFetching';
+import { useRouter } from 'next/navigation';
+const RealEstateDashboard = ({ users }) => {
+  console.log("users", users);
+  
   // Sample data
-  let chatHistory = {};
-  let userRequirements = {};
-  const structuredUserData = userData.map((user) => {
-
-    // adding user chat history
-    const messages = user.conversation
-    chatHistory[user.phoneNumber] = messages;
-
-    // adding user requirements
-    userRequirements[user.phoneNumber] = user.requirements;
-
-    // adding date
-    const lastMessage = messages[messages.length - 1];
-
-    // adding action
-    const userAction = user.actions.action ? user.actions.action : "No Action";
-
-    return {
-      id: user.phoneNumber,
-      phone: user.phoneNumber,
-      date: formatDateForDisplay(lastMessage.timestamp),
-      requirements: "Requirements",
-      messageCount: messages.length,
-      status: userAction
-    }
-  })
-
+  const router = useRouter();
+  const [usersData, setUsersData] = useState(users.users);
+  const [hasMore, setHasMore] = useState(users.pagination.has_more);
+  const [nextCursor, setNextCursor] = useState(users.pagination.next_cursor);
+  const [previousCursor, setPreviousCursor] = useState(null);
   // Sample property details data
   const propertyDetails = {
     "Three Bedroom": {
@@ -109,14 +90,18 @@ const RealEstateDashboard = ({ userData }) => {
     }
   };
 
-  const [leads, setLeads] = useState(structuredUserData);
+  // const [leads, setLeads] = useState(initialLeads);
   const [activeTab, setActiveTab] = useState('All Chats');
   const [searchTerm, setSearchTerm] = useState('');
-  
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
-  
+
   // Date filter states
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [startDate, setStartDate] = useState('2025-03-26');
@@ -135,14 +120,14 @@ const RealEstateDashboard = ({ userData }) => {
     const formattedStartDate = formatDateForDisplay(startDate);
     const formattedEndDate = formatDateForDisplay(endDate);
     setDisplayDateRange(`${formattedStartDate} - ${formattedEndDate}`);
-    
+
     // Filter leads based on date range
     const filteredByDate = initialLeads.filter(lead => {
       const [day, month, year] = lead.date.split('-');
       const leadDate = new Date(`20${year}-${month}-${day}`);
       return leadDate >= new Date(startDate) && leadDate <= new Date(endDate);
     });
-    
+
     setLeads(filteredByDate);
     setShowDatePicker(false);
   };
@@ -151,21 +136,62 @@ const RealEstateDashboard = ({ userData }) => {
   const resetFilters = () => {
     setLeads(initialLeads);
     setSearchTerm('');
+    setCurrentPage(1); // Reset to first page when filters are reset
   };
-  
+
   // Filter leads based on active tab and search
-  const filteredLeads = leads.filter(lead => {
-    if (activeTab === 'All Chats') return true;
-    if (activeTab === 'Recent Chats') return new Date(lead.date.split('-').reverse().join('-')) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    if (activeTab === 'Needs Action') return ['Missing Info', 'Schedule Call', 'Make a Call', 'Book Viewing'].includes(lead.status);
-    if (activeTab === 'NO Action') return ['Not Interested', 'Not Qualified'].includes(lead.status);
-    return true;
-  }).filter(lead => {
-    if (!searchTerm) return true;
-    return lead.phone.toLowerCase().includes(searchTerm.toLowerCase()) || 
-           lead.requirements.toLowerCase().includes(searchTerm.toLowerCase()) || 
-           lead.phone.includes(searchTerm);
-  });
+  // const filteredLeads = leads.filter(lead => {
+  //   if (activeTab === 'All Chats') return true;
+  //   if (activeTab === 'Recent Chats') return new Date(lead.date.split('-').reverse().join('-')) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  //   if (activeTab === 'Needs Action') return ['Missing Info', 'Schedule Call', 'Make a Call', 'Book Viewing'].includes(lead.status);
+  //   if (activeTab === 'NO Action') return ['Not Interested', 'Not Qualified'].includes(lead.status);
+  //   return true;
+  // }).filter(lead => {
+  //   if (!searchTerm) return true;
+  //   return lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     lead.requirements.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     lead.phone.includes(searchTerm);
+  // });
+
+  // Calculate pagination
+  // const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
+  // const startIndex = (currentPage - 1) * itemsPerPage;
+  // const endIndex = startIndex + itemsPerPage;
+  // const currentLeads = filteredLeads.slice(startIndex, endIndex);
+
+  // Pagination handlers
+  const handleNextPage = async () => {
+    if (hasMore) {
+      setPreviousCursor(nextCursor);
+      setCurrentPage(currentPage + 1);
+      const nextUsers = await fetchUsers(nextCursor);
+      setUsersData(
+        [
+          ...nextUsers.users
+        ]
+      );
+      setNextCursor(nextUsers.pagination.next_cursor);
+      setHasMore(nextUsers.pagination.has_more);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+//   const filteredLeads = leads.filter(lead => {
+//     if (activeTab === 'All Chats') return true;
+//     if (activeTab === 'Recent Chats') return new Date(lead.date.split('-').reverse().join('-')) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+//     if (activeTab === 'Needs Action') return ['Missing Info', 'Schedule Call', 'Make a Call', 'Book Viewing'].includes(lead.status);
+//     if (activeTab === 'NO Action') return ['Not Interested', 'Not Qualified'].includes(lead.status);
+//     return true;
+//   }).filter(lead => {
+//     if (!searchTerm) return true;
+//     return lead.phone.toLowerCase().includes(searchTerm.toLowerCase()) || 
+//            lead.requirements.toLowerCase().includes(searchTerm.toLowerCase()) || 
+//            lead.phone.includes(searchTerm);
+//   });
 
   // Get status color and icon
   const getStatusStyle = (status) => {
@@ -206,11 +232,10 @@ const RealEstateDashboard = ({ userData }) => {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap ${
-                    activeTab === tab 
-                      ? 'bg-white text-blue-700 shadow-sm' 
-                      : 'text-gray-600 hover:bg-gray-200'
-                  }`}
+                  className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap ${activeTab === tab
+                    ? 'bg-white text-blue-700 shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-200'
+                    }`}
                 >
                   {tab}
                 </button>
@@ -237,17 +262,17 @@ const RealEstateDashboard = ({ userData }) => {
               />
             </div>
             <div className="flex flex-wrap gap-2 sm:gap-3">
-              <button 
+              <button
                 onClick={resetFilters}
                 className="flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-md text-gray-700 hover:bg-gray-50 text-sm"
               >
                 <Filter size={16} />
                 <span className="hidden xs:inline">Filter</span>
               </button>
-              
+
               {/* Date filter with dropdown */}
               <div className="relative">
-                <button 
+                <button
                   onClick={() => setShowDatePicker(!showDatePicker)}
                   className="flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-md text-gray-700 hover:bg-gray-50 text-sm"
                 >
@@ -255,14 +280,14 @@ const RealEstateDashboard = ({ userData }) => {
                   <span className="sm:hidden">Date</span>
                   <ChevronDown size={14} />
                 </button>
-                
+
                 {showDatePicker && (
                   <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded-md shadow-lg p-4 z-10">
                     <div className="space-y-3">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-                        <input 
-                          type="date" 
+                        <input
+                          type="date"
                           value={startDate}
                           onChange={(e) => setStartDate(e.target.value)}
                           className="w-full border border-gray-200 rounded-md p-2 text-sm"
@@ -270,15 +295,15 @@ const RealEstateDashboard = ({ userData }) => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                        <input 
-                          type="date" 
+                        <input
+                          type="date"
                           value={endDate}
                           onChange={(e) => setEndDate(e.target.value)}
                           className="w-full border border-gray-200 rounded-md p-2 text-sm"
                         />
                       </div>
                       <div className="flex justify-end pt-2">
-                        <button 
+                        <button
                           onClick={handleDateFilterChange}
                           className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
                         >
@@ -308,39 +333,45 @@ const RealEstateDashboard = ({ userData }) => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredLeads.map((lead) => {
-                      const statusStyle = getStatusStyle(lead.status);
+                    {usersData.map((user) => {
+                      const lastMessage = user.conversation?.[0]?.user_message || '';
+                      const lastActivity = new Date(user.lastActivity).toLocaleDateString();
+                      const requirements = user.requirements?.userBuildingType?.[0] || 'Not specified';
+                      const messageCount = user.conversation?.length || 0;
+                      const status = user.profile?.Score?.details?.buyer?.category || 'Cold';
+
                       return (
-                        <tr key={lead.id} className="hover:bg-gray-50 transition-colors text-xs sm:text-sm">
+                        <tr onClick={() => router.push(`/dashbord/chat/history/${user.phoneNumber}`)} key={user.phoneNumber} className="hover:bg-gray-50 transition-colors text-xs sm:text-sm">
                           <td className="px-2 sm:px-4 py-2 sm:py-3 font-medium text-gray-900">
                             <div className="flex flex-col sm:hidden">
-                              <span>{lead.name}</span>
-                              <span className="text-xs text-gray-500">{lead.phone}</span>
-                              <span 
+                              <span className="text-xs text-gray-500">{user.phoneNumber}</span>
+                              <span
                                 className="text-xs text-blue-600 cursor-pointer hover:underline"
-                                onClick={() => openPropertyDetails(lead.requirements)}
+                                onClick={() => openPropertyDetails(requirements)}
                               >
-                                {lead.requirements}
+                                {requirements}
                               </span>
                             </div>
-                            <span className="hidden sm:inline">{lead.name}</span>
+                            <span className="hidden sm:inline">{user.phoneNumber}</span>
                           </td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 hidden sm:table-cell">{lead.phone}</td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600">{lead.date}</td>
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 hidden sm:table-cell">{user.phoneNumber}</td>
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600">{lastActivity}</td>
                           <td className="px-2 sm:px-4 py-2 sm:py-3 hidden md:table-cell">
-                            <span 
+                            <span
                               className="text-blue-600 cursor-pointer hover:underline"
-                              onClick={() => openPropertyDetails(lead.requirements)}
+                              onClick={() => openPropertyDetails(requirements)}
                             >
-                              {lead.requirements}
+                              {requirements}
                             </span>
                           </td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-medium">{lead.messageCount}</td>
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-medium">{messageCount}</td>
                           <td className="px-2 sm:px-4 py-2 sm:py-3">
                             <div className="flex justify-center">
-                              <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap ${statusStyle.bgColor}`}>
-                                {statusStyle.icon}
-                                {lead.status}
+                              <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap ${status === 'Hot' ? 'bg-green-100 text-green-700' :
+                                status === 'Warm' ? 'bg-yellow-100 text-yellow-700' :
+                                  'bg-gray-100 text-gray-700'
+                                }`}>
+                                {status}
                               </span>
                             </div>
                           </td>
@@ -352,24 +383,40 @@ const RealEstateDashboard = ({ userData }) => {
               </div>
             </div>
           </div>
-          
-          {/* Empty state */}
-          {filteredLeads.length === 0 && (
-            <div className="text-center py-8 sm:py-10">
-              <p className="text-gray-500 text-sm sm:text-base">لا توجد بيانات تطابق التصفية الحالية</p>
-              <button 
-                onClick={resetFilters} 
-                className="mt-3 text-blue-600 text-sm hover:text-blue-800"
-              >
-                إعادة ضبط التصفية
-              </button>
+
+          {/* Pagination controls */}
+          {usersData.length > 0 && (
+            <div className="flex justify-end items-center mt-4">
+              <div className="flex gap-2">
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${currentPage === 1
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                    }`}
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={handleNextPage}
+                  disabled={!hasMore}
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${hasMore
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    }`}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           )}
+
         </div>
       </div>
-      
+
       {/* Property Details Modal */}
-      <PropertyDetailsModal 
+      <PropertyDetailsModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         property={selectedProperty}
