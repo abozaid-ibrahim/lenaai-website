@@ -88,7 +88,7 @@ export async function fetchUsers(cursor) {
     if (cursor) {
       params.cursor = cursor;
     }
-    const response = await axiosInstance.get(`dashboard/DREAM_HOMES`, {
+    const response = await axiosInstance.get(`dashboard/ALL`, {
       params: params
     });
     return response.data;
