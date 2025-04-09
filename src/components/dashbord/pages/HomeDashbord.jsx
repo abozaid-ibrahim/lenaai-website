@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { Search, Filter, MessageSquare, Phone, Home, Calendar, CheckCircle, X, Eye, ChevronDown } from 'lucide-react';
+import formatDateForDisplay from '@/utils/formateDate';
 import PropertyDetailsModal from '../scomponent/PropertyDetailsModal';
 import { fetchUsers } from '@/components/services/serviceFetching';
 import { useRouter } from 'next/navigation';
@@ -112,15 +113,6 @@ const RealEstateDashboard = ({ users }) => {
     setIsModalOpen(true);
   };
 
-  // Function to format date for display
-  const formatDateForDisplay = (dateStr) => {
-    const date = new Date(dateStr);
-    const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'short' });
-    const year = date.getFullYear().toString().substr(-2);
-    return `${day} ${month} ${year}`;
-  };
-
   // Handle date filter changes
   const handleDateFilterChange = () => {
     const formattedStartDate = formatDateForDisplay(startDate);
@@ -186,29 +178,41 @@ const RealEstateDashboard = ({ users }) => {
       setCurrentPage(currentPage - 1);
     }
   };
+//   const filteredLeads = leads.filter(lead => {
+//     if (activeTab === 'All Chats') return true;
+//     if (activeTab === 'Recent Chats') return new Date(lead.date.split('-').reverse().join('-')) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+//     if (activeTab === 'Needs Action') return ['Missing Info', 'Schedule Call', 'Make a Call', 'Book Viewing'].includes(lead.status);
+//     if (activeTab === 'NO Action') return ['Not Interested', 'Not Qualified'].includes(lead.status);
+//     return true;
+//   }).filter(lead => {
+//     if (!searchTerm) return true;
+//     return lead.phone.toLowerCase().includes(searchTerm.toLowerCase()) || 
+//            lead.requirements.toLowerCase().includes(searchTerm.toLowerCase()) || 
+//            lead.phone.includes(searchTerm);
+//   });
 
   // Get status color and icon
   const getStatusStyle = (status) => {
     switch (status) {
-      case 'Ongoing Chat':
+      case 'Follow up later':
         return { bgColor: 'bg-gray-100 text-gray-700', icon: <MessageSquare size={14} className="mr-1" /> };
-      case 'Not Interested':
+      case 'Not interested':
         return { bgColor: 'bg-gray-200 text-gray-700', icon: <X size={14} className="mr-1" /> };
-      case 'Missing Info':
+      case 'Missing requirement':
         return { bgColor: 'bg-orange-500 text-white', icon: <Filter size={14} className="mr-1" /> };
-      case 'Property View':
+      case 'Property view':
         return { bgColor: 'bg-blue-200 text-blue-700', icon: <Eye size={14} className="mr-1" /> };
-      case 'Office Visit':
+      case 'Office visit':
         return { bgColor: 'bg-green-100 text-green-700', icon: <Home size={14} className="mr-1" /> };
-      case 'Qualified Lead':
+      case 'Qualified lead':
         return { bgColor: 'bg-teal-500 text-white', icon: <CheckCircle size={14} className="mr-1" /> };
       case 'Book Viewing':
         return { bgColor: 'bg-red-500 text-white', icon: <Calendar size={14} className="mr-1" /> };
       case 'Schedule Call':
         return { bgColor: 'bg-blue-400 text-white', icon: <Calendar size={14} className="mr-1" /> };
-      case 'Make a Call':
+      case 'Make a call':
         return { bgColor: 'bg-green-600 text-white', icon: <Phone size={14} className="mr-1" /> };
-      case 'Not Qualified':
+      case 'Not qualified':
         return { bgColor: 'bg-gray-500 text-white', icon: <X size={14} className="mr-1" /> };
       default:
         return { bgColor: 'bg-gray-100', icon: null };
