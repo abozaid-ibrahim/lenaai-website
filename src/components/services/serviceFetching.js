@@ -129,23 +129,6 @@ export async function addCompound(compoundData) {
   }
 }
 
-export async function fetchUsers(cursor) {
-  try {
-    const params = {
-      limit: 5,
-    }
-    if (cursor) {
-      params.cursor = cursor;
-    }
-    const response = await axiosInstance.get(`dashboard/DREAM_HOMES`, {
-      params: params
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Failed to fetch users:", error.message);
-    return { error: error.message };
-  }
-}
 
 export async function getChatHistory(userId) {
   try {
