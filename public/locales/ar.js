@@ -3,6 +3,6 @@ export default {
   dashboard: "لوحة التحكم",
   language: "اللغة",
   english: "الإنجليزية",
-  arabic: "العربية",
+  arabic: "العربية"
   // Add more translations as needed
 };

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import {
   uploadImages,
   deleteImage,
-  addCompound,
+  addCompound
 } from "@/components/services/serviceFetching";
 
 // Enhanced validation schema with rules for all inputs
@@ -15,7 +15,7 @@ const validationSchema = Yup.object({
   name: Yup.string().required("Compound name is required"),
   description: Yup.string().min(
     10,
-    "Description must be at least 10 characters",
+    "Description must be at least 10 characters"
   ),
   developer_name: Yup.string().required("Developer name is required"),
   city: Yup.string().required("City is required"),
@@ -35,7 +35,7 @@ const validationSchema = Yup.object({
     .transform((value) => (value === "" ? null : value))
     .required("Please enter a link"),
   master_plan: Yup.mixed().required("Master plan image is required"),
-  gated: Yup.boolean(),
+  gated: Yup.boolean()
 });
 
 export const useCompoundForm = (onClose, onSave) => {
@@ -57,14 +57,14 @@ export const useCompoundForm = (onClose, onSave) => {
       gated: false,
       video_url: "",
       google_map_link: "",
-      master_plan: null,
+      master_plan: null
     },
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       // Check if master plan image exists
       if (!values.master_plan) {
         toast.error(
-          "Master plan image must be uploaded before saving the compound",
+          "Master plan image must be uploaded before saving the compound"
         );
         setSubmitting(false);
         return;
@@ -73,7 +73,7 @@ export const useCompoundForm = (onClose, onSave) => {
       try {
         const submissionData = {
           ...values,
-          master_plan: values.master_plan ? values.master_plan.url : null,
+          master_plan: values.master_plan ? values.master_plan.url : null
         };
 
         // Use addCompound function from serviceFetching
@@ -96,7 +96,7 @@ export const useCompoundForm = (onClose, onSave) => {
       } finally {
         setSubmitting(false);
       }
-    },
+    }
   });
 
   const resetFileInput = () => {
@@ -174,6 +174,6 @@ export const useCompoundForm = (onClose, onSave) => {
     removeSelectedFile,
     handleImageUpload,
     removeUploadedImage,
-    setNewDeveloper,
+    setNewDeveloper
   };
 };

@@ -9,7 +9,7 @@ import {
   Plus,
   ChevronDown,
   ChevronLeft,
-  ChevronRight,
+  ChevronRight
 } from "lucide-react";
 import AddUnitModal from "../scomponent/AddUnitModal";
 import Link from "next/link";
@@ -27,8 +27,8 @@ const realEstateData = [
     buildings: [
       { id: 101, name: "Tower A", units: 45, image: im },
       { id: 102, name: "Tower B", units: 52, image: im },
-      { id: 103, name: "Garden Villa", units: 10, image: im },
-    ],
+      { id: 103, name: "Garden Villa", units: 10, image: im }
+    ]
   },
   {
     id: 2,
@@ -43,15 +43,15 @@ const realEstateData = [
         id: 201,
         name: "Block 1",
         units: 24,
-        image: "/api/placeholder/400/300",
+        image: "/api/placeholder/400/300"
       },
       {
         id: 202,
         name: "Block 2",
         units: 24,
-        image: "/api/placeholder/400/300",
-      },
-    ],
+        image: "/api/placeholder/400/300"
+      }
+    ]
   },
   {
     id: 3,
@@ -66,21 +66,21 @@ const realEstateData = [
         id: 301,
         name: "North Tower",
         units: 60,
-        image: "/api/placeholder/400/300",
+        image: "/api/placeholder/400/300"
       },
       {
         id: 302,
         name: "South Tower",
         units: 60,
-        image: "/api/placeholder/400/300",
+        image: "/api/placeholder/400/300"
       },
       {
         id: 303,
         name: "Penthouse Block",
         units: 15,
-        image: "/api/placeholder/400/300",
-      },
-    ],
+        image: "/api/placeholder/400/300"
+      }
+    ]
   },
   {
     id: 4,
@@ -95,16 +95,16 @@ const realEstateData = [
         id: 401,
         name: "The Gallery",
         units: 35,
-        image: "/api/placeholder/400/300",
+        image: "/api/placeholder/400/300"
       },
       {
         id: 402,
         name: "The Studio",
         units: 28,
-        image: "/api/placeholder/400/300",
-      },
-    ],
-  },
+        image: "/api/placeholder/400/300"
+      }
+    ]
+  }
 ];
 
 const RealEstateListings = ({ initialData, comboundata, developersData }) => {
@@ -122,10 +122,10 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
     ? initialData.filter((estate) => {
         const matchesSearch =
           (estate.name?.toLowerCase() || "").includes(
-            searchTerm.toLowerCase(),
+            searchTerm.toLowerCase()
           ) ||
           (estate.compound?.toLowerCase() || "").includes(
-            searchTerm.toLowerCase(),
+            searchTerm.toLowerCase()
           ) ||
           (estate.city?.toLowerCase() || "").includes(searchTerm.toLowerCase());
 
@@ -150,8 +150,8 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
         ? developersData.map((developer) => developer.name)
         : initialData
             .filter((estate) => estate.developer)
-            .map((estate) => estate.developer),
-    ),
+            .map((estate) => estate.developer)
+    )
   ];
 
   // Calculate pagination

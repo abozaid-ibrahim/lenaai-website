@@ -3,5 +3,5 @@ export default {
   dashboard: "Dashboard",
   language: "Language",
   english: "English",
-  arabic: "Arabic",
+  arabic: "Arabic"
 };

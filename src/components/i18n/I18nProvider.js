@@ -8,7 +8,7 @@ import arTranslations from "../../locals/ar";
 // Static translations
 const translations = {
   en: enTranslations,
-  ar: arTranslations,
+  ar: arTranslations
 };
 
 export const I18nProvider = ({ children }) => {

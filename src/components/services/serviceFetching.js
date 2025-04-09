@@ -33,8 +33,8 @@ export async function uploadImages(formData) {
   try {
     const response = await axiosInstance.post(`/images/`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
-      },
+        "Content-Type": "multipart/form-data"
+      }
     });
     return response.data;
   } catch (error) {
@@ -77,8 +77,8 @@ export async function deleteUnit(id) {
   try {
     const response = await axiosInstance.delete(`/delete-unit`, {
       params: {
-        unitId: id,
-      },
+        unitId: id
+      }
     });
     return response.data;
   } catch (error) {
@@ -91,13 +91,13 @@ export async function deleteUnit(id) {
 export async function fetchUsers(cursor) {
   try {
     const params = {
-      limit: 5,
+      limit: 5
     };
     if (cursor) {
       params.cursor = cursor;
     }
     const response = await axiosInstance.get(`dashboard/ALL`, {
-      params: params,
+      params: params
     });
     return response.data;
   } catch (error) {
@@ -141,8 +141,8 @@ export async function loginUser(formData) {
   try {
     const response = await axiosInstance.post("/login", formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
-      },
+        "Content-Type": "multipart/form-data"
+      }
     });
     return response.data;
   } catch (error) {

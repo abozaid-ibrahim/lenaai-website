@@ -9,24 +9,24 @@ i18n
     debug: true,
     fallbackLng: "en",
     interpolation: {
-      escapeValue: false,
+      escapeValue: false
     },
     resources: {
       en: {
         translation: {
           welcome: "Welcome",
-          dashboard: "Dashboard",
+          dashboard: "Dashboard"
           // Add more translations here
-        },
+        }
       },
       ar: {
         translation: {
           welcome: "مرحبا",
-          dashboard: "لوحة التحكم",
+          dashboard: "لوحة التحكم"
           // Add more translations here
-        },
-      },
-    },
+        }
+      }
+    }
   });
 
 export default i18n;

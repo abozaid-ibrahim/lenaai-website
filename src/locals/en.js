@@ -4,6 +4,6 @@ export default {
   "hero.title2": "SMART REAL ESTATE CRM",
   "hero.subtitle2": "AUTOMATE & SCALE EFFORTLESSLY",
   "button.tryChat": "Try our Chatbot",
-  "button.requestDemo": "Request Demo",
+  "button.requestDemo": "Request Demo"
   // Add more translations as needed
 };

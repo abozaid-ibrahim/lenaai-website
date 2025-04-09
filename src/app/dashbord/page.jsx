@@ -4,7 +4,7 @@ import React from "react";
 
 export const metadata = {
   title: "Home",
-  description: "Home page",
+  description: "Home page"
 };
 const page = async () => {
   const users = await fetchUsers();

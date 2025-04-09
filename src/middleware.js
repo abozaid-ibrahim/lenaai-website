@@ -18,7 +18,7 @@ export async function middleware(request) {
     // If no client_id, redirect to login with a message
     if (!clientId) {
       return NextResponse.redirect(
-        new URL("/auth/login?message=Please login first", request.url),
+        new URL("/auth/login?message=Please login first", request.url)
       );
     }
   }
@@ -29,5 +29,5 @@ export async function middleware(request) {
 
 // Configure which paths this middleware will run on
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"]
 };

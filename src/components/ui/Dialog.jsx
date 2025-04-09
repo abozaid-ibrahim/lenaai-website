@@ -37,7 +37,7 @@ const Dialog = ({
   children,
   closeOnOverlayClick = true,
   showCloseButton,
-  className = "",
+  className = ""
 }) => {
   const dialogRef = useRef(null);
   const contentRef = useRef(null);
@@ -76,7 +76,7 @@ const Dialog = ({
     lg: "max-w-lg",
     xl: "max-w-xl",
     "2xl": "max-w-2xl",
-    full: "max-w-full w-full",
+    full: "max-w-full w-full"
   };
 
   return (

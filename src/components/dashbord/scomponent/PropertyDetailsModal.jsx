@@ -11,7 +11,7 @@ import {
   Calendar,
   DollarSign,
   User,
-  Phone,
+  Phone
 } from "lucide-react";
 
 const PropertyDetailsModal = ({ isOpen, onClose, property }) => {

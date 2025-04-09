@@ -6,7 +6,7 @@ export const generateMetadata = async ({ params }) => {
   const { id } = await params;
   const unit = await fetchUnitById(id);
   return {
-    title: unit.unitTitle,
+    title: unit.unitTitle
   };
 };
 const Page = async ({ params }) => {

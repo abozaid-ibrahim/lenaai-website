@@ -25,9 +25,9 @@ const HeroSection = () => {
         { text: "Try our Chatbot", className: "bg-primary" },
         {
           text: "Request Demo",
-          className: "bg-transparent border border-white",
-        },
-      ],
+          className: "bg-transparent border border-white"
+        }
+      ]
     },
     {
       image: img2,
@@ -37,10 +37,10 @@ const HeroSection = () => {
         { text: "Try our Chatbot", className: "bg-primary" },
         {
           text: "Request Demo",
-          className: "bg-transparent border border-white",
-        },
-      ],
-    },
+          className: "bg-transparent border border-white"
+        }
+      ]
+    }
   ];
 
   return (

@@ -6,7 +6,7 @@ import {
   MapPin,
   Building,
   Handshake,
-  User,
+  User
 } from "lucide-react";
 
 const Footer = () => {
