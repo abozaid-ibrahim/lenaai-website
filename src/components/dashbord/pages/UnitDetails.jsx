@@ -11,7 +11,7 @@ export default function UnitDetails({ unit }) {
     const router = useRouter();
 
     const handleDeleteUnit = async () => {
-        await deleteUnit(unit.id);
+        await deleteUnit(unit.unitId);
         toast.success('Unit deleted successfully');
         router.back();
     }
