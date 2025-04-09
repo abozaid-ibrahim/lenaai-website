@@ -76,9 +76,9 @@ export async function updateUnit(unit) {
 export async function deleteUnit(id) {
   try {
     const response = await axiosInstance.delete(`/delete-unit`, {
-      params: {
-        unitId: id,
-      },
+      headers: {
+        unitId: id
+      }
     });
     return response.data;
   } catch (error) {
@@ -157,10 +157,10 @@ export async function fetchData() {
 
 export async function getChatHistory(userId) {
   try {
-    const response = await axiosInstance.get(`history/DREAM_HOMES/${userId}`);
+    const response = await axiosInstance.get(`history/ALL/${userId}`);
     return response.data;
   } catch (error) {
-    console.error("Failed to get chat history:", error.message);
+    console.error("Failed to fetch data:", error.message);
     return { error: error.message };
   }
 }
