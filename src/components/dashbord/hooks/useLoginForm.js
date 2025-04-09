@@ -52,7 +52,7 @@ export const useLoginForm = () => {
         toast.success('Login successful');
         
         // Redirect to dashboard
-        router.push('/dashbord');
+        window.location.href = '/dashbord';
       } catch (error) {
         console.error('Login failed:', error);
         if (error.message === "Request failed with status code 401" ) {
