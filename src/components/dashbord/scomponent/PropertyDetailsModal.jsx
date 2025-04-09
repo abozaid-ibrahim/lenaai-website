@@ -1,5 +1,18 @@
-import React from 'react';
-import { X, Home, Square, Building2, Bath, Bed, Eye, Landmark, Calendar, DollarSign, User, Phone } from 'lucide-react';
+import React from "react";
+import {
+  X,
+  Home,
+  Square,
+  Building2,
+  Bath,
+  Bed,
+  Eye,
+  Landmark,
+  Calendar,
+  DollarSign,
+  User,
+  Phone,
+} from "lucide-react";
 
 const PropertyDetailsModal = ({ isOpen, onClose, property }) => {
   if (!isOpen || !property) return null;
@@ -12,7 +25,7 @@ const PropertyDetailsModal = ({ isOpen, onClose, property }) => {
           <h3 className="text-lg font-semibold text-gray-900">
             {property.title}
           </h3>
-          <button 
+          <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-500 focus:outline-none"
           >
@@ -32,7 +45,9 @@ const PropertyDetailsModal = ({ isOpen, onClose, property }) => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Building Type</p>
-                    <p className="text-sm font-medium">{property.buildingType}</p>
+                    <p className="text-sm font-medium">
+                      {property.buildingType}
+                    </p>
                   </div>
                 </div>
 
@@ -72,7 +87,9 @@ const PropertyDetailsModal = ({ isOpen, onClose, property }) => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Bathroom Count</p>
-                    <p className="text-sm font-medium">{property.bathroomCount}</p>
+                    <p className="text-sm font-medium">
+                      {property.bathroomCount}
+                    </p>
                   </div>
                 </div>
 
@@ -124,7 +141,9 @@ const PropertyDetailsModal = ({ isOpen, onClose, property }) => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Down Payment</p>
-                    <p className="text-sm font-medium">{property.downPayment}</p>
+                    <p className="text-sm font-medium">
+                      {property.downPayment}
+                    </p>
                   </div>
                 </div>
 
@@ -134,7 +153,9 @@ const PropertyDetailsModal = ({ isOpen, onClose, property }) => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Delivery Year</p>
-                    <p className="text-sm font-medium">{property.deliveryYear}</p>
+                    <p className="text-sm font-medium">
+                      {property.deliveryYear}
+                    </p>
                   </div>
                 </div>
 
@@ -144,7 +165,9 @@ const PropertyDetailsModal = ({ isOpen, onClose, property }) => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Total Price</p>
-                    <p className="text-sm font-medium">{property?.totalPrice || "N/A"}</p>
+                    <p className="text-sm font-medium">
+                      {property?.totalPrice || "N/A"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -157,17 +180,23 @@ const PropertyDetailsModal = ({ isOpen, onClose, property }) => {
                   <div className="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mb-2">
                     <User className="h-8 w-8 text-blue-600" />
                   </div>
-                  <h4 className="font-medium text-gray-900">{property.contactName}</h4>
-                  <p className="text-sm text-gray-500 mt-1">{property.lastUpdate}</p>
+                  <h4 className="font-medium text-gray-900">
+                    {property.contactName}
+                  </h4>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {property.lastUpdate}
+                  </p>
                 </div>
               </div>
-              
+
               <div className="bg-blue-50 p-4 rounded-lg">
                 <div className="text-center">
                   <div className="inline-block bg-blue-100 p-2 rounded-full mb-2">
                     <Phone className="h-6 w-6 text-blue-600" />
                   </div>
-                  <p className="text-sm text-blue-800 font-medium">For {property.forRentSale}</p>
+                  <p className="text-sm text-blue-800 font-medium">
+                    For {property.forRentSale}
+                  </p>
                 </div>
               </div>
             </div>
