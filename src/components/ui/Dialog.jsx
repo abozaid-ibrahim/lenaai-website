@@ -50,7 +50,7 @@ const Dialog = ({
   // Handle click outside dialog
   const handleOverlayClick = (e) => {
     if (closeOnOverlayClick && isOpen && dialogRef.current === e.target)
-      onclose();
+      onClose();
   };
 
   useEffect(() => {
