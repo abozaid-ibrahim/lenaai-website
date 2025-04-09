@@ -1,10 +1,10 @@
-"use client"
-import React from 'react';
-import { X, Upload, MapPin, Trash2 } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-import { useCompoundForm } from '../hooks/useCompoundForm';
+"use client";
+import React from "react";
+import { X, Upload, MapPin, Trash2 } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { useCompoundForm } from "../hooks/useCompoundForm";
 
-const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
+const AddCompoundModal = ({ isOpen, onClose, onSave, developersData }) => {
   const {
     formik,
     newDeveloper,
@@ -16,7 +16,7 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
     removeSelectedFile,
     handleImageUpload,
     removeUploadedImage,
-    setNewDeveloper
+    setNewDeveloper,
   } = useCompoundForm(onClose, onSave);
 
   if (!isOpen) return null;
@@ -26,9 +26,9 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-primary z-10 px-6 py-4 flex justify-between items-center">
           <h2 className="text-2xl font-bold text-white">Add New Compound</h2>
-          <button 
+          <button
             onClick={onClose}
-            className="p-2 rounded-full  transition-colors"
+            className="p-2 rounded-full transition-colors"
             disabled={formik.isSubmitting}
           >
             <X className="w-6 h-6 text-white" />
@@ -37,58 +37,75 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
 
         <form onSubmit={formik.handleSubmit} className="p-6 space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Compound Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Compound Name
+            </label>
             <input
               type="text"
               name="name"
               value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.name && formik.errors.name ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.name && formik.errors.name ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-primary focus:border-transparent`}
             />
             {formik.touched.name && formik.errors.name && (
-              <div className="text-red-500 text-xs mt-1">{formik.errors.name}</div>
+              <div className="text-red-500 text-xs mt-1">
+                {formik.errors.name}
+              </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
             <textarea
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.description && formik.errors.description ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-primary focus:border-transparent`}
               rows="3"
             />
+            {formik.touched.description && formik.errors.description && (
+              <div className="text-red-500 text-xs mt-1">
+                {formik.errors.description}
+              </div>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Country
+            </label>
             <select
               name="country"
               value={formik.values.country}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.country && formik.errors.country ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.country && formik.errors.country ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-primary focus:border-transparent`}
             >
               <option value="Egypt">Egypt</option>
               <option value="UAE">UAE</option>
               <option value="Saudi Arabia">Saudi Arabia</option>
             </select>
             {formik.touched.country && formik.errors.country && (
-              <div className="text-red-500 text-xs mt-1">{formik.errors.country}</div>
+              <div className="text-red-500 text-xs mt-1">
+                {formik.errors.country}
+              </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              City
+            </label>
             <select
               name="city"
               value={formik.values.city}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.city && formik.errors.city ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.city && formik.errors.city ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-primary focus:border-transparent`}
             >
               <option value="">Select City</option>
               <option value="Cairo">Cairo</option>
@@ -97,40 +114,55 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               <option value="New Cairo">New Cairo</option>
             </select>
             {formik.touched.city && formik.errors.city && (
-              <div className="text-red-500 text-xs mt-1">{formik.errors.city}</div>
+              <div className="text-red-500 text-xs mt-1">
+                {formik.errors.city}
+              </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Area (m²)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Area (m²)
+            </label>
             <input
               type="number"
               name="area"
               value={formik.values.area}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.area && formik.errors.area ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.area && formik.errors.area ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-primary focus:border-transparent`}
             />
             {formik.touched.area && formik.errors.area && (
-              <div className="text-red-500 text-xs mt-1">{formik.errors.area}</div>
+              <div className="text-red-500 text-xs mt-1">
+                {formik.errors.area}
+              </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Video URL</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Video URL
+            </label>
             <input
               type="url"
               name="video_url"
               value={formik.values.video_url}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              className={`w-full px-4 py-2 rounded-lg border ${formik.touched.video_url && formik.errors.video_url ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-primary focus:border-transparent`}
               placeholder="https://youtube.com/..."
             />
+            {formik.touched.video_url && formik.errors.video_url && (
+              <div className="text-red-500 text-xs mt-1">
+                {formik.errors.video_url}
+              </div>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Google Maps Link</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Google Maps Link
+            </label>
             <div className="flex">
               <input
                 type="url"
@@ -138,10 +170,10 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                 value={formik.values.google_map_link}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-2 rounded-l-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                className={`w-full px-4 py-2 rounded-l-lg border ${formik.touched.google_map_link && formik.errors.google_map_link ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-primary focus:border-transparent`}
                 placeholder="https://maps.google.com/..."
               />
-              <button 
+              <button
                 type="button"
                 className="bg-gray-100 px-3 rounded-r-lg border border-l-0 border-gray-300 hover:bg-gray-200"
                 title="Open Maps"
@@ -149,10 +181,18 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                 <MapPin className="w-5 h-5 text-gray-600" />
               </button>
             </div>
+            {formik.touched.google_map_link &&
+              formik.errors.google_map_link && (
+                <div className="text-red-500 text-xs mt-1">
+                  {formik.errors.google_map_link}
+                </div>
+              )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Developer</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Developer
+            </label>
             {!newDeveloper ? (
               <div className="flex gap-2">
                 <select
@@ -160,24 +200,28 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                   value={formik.values.developer_name}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className={`w-full px-4 py-2 rounded-lg border ${formik.touched.developer_name && formik.errors.developer_name ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
+                  className={`w-full px-4 py-2 rounded-lg border ${formik.touched.developer_name && formik.errors.developer_name ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-primary focus:border-transparent`}
                 >
                   <option value="">Select Developer</option>
-                  {developers.length > 0 ? (
-                    developers.map(dev => (
-                      <option key={dev.id} value={dev.name}>{dev.name}</option>
+                  {developersData && developersData.length > 0 ? (
+                    developersData.map((dev, index) => (
+                      <option key={index} value={dev.name}>
+                        {dev.name}
+                      </option>
                     ))
                   ) : (
                     <>
-                      <option value="Talaat Mostafa Group (TMG) - طلعت مصطفى">Talaat Mostafa Group (TMG) - طلعت مصطفى</option>
+                      <option value="Talaat Mostafa Group (TMG) - طلعت مصطفى">
+                        Talaat Mostafa Group (TMG) - طلعت مصطفى
+                      </option>
                       <option value="Madinaty">Madinaty</option>
                       <option value="Emaar">Emaar</option>
                       <option value="Palm Hills">Palm Hills</option>
                     </>
                   )}
                 </select>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setNewDeveloper(true)}
                   className="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-gray-700 text-sm"
                 >
@@ -192,11 +236,11 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                   value={formik.values.developer_name}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className={`w-full px-4 py-2 rounded-lg border ${formik.touched.developer_name && formik.errors.developer_name ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-primary focus:border-transparent`}
+                  className={`w-full px-4 py-2 rounded-lg border ${formik.touched.developer_name && formik.errors.developer_name ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-primary focus:border-transparent`}
                   placeholder="Enter developer name"
                 />
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setNewDeveloper(false)}
                   className="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-gray-700 text-sm"
                 >
@@ -205,13 +249,19 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               </div>
             )}
             {formik.touched.developer_name && formik.errors.developer_name && (
-              <div className="text-red-500 text-xs mt-1">{formik.errors.developer_name}</div>
+              <div className="text-red-500 text-xs mt-1">
+                {formik.errors.developer_name}
+              </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Master Plan Image</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Master Plan Image
+            </label>
+            <div
+              className={`border-2 border-dashed ${formik.touched.master_plan && formik.errors.master_plan ? "border-red-500" : "border-gray-300"} rounded-lg p-4 text-center`}
+            >
               <input
                 type="file"
                 id="masterPlanImage"
@@ -220,24 +270,28 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                 className="hidden"
                 ref={fileInputRef}
               />
-              
+
               {/* When no file is selected or uploaded */}
               {!selectedFile && !formik.values.master_plan && (
-                <label 
+                <label
                   htmlFor="masterPlanImage"
                   className="cursor-pointer flex flex-col items-center justify-center py-3"
                 >
                   <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                  <span className="text-sm text-gray-500">لم يتم اختيار أي ملف</span>
+                  <span className="text-sm text-gray-500">
+                    لم يتم اختيار أي ملف
+                  </span>
                   <span className="text-xs text-gray-400 mt-1">اختيار ملف</span>
                 </label>
               )}
-              
+
               {/* When file is selected but not uploaded yet */}
               {selectedFile && (
                 <div className="py-3">
                   <div className="flex items-center justify-center gap-2 mb-3">
-                    <span className="text-sm text-gray-700">{selectedFile.name}</span>
+                    <span className="text-sm text-gray-700">
+                      {selectedFile.name}
+                    </span>
                     <button
                       type="button"
                       onClick={removeSelectedFile}
@@ -253,11 +307,11 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                     disabled={uploadingImage}
                     className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 disabled:opacity-50"
                   >
-                    {uploadingImage ? 'جاري الرفع...' : 'رفع الصورة'}
+                    {uploadingImage ? "جاري الرفع..." : "رفع الصورة"}
                   </button>
                 </div>
               )}
-              
+
               {/* When file is already uploaded */}
               {formik.values.master_plan && (
                 <div className="py-3">
@@ -282,6 +336,11 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
                 </div>
               )}
             </div>
+            {formik.touched.master_plan && formik.errors.master_plan && (
+              <div className="text-red-500 text-xs mt-1">
+                {formik.errors.master_plan}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center">
@@ -293,7 +352,10 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
               onChange={formik.handleChange}
               className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
             />
-            <label htmlFor="gated" className="ml-2 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="gated"
+              className="ml-2 text-sm font-medium text-gray-700"
+            >
               Gated Community
             </label>
           </div>
@@ -302,15 +364,9 @@ const AddCompoundModal = ({ isOpen, onClose, onSave, developers = [] }) => {
             <button
               type="submit"
               disabled={formik.isSubmitting}
-              className="w-full py-3 bg-primary  text-white font-medium rounded-lg transition-colors shadow-md disabled:opacity-50"
-              onClick={(e) => {
-                if (!formik.values.master_plan) {
-                  e.preventDefault();
-                  toast.error("يجب رفع صورة المخطط الرئيسي قبل حفظ المجمع");
-                }
-              }}
+              className="w-full py-3 bg-primary text-white font-medium rounded-lg transition-colors shadow-md disabled:opacity-50"
             >
-              {formik.isSubmitting ? 'جاري الحفظ...' : 'Save Compound'}
+              {formik.isSubmitting ? "جاري الحفظ..." : "Save Compound"}
             </button>
           </div>
         </form>

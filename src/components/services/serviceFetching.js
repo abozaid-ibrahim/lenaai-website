@@ -1,9 +1,17 @@
 import axiosInstance from "@/utils/axiosInstance";
+import Cookies from "js-cookie";
+import { getClientid } from "./clientCookies";
+
+// Function to get client_id from cookies safely
+
+// For server-side, fetch the cookie from an API route
 
 // Fetch units using axios
 export async function fetchUnits() {
+  const clientId = await getClientid();
+
   try {
-    const response = await axiosInstance.get(`units/DREAM_HOMES`);
+    const response = await axiosInstance.get(`units/${clientId}`);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch units:", error.message);
@@ -25,8 +33,8 @@ export async function uploadImages(formData) {
   try {
     const response = await axiosInstance.post(`/images/`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        "Content-Type": "multipart/form-data",
+      },
     });
     return response.data;
   } catch (error) {
@@ -84,12 +92,12 @@ export async function fetchUsers(cursor) {
   try {
     const params = {
       limit: 5,
-    }
+    };
     if (cursor) {
       params.cursor = cursor;
     }
     const response = await axiosInstance.get(`dashboard/ALL`, {
-      params: params
+      params: params,
     });
     return response.data;
   } catch (error) {
@@ -129,6 +137,23 @@ export async function addCompound(compoundData) {
   }
 }
 
+export async function loginUser(formData) {
+  try {
+    const response = await axiosInstance.post("/login", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Login failed:", error.message);
+    throw { message: error.response?.data?.message || error.message };
+  }
+}
+
+export async function fetchData() {
+  // Your fetching logic here
+}
 
 export async function getChatHistory(userId) {
   try {

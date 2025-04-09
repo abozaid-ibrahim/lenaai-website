@@ -7,4 +7,5 @@ export default function ChatHistory({ data }) {
             <ChatHistoryContent data={data} />
         </div>
     )
+
 }

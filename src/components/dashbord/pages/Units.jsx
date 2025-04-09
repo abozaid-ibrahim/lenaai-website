@@ -1,10 +1,19 @@
-"use client"
-import React, { useState } from 'react';
-import im from "../../../../public/images/building1.jpg"
-import { Eye, Edit, Trash2, MapPin, Plus, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
-import AddUnitModal from '../scomponent/AddUnitModal';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+"use client";
+import React, { useState } from "react";
+import im from "../../../../public/images/building1.jpg";
+import {
+  Eye,
+  Edit,
+  Trash2,
+  MapPin,
+  Plus,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import AddUnitModal from "../scomponent/AddUnitModal";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 // Sample data - replace with your actual data
 const realEstateData = [
   {
@@ -18,8 +27,8 @@ const realEstateData = [
     buildings: [
       { id: 101, name: "Tower A", units: 45, image: im },
       { id: 102, name: "Tower B", units: 52, image: im },
-      { id: 103, name: "Garden Villa", units: 10, image: im }
-    ]
+      { id: 103, name: "Garden Villa", units: 10, image: im },
+    ],
   },
   {
     id: 2,
@@ -30,9 +39,19 @@ const realEstateData = [
     price: "$850,000",
     developer: "Green Valley Construction",
     buildings: [
-      { id: 201, name: "Block 1", units: 24, image: "/api/placeholder/400/300" },
-      { id: 202, name: "Block 2", units: 24, image: "/api/placeholder/400/300" }
-    ]
+      {
+        id: 201,
+        name: "Block 1",
+        units: 24,
+        image: "/api/placeholder/400/300",
+      },
+      {
+        id: 202,
+        name: "Block 2",
+        units: 24,
+        image: "/api/placeholder/400/300",
+      },
+    ],
   },
   {
     id: 3,
@@ -43,10 +62,25 @@ const realEstateData = [
     price: "$2,500,000",
     developer: "Skyline Developers",
     buildings: [
-      { id: 301, name: "North Tower", units: 60, image: "/api/placeholder/400/300" },
-      { id: 302, name: "South Tower", units: 60, image: "/api/placeholder/400/300" },
-      { id: 303, name: "Penthouse Block", units: 15, image: "/api/placeholder/400/300" }
-    ]
+      {
+        id: 301,
+        name: "North Tower",
+        units: 60,
+        image: "/api/placeholder/400/300",
+      },
+      {
+        id: 302,
+        name: "South Tower",
+        units: 60,
+        image: "/api/placeholder/400/300",
+      },
+      {
+        id: 303,
+        name: "Penthouse Block",
+        units: 15,
+        image: "/api/placeholder/400/300",
+      },
+    ],
   },
   {
     id: 4,
@@ -57,44 +91,68 @@ const realEstateData = [
     price: "$750,000",
     developer: "Metropolitan Builders",
     buildings: [
-      { id: 401, name: "The Gallery", units: 35, image: "/api/placeholder/400/300" },
-      { id: 402, name: "The Studio", units: 28, image: "/api/placeholder/400/300" }
-    ]
-  }
+      {
+        id: 401,
+        name: "The Gallery",
+        units: 35,
+        image: "/api/placeholder/400/300",
+      },
+      {
+        id: 402,
+        name: "The Studio",
+        units: 28,
+        image: "/api/placeholder/400/300",
+      },
+    ],
+  },
 ];
 
 const RealEstateListings = ({ initialData, comboundata, developersData }) => {
   const navigate = useRouter();
   const [selectedEstate, setSelectedEstate] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [developerFilter, setDeveloperFilter] = useState('all'); // Changed from priceFilter
-  const [compoundFilter, setCompoundFilter] = useState('all'); // إضافة فلتر للمجمعات
+  const [searchTerm, setSearchTerm] = useState("");
+  const [developerFilter, setDeveloperFilter] = useState("all"); // Changed from priceFilter
+  const [compoundFilter, setCompoundFilter] = useState("all"); // إضافة فلتر للمجمعات
   const [currentPage, setCurrentPage] = useState(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const itemsPerPage = 8;
 
   // Filter estates based on search, developer filter, and compound filter
-  const filteredEstates = initialData ? initialData.filter(estate => {
-    const matchesSearch =
-      (estate.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-      (estate.compound?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-      (estate.city?.toLowerCase() || '').includes(searchTerm.toLowerCase());
+  const filteredEstates = initialData
+    ? initialData.filter((estate) => {
+        const matchesSearch =
+          (estate.name?.toLowerCase() || "").includes(
+            searchTerm.toLowerCase(),
+          ) ||
+          (estate.compound?.toLowerCase() || "").includes(
+            searchTerm.toLowerCase(),
+          ) ||
+          (estate.city?.toLowerCase() || "").includes(searchTerm.toLowerCase());
 
-    let matchesDeveloper = true;
-    if (developerFilter !== 'all') {
-      matchesDeveloper = estate.developer === developerFilter;
-    }
+        let matchesDeveloper = true;
+        if (developerFilter !== "all") {
+          matchesDeveloper = estate.developer === developerFilter;
+        }
 
-    let matchesCompound = true;
-    if (compoundFilter !== 'all') {
-      matchesCompound = estate.compound === compoundFilter;
-    }
+        let matchesCompound = true;
+        if (compoundFilter !== "all") {
+          matchesCompound = estate.compound === compoundFilter;
+        }
 
-    return matchesSearch && matchesDeveloper && matchesCompound;
-  }) : [];
+        return matchesSearch && matchesDeveloper && matchesCompound;
+      })
+    : [];
 
   // Get unique developers for filter dropdown
-  const developers = [...new Set(developersData ? developersData.map(developer => developer.name) : initialData.filter(estate => estate.developer).map(estate => estate.developer))];
+  const developers = [
+    ...new Set(
+      developersData
+        ? developersData.map((developer) => developer.name)
+        : initialData
+            .filter((estate) => estate.developer)
+            .map((estate) => estate.developer),
+    ),
+  ];
 
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -156,7 +214,9 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Real Estate Properties</h1>
+          <h1 className="text-3xl font-bold text-gray-800">
+            Real Estate Properties
+          </h1>
           <p className="text-gray-600 mt-2">Explore our exclusive listings</p>
         </div>
 
@@ -180,20 +240,30 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
               >
                 <option value="all">All Developers</option>
                 {developers.map((developer, index) => (
-                  <option key={`developer-${index}-${developer}`} value={developer}>{developer}</option>
+                  <option
+                    key={`developer-${index}-${developer}`}
+                    value={developer}
+                  >
+                    {developer}
+                  </option>
                 ))}
               </select>
 
-              
               <select
                 className="flex-1 min-w-[180px] px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 value={compoundFilter}
                 onChange={(e) => setCompoundFilter(e.target.value)}
               >
                 <option value="all">All Compounds</option>
-                {comboundata && comboundata.map((compound, index) => (
-                  <option key={`compound-${index}-${compound.name}`} value={compound.name}>{compound.name}</option>
-                ))}
+                {comboundata &&
+                  comboundata.map((compound, index) => (
+                    <option
+                      key={`compound-${index}-${compound.name}`}
+                      value={compound.name}
+                    >
+                      {compound.name}
+                    </option>
+                  ))}
               </select>
 
               <button
@@ -210,7 +280,9 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
         {/* Real Estate Cards */}
         {filteredEstates.length === 0 ? (
           <div className="text-center py-10">
-            <p className="text-xl text-gray-600">No properties match your criteria. Try adjusting your search.</p>
+            <p className="text-xl text-gray-600">
+              No properties match your criteria. Try adjusting your search.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -235,8 +307,6 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
                         className="w-full h-full object-cover"
                       />
                     )}
-
-                    
                   </div>
 
                   <div className="p-4 flex-grow flex flex-col justify-between">
@@ -246,34 +316,42 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
                       </h3>
                       <div className="flex items-center text-gray-700 mb-2">
                         <MapPin className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
-                        <span className="line-clamp-1">{estate.city || "Location not specified"}</span>
+                        <span className="line-clamp-1">
+                          {estate.city || "Location not specified"}
+                        </span>
                       </div>
                     </div>
 
                     <div className="flex flex-col gap-2 mt-auto">
-
                       {estate.bathrooms && (
                         <div className="text-sm text-gray-600 rtl:text-right">
-                          <span className="font-medium">Bathrooms:</span> {estate.bathrooms}
+                          <span className="font-medium">Bathrooms:</span>{" "}
+                          {estate.bathrooms}
                         </div>
                       )}
                       {estate.finishing && (
                         <div className="text-sm text-gray-600 rtl:text-right">
-                          <span className="font-medium">Finishing:</span> {estate.finishing}
+                          <span className="font-medium">Finishing:</span>{" "}
+                          {estate.finishing}
                         </div>
                       )}
                       {estate.buildingType && (
                         <div className="text-sm text-gray-600 rtl:text-right">
-                          <span className="font-medium">Building Type:</span> {estate.buildingType}
+                          <span className="font-medium">Building Type:</span>{" "}
+                          {estate.buildingType}
                         </div>
                       )}
                       {estate.downPayment && (
                         <div className="text-sm text-gray-600 rtl:text-right">
-                          <span className="font-medium">Down Payment:</span> {estate.downPayment}
+                          <span className="font-medium">Down Payment:</span>{" "}
+                          {estate.downPayment}
                         </div>
                       )}
 
-                      <button onClick={() => navigate.push(`/dashbord/units/${estate.unitId}`)}
+                      <button
+                        onClick={() =>
+                          navigate.push(`/dashbord/units/${estate.unitId}`)
+                        }
                         className="w-full py-2 px-4 bg-primary text-white rounded-md font-medium transition duration-300 flex items-center justify-center text-sm mt-2"
                       >
                         <Eye className="mr-2 w-4 h-4" />
@@ -292,30 +370,33 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
           <div className="mt-10 flex justify-center">
             <nav className="flex items-center bg-white px-4 py-3 rounded-xl shadow-lg">
               <button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className={`mx-1 p-2 rounded-full ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-primary hover:bg-primary/10 border border-gray-200'} transition-all duration-300 flex items-center justify-center`}
+                className={`mx-1 p-2 rounded-full ${currentPage === 1 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white text-primary hover:bg-primary/10 border border-gray-200"} transition-all duration-300 flex items-center justify-center`}
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
 
-              {getPaginationNumbers().map(pageNumber => (
+              {getPaginationNumbers().map((pageNumber) => (
                 <button
                   key={`page-${pageNumber}`}
                   onClick={() => setCurrentPage(pageNumber)}
-                  className={`mx-1 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 ${currentPage === pageNumber
-                      ? 'bg-primary text-white font-medium shadow-md transform scale-110'
-                      : 'text-gray-700 hover:bg-primary/10 border border-gray-200'
-                    }`}
+                  className={`mx-1 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 ${
+                    currentPage === pageNumber
+                      ? "bg-primary text-white font-medium shadow-md transform scale-110"
+                      : "text-gray-700 hover:bg-primary/10 border border-gray-200"
+                  }`}
                 >
                   {pageNumber}
                 </button>
               ))}
 
               <button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
-                className={`mx-1 p-2 rounded-full ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-primary hover:bg-primary/10 border border-gray-200'} transition-all duration-300 flex items-center justify-center`}
+                className={`mx-1 p-2 rounded-full ${currentPage === totalPages ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white text-primary hover:bg-primary/10 border border-gray-200"} transition-all duration-300 flex items-center justify-center`}
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -325,6 +406,7 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
 
         {/* Add Unit Modal */}
         <AddUnitModal
+          developersData={developersData}
           comboundata={comboundata}
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
