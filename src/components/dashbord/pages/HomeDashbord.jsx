@@ -145,7 +145,6 @@ const RealEstateDashboard = ({ userData }) => {
     const formattedEndDate = formatDateForDisplay(endDate);
     setDisplayDateRange(`${formattedStartDate} - ${formattedEndDate}`);
 
-    // Filter leads based on date range
     const filteredByDate = initialLeads?.filter(lead => {
       const [day, month, year] = lead.date.split('-');
       const leadDate = new Date(`20${year}-${month}-${day}`);
