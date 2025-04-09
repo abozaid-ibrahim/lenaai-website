@@ -55,7 +55,7 @@ const Header = () => {
 
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* <LanguageSwitcher /> */}
+            <LanguageSwitcher />
             {/* <Link href="/dashbord" className="text-white border border-blue-400 px-5 py-1.5 rounded-full hover:border-blue-200 hover:text-blue-200 transition-all duration-300">
               Signup
             </Link> */}
