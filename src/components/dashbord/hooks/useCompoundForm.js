@@ -15,7 +15,7 @@ const validationSchema = Yup.object({
   name: Yup.string().required("Compound name is required"),
   description: Yup.string().min(
     10,
-    "Description must be at least 10 characters",
+    "Description must be at least 10 characters"
   ),
   developer_name: Yup.string().required("Developer name is required"),
   city: Yup.string().required("City is required"),
@@ -64,7 +64,7 @@ export const useCompoundForm = (onClose, onSave) => {
       // Check if master plan image exists
       if (!values.master_plan) {
         toast.error(
-          "Master plan image must be uploaded before saving the compound",
+          "Master plan image must be uploaded before saving the compound"
         );
         setSubmitting(false);
         return;

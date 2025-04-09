@@ -116,7 +116,7 @@ const RealEstateDashboard = ({ users }) => {
   const [startDate, setStartDate] = useState("2025-03-26");
   const [endDate, setEndDate] = useState("2025-04-12");
   const [displayDateRange, setDisplayDateRange] = useState(
-    "26 Mar 25 - 12 Apr 25",
+    "26 Mar 25 - 12 Apr 25"
   );
 
   // Function to open property details modal
@@ -279,7 +279,7 @@ const RealEstateDashboard = ({ users }) => {
                   >
                     {tab}
                   </button>
-                ),
+                )
               )}
             </div>
             <button className="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2">
@@ -390,7 +390,7 @@ const RealEstateDashboard = ({ users }) => {
                       const lastMessage =
                         user.conversation?.[0]?.user_message || "";
                       const lastActivity = new Date(
-                        user.lastActivity,
+                        user.lastActivity
                       ).toLocaleDateString();
                       const requirements =
                         user.requirements?.userBuildingType?.[0] ||
@@ -403,7 +403,7 @@ const RealEstateDashboard = ({ users }) => {
                         <tr
                           onClick={() =>
                             router.push(
-                              `/dashbord/chat/history/${user.phoneNumber}`,
+                              `/dashbord/chat/history/${user.phoneNumber}`
                             )
                           }
                           key={user.phoneNumber}

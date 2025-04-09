@@ -122,10 +122,10 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
     ? initialData.filter((estate) => {
         const matchesSearch =
           (estate.name?.toLowerCase() || "").includes(
-            searchTerm.toLowerCase(),
+            searchTerm.toLowerCase()
           ) ||
           (estate.compound?.toLowerCase() || "").includes(
-            searchTerm.toLowerCase(),
+            searchTerm.toLowerCase()
           ) ||
           (estate.city?.toLowerCase() || "").includes(searchTerm.toLowerCase());
 
@@ -150,7 +150,7 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
         ? developersData.map((developer) => developer.name)
         : initialData
             .filter((estate) => estate.developer)
-            .map((estate) => estate.developer),
+            .map((estate) => estate.developer)
     ),
   ];
 

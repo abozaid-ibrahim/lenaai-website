@@ -18,7 +18,7 @@ export async function middleware(request) {
     // If no client_id, redirect to login with a message
     if (!clientId) {
       return NextResponse.redirect(
-        new URL("/auth/login?message=Please login first", request.url),
+        new URL("/auth/login?message=Please login first", request.url)
       );
     }
   }

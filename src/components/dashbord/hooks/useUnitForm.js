@@ -194,7 +194,7 @@ export const useUnitForm = (onClose, onSave) => {
     } catch (error) {
       console.error("Error uploading images:", error);
       toast.error(
-        `Failed to upload images: ${error.message || "Unknown error"}`,
+        `Failed to upload images: ${error.message || "Unknown error"}`
       );
     } finally {
       setUploadingImages(false);
@@ -219,7 +219,7 @@ export const useUnitForm = (onClose, onSave) => {
     } catch (error) {
       console.error("Error deleting image:", error);
       toast.error(
-        `Failed to delete image: ${error.message || "Unknown error"}`,
+        `Failed to delete image: ${error.message || "Unknown error"}`
       );
     }
   };
@@ -235,7 +235,7 @@ export const useUnitForm = (onClose, onSave) => {
     const currentPlans = formik.values.paymentPlans;
     formik.setFieldValue(
       "paymentPlans",
-      currentPlans ? `${currentPlans}, ${planText}` : planText,
+      currentPlans ? `${currentPlans}, ${planText}` : planText
     );
   };
 
@@ -254,7 +254,7 @@ export const useUnitForm = (onClose, onSave) => {
     // Set the newly created compound name to the unit's compound field
     formik.setFieldValue(
       "compound",
-      compoundData.name || compoundData.compoundName,
+      compoundData.name || compoundData.compoundName
     );
   };
 
