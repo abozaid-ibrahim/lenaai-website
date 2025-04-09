@@ -3,16 +3,37 @@ import React, { useState } from 'react';
 import { Search, Filter, MessageSquare, Phone, Home, Calendar, CheckCircle, X, Eye, ChevronDown } from 'lucide-react';
 import formatDateForDisplay from '@/utils/formateDate';
 import PropertyDetailsModal from '../scomponent/PropertyDetailsModal';
-import { fetchUsers } from '@/components/services/serviceFetching';
-import { useRouter } from 'next/navigation';
-const RealEstateDashboard = ({ users }) => {
+import { useFormik } from 'formik';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
+const RealEstateDashboard = ({ userData }) => {
   // Sample data
-  const router = useRouter();
-  const [usersData, setUsersData] = useState(users.users);
-  const [hasMore, setHasMore] = useState(users?.pagination?.has_more);
-  const [nextCursor, setNextCursor] = useState(users?.pagination?.next_cursor);
-  const [previousCursor, setPreviousCursor] = useState(null);
+  let chatHistory = {};
+  let userRequirements = {};
+  const structuredUserData = userData?.map((user) => {
+
+    const messages = user.conversation
+    chatHistory[user.phoneNumber] = messages;
+
+    // adding user requirements
+    userRequirements[user.phoneNumber] = user.requirements;
+    // adding date
+    const lastMessage = messages[messages.length - 1];
+
+    // adding action
+    const userAction = user.actions.action ? user.actions.action : "No Action";
+
+    return {
+      id: user.phoneNumber,
+      phone: user.phoneNumber,
+      date: formatDateForDisplay(lastMessage.timestamp),
+      requirements: "Requirements",
+      messageCount: messages.length,
+      status: userAction
+    }
+  })
+
   // Sample property details data
   const propertyDetails = {
     "Three Bedroom": {
@@ -89,13 +110,9 @@ const RealEstateDashboard = ({ users }) => {
     }
   };
 
-  // const [leads, setLeads] = useState(initialLeads);
+  const [leads, setLeads] = useState(structuredUserData);
   const [activeTab, setActiveTab] = useState('All Chats');
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -113,6 +130,15 @@ const RealEstateDashboard = ({ users }) => {
     setSelectedProperty(property);
     setIsModalOpen(true);
   };
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+  };
 
   // Handle date filter changes
   const handleDateFilterChange = () => {
@@ -121,7 +147,7 @@ const RealEstateDashboard = ({ users }) => {
     setDisplayDateRange(`${formattedStartDate} - ${formattedEndDate}`);
 
     // Filter leads based on date range
-    const filteredByDate = initialLeads.filter(lead => {
+    const filteredByDate = initialLeads?.filter(lead => {
       const [day, month, year] = lead.date.split('-');
       const leadDate = new Date(`20${year}-${month}-${day}`);
       return leadDate >= new Date(startDate) && leadDate <= new Date(endDate);
@@ -135,62 +161,115 @@ const RealEstateDashboard = ({ users }) => {
   const resetFilters = () => {
     setLeads(initialLeads);
     setSearchTerm('');
-    setCurrentPage(1); // Reset to first page when filters are reset
   };
 
   // Filter leads based on active tab and search
-  // const filteredLeads = leads.filter(lead => {
-  //   if (activeTab === 'All Chats') return true;
-  //   if (activeTab === 'Recent Chats') return new Date(lead.date.split('-').reverse().join('-')) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  //   if (activeTab === 'Needs Action') return ['Missing Info', 'Schedule Call', 'Make a Call', 'Book Viewing'].includes(lead.status);
-  //   if (activeTab === 'NO Action') return ['Not Interested', 'Not Qualified'].includes(lead.status);
-  //   return true;
-  // }).filter(lead => {
-  //   if (!searchTerm) return true;
-  //   return lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     lead.requirements.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     lead.phone.includes(searchTerm);
-  // });
+  const filteredLeads = leads?.filter(lead => {
+    if (activeTab === 'All Chats') return true;
+    if (activeTab === 'Recent Chats') return new Date(lead.date.split('-').reverse().join('-')) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    if (activeTab === 'Needs Action') return ['Missing Info', 'Schedule Call', 'Make a Call', 'Book Viewing'].includes(lead.status);
+    if (activeTab === 'NO Action') return ['Not Interested', 'Not Qualified'].includes(lead.status);
+    return true;
+  }).filter(lead => {
+    if (!searchTerm) return true;
+    return lead.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.requirements.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.phone.includes(searchTerm);
+  });
 
-  // Calculate pagination
-  // const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
-  // const startIndex = (currentPage - 1) * itemsPerPage;
-  // const endIndex = startIndex + itemsPerPage;
-  // const currentLeads = filteredLeads.slice(startIndex, endIndex);
+  const [loading, setLoading] = useState(false);
+  const [isOpenmodle, setIsOpenmodle] = useState(false);
 
-  // Pagination handlers
-  const handleNextPage = async () => {
-    if (hasMore) {
-      setPreviousCursor(nextCursor);
-      setCurrentPage(currentPage + 1);
-      const nextUsers = await fetchUsers(nextCursor);
-      setUsersData(
-        [
-          ...nextUsers.users
-        ]
-      );
-      setNextCursor(nextUsers.pagination.next_cursor);
-      setHasMore(nextUsers.pagination.has_more);
+  const formik = useFormik({
+    initialValues: {
+      spreadsheet_url: "",
+      media_url: ""
+    },
+    onSubmit: async (values) => {
+      const requestLinkData = {
+        spreadsheet_url: values.spreadsheet_url,
+        media_url: values.media_url,
+        sheet_name: "Sheet1",
+        client_id: "ALL"
+      };
+
+      try {
+        setLoading(true);
+        const response = await axios.post(
+          "https://api.lenaai.net/webhook/send-video-using-spreadsheet",
+          requestLinkData,
+          {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+        );
+        toast.success(response.data);
+      } catch (error) {
+        toast.error(error?.message);
+        console.error(error?.message);
+      } finally {
+        setLoading(false);
+        formik.resetForm();
+      }
     }
-  };
+  });
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-//   const filteredLeads = leads.filter(lead => {
-//     if (activeTab === 'All Chats') return true;
-//     if (activeTab === 'Recent Chats') return new Date(lead.date.split('-').reverse().join('-')) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-//     if (activeTab === 'Needs Action') return ['Missing Info', 'Schedule Call', 'Make a Call', 'Book Viewing'].includes(lead.status);
-//     if (activeTab === 'NO Action') return ['Not Interested', 'Not Qualified'].includes(lead.status);
-//     return true;
-//   }).filter(lead => {
-//     if (!searchTerm) return true;
-//     return lead.phone.toLowerCase().includes(searchTerm.toLowerCase()) || 
-//            lead.requirements.toLowerCase().includes(searchTerm.toLowerCase()) || 
-//            lead.phone.includes(searchTerm);
-//   });
+
+
+
+
+
+
+
+
+
+
+
+  const formikinput = useFormik({
+    initialValues: {
+      value1: "", // select input
+      value2: "", // text input
+    },
+    onSubmit: async (values) => {
+      const requestLinkData = {
+        value1: values.value1,
+        value2: values.value2,
+      };
+
+      try {
+        setLoading(true);
+        const response = await axios.post("URL", requestLinkData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        toast.success(response.data);
+      } catch (error) {
+        toast.error(error?.message);
+        console.error(error?.message);
+      } finally {
+        setLoading(false);
+        formikinput.resetForm();
+      }
+    },
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // Get status color and icon
   const getStatusStyle = (status) => {
@@ -220,6 +299,7 @@ const RealEstateDashboard = ({ users }) => {
     }
   };
 
+
   return (
     <div className="min-h-screen bg-gray-50 p-2 sm:p-4 md:p-6">
       <div className="max-w-7xl mx-auto bg-white rounded-xl shadow-sm">
@@ -240,13 +320,110 @@ const RealEstateDashboard = ({ users }) => {
                 </button>
               ))}
             </div>
-            <button className="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2">
-              <MessageSquare size={16} />
-              WhatsApp Leads
-            </button>
+            <div className="relative inline-block">
+              <button
+                onClick={handleOpenModal}
+                className="w-full cursor-pointer sm:w-auto bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2"
+              >
+                <MessageSquare size={16} />
+                WhatsApp Leads
+              </button>
+
+
+              {isOpen && (
+                <div className="fixed inset-0 bg-[#00000042] bg-opacity-40 flex items-center justify-center z-50">
+                  <div className="bg-white rounded-lg shadow-lg w-[90%] max-w-md p-6 relative">
+                    {/* إغلاق */}
+                    <button
+                      onClick={handleCloseModal}
+                      className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 mt-4"
+                    >
+                      <X size={20} />
+                    </button>
+
+                    <h2 className="text-lg font-semibold mb-2">  Send Cold Whats Messages Patch</h2>
+                    <div>
+
+                      <form onSubmit={formik.handleSubmit}>
+                        <div className="grid gap-12 mb-6 mt-5 mb-5">
+                          <div>
+                            <label htmlFor="spreadsheet_url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                              Link or File
+                            </label>
+                            <input
+                              type="text"
+                              id="spreadsheet_url"
+                              name="spreadsheet_url"
+                              onChange={formik.handleChange}
+                              value={formik.values.spreadsheet_url}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
+            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+            dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                              placeholder="Spreadsheet Link"
+                              required
+                            />
+                          </div>
+
+                          <div>
+                            <label htmlFor="media_url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                              Video Link
+                            </label>
+                            <input
+                              type="text"
+                              id="media_url"
+                              name="media_url"
+                              onChange={formik.handleChange}
+                              value={formik.values.media_url}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
+            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+            dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                              placeholder="Video Link"
+                              required
+                            />
+                          </div>
+
+                          <button
+                            type="submit"
+                            disabled={loading}
+                            className="bg-blue-600 text-white px-4 py-2 rounded"
+                          >
+                            {loading ? "Sending..." : "Send"}
+                          </button>
+                        </div>
+                      </form>
+
+                    </div>
+
+                    <div className="flex justify-end gap-2">
+                      {/* <button
+                        onClick={handleCloseModal}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm"
+                      >
+                        إلغاء
+                      </button>
+                      <button
+                        onClick={() => {
+                          // من هنا ترسل رسائل واتساب
+                          console.log("تم الإرسال...");
+                          setIsOpen(false);
+                        }}
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm"
+                      >
+                        إرسال
+                      </button> */}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+
+            </div>
+
           </div>
 
-          {/* Search and filter */}
+          
           <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
             <div className="relative flex-grow">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -316,7 +493,6 @@ const RealEstateDashboard = ({ users }) => {
             </div>
           </div>
 
-          {/* Table with responsive design */}
           <div className="overflow-x-auto -mx-3 sm:mx-0">
             <div className="inline-block min-w-full align-middle">
               <div className="overflow-hidden border border-gray-200 sm:rounded-lg">
@@ -332,45 +508,46 @@ const RealEstateDashboard = ({ users }) => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {usersData?.map((user) => {
-                      const lastMessage = user.conversation?.[0]?.user_message || '';
-                      const lastActivity = new Date(user.lastActivity).toLocaleDateString();
-                      const requirements = user.requirements?.userBuildingType?.[0] || 'Not specified';
-                      const messageCount = user.conversation?.length || 0;
-                      const status = user.profile?.Score?.details?.buyer?.category || 'Cold';
-
+                    {filteredLeads?.map((lead) => {
+                      const statusStyle = getStatusStyle(lead.status);
                       return (
-                        <tr onClick={() => router.push(`/dashbord/chat/history/${user.phoneNumber}`)} key={user.phoneNumber} className="hover:bg-gray-50 transition-colors text-xs sm:text-sm">
+                        <tr key={lead.id} className="hover:bg-gray-50 transition-colors text-xs sm:text-sm">
                           <td className="px-2 sm:px-4 py-2 sm:py-3 font-medium text-gray-900">
                             <div className="flex flex-col sm:hidden">
-                              <span className="text-xs text-gray-500">{user.phoneNumber}</span>
+                              <span>{lead.name}</span>
+                              <span className="text-xs text-gray-500">{lead.phone}</span>
                               <span
                                 className="text-xs text-blue-600 cursor-pointer hover:underline"
-                                onClick={() => openPropertyDetails(requirements)}
+                                onClick={() => openPropertyDetails(lead.requirements)}
                               >
-                                {requirements}
+                                {lead.requirements}
                               </span>
                             </div>
-                            <span className="hidden sm:inline">{user.phoneNumber}</span>
+                            <span className="hidden sm:inline">{lead.name}</span>
                           </td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 hidden sm:table-cell">{user.phoneNumber}</td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600">{lastActivity}</td>
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 hidden sm:table-cell">{lead.phone}</td>
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600">{lead.date}</td>
                           <td className="px-2 sm:px-4 py-2 sm:py-3 hidden md:table-cell">
                             <span
                               className="text-blue-600 cursor-pointer hover:underline"
-                              onClick={() => openPropertyDetails(requirements)}
+                              onClick={() => openPropertyDetails(lead.requirements)}
                             >
-                              {requirements}
+                              {lead.requirements}
                             </span>
                           </td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-medium">{messageCount}</td>
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-medium">{lead.messageCount}</td>
                           <td className="px-2 sm:px-4 py-2 sm:py-3">
                             <div className="flex justify-center">
-                              <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap ${status === 'Hot' ? 'bg-green-100 text-green-700' :
-                                status === 'Warm' ? 'bg-yellow-100 text-yellow-700' :
-                                  'bg-gray-100 text-gray-700'
-                                }`}>
-                                {status}
+                              <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap ${statusStyle.bgColor}`}>
+                                {/* {statusStyle.icon}
+                                {lead.status} */}
+                                <button
+                                  type="button"
+                                  onClick={() => setIsOpenmodle(true)}
+                                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 cursor-pointer py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                >
+                                  Action
+                                </button>
                               </span>
                             </div>
                           </td>
@@ -383,34 +560,108 @@ const RealEstateDashboard = ({ users }) => {
             </div>
           </div>
 
-          {/* Pagination controls */}
-          {usersData?.length > 0 && (
-            <div className="flex justify-end items-center mt-4">
-              <div className="flex gap-2">
-                <button
-                  onClick={handlePrevPage}
-                  disabled={currentPage === 1}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${currentPage === 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                    }`}
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={handleNextPage}
-                  disabled={!hasMore}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${hasMore
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    }`}
-                >
-                  Next
-                </button>
+
+          {isOpenmodle && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#00000042] bg-opacity-50">
+              <div className="relative p-4 w-full max-w-2xl max-h-full">
+                <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+
+                  <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                    <h3 className="text-xl font-semibold  dark:text-white">
+                      change Action
+                    </h3>
+                    <button
+                      onClick={() => setIsOpenmodle(false)}
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
+                      <svg
+                        className="w-3 h-3"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 14 14"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7L1 13"
+                        />
+                      </svg>
+                      <span className="sr-only">Close modal</span>
+                    </button>
+                  </div>
+
+                  <div className="p-4 md:p-5 space-y-4">
+                    <form className="max-w-md mx-auto" onSubmit={formikinput.handleSubmit}>
+                      {/* Select Field */}
+                      <label htmlFor="value1" className="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Action
+                      </label>
+                      <select
+                        id="value1"
+                        name="value1"
+                        onChange={formikinput.handleChange}
+                        value={formikinput.values.value1}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      >
+                        <option value="">Select an option</option>
+                        <option value="Action1">Action1</option>
+                        <option value="Canada2">Canada2</option>
+                        <option value="France3">France3</option>
+                        <option value="Germany4">Germany4</option>
+                      </select>
+
+                      {/* Text Input */}
+                      <div className="mt-5">
+                        <label htmlFor="value2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                          Comment
+                        </label>
+                        <input
+                          type="text"
+                          id="value2"
+                          name="value2"
+                          onChange={formikinput.handleChange}
+                          value={formikinput.values.value2}
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+            focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5
+            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+            dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="comment"
+                          required
+                        />
+                      </div>
+
+                      {/* Submit Button */}
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="mt-5 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg disabled:opacity-50"
+                      >
+                        send
+                      </button>
+                    </form>
+                  </div>
+
+                </div>
               </div>
             </div>
           )}
 
+          {filteredLeads?.length === 0 && (
+            <div className="text-center py-8 sm:py-10">
+              <p className="text-gray-500 text-sm sm:text-base">لا توجد بيانات تطابق التصفية الحالية</p>
+              <button
+                onClick={resetFilters}
+                className="mt-3 text-blue-600 text-sm hover:text-blue-800"
+              >
+                إعادة ضبط التصفية
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
