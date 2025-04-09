@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Moon, LayoutDashboard, BarChart2, Home, LogOut, TableRowsSplit } from 'lucide-react';
@@ -14,13 +14,7 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
-  const handleLogout = async () => {
-    
-    Cookies.remove("client_id")
-    
-    window.location.reload()   
-    toast.success("Logout Successful")
- }
+
  
 
   // Make the function available globally
