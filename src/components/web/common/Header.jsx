@@ -2,15 +2,17 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Globe } from "lucide-react";
-import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import {
   getClientid,
   removeClientId,
 } from "@/components/services/clientCookies";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { useI18n } from "@/app/context/translate-api";
 
 const Header = () => {
+  const { t } = useI18n();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -37,25 +39,25 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             <Link href="/" className="hover:text-blue-200 transition-colors">
-              Home
+              {t.header.home}
             </Link>
             <Link
               href="/dashbord"
               className="hover:text-blue-200 transition-colors"
             >
-              Client Dashboard
+              {t.header.clientDashboard}
             </Link>
             <Link href="" className="hover:text-blue-200 transition-colors">
-              Job Opportunities
+              {t.header.jobOpportunities}
             </Link>
             <Link href="" className="hover:text-blue-200 transition-colors">
-              All Properties
+              {t.header.allProperties}
             </Link>
           </nav>
 
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* <LanguageSwitcher /> */}
+            <LanguageSwitcher />
             {/* <Link href="/dashbord" className="text-white border border-blue-400 px-5 py-1.5 rounded-full hover:border-blue-200 hover:text-blue-200 transition-all duration-300">
               Signup
             </Link> */}
@@ -64,7 +66,7 @@ const Header = () => {
                 href="/auth/login"
                 className="text-yellow-400 border border-yellow-400 px-5 py-1.5 rounded-full hover:border-yellow-200 hover:text-yellow-200 transition-all duration-300"
               >
-                Sign In
+                {t.login}
               </Link>
             ) : (
               <button
@@ -92,25 +94,25 @@ const Header = () => {
                 href="/"
                 className="hover:text-blue-200 transition-colors py-2"
               >
-                Home
+                {t.header.home}
               </Link>
               <Link
                 href=""
                 className="hover:text-blue-200 transition-colors py-2"
               >
-                Client Dashboard
+                {t.header.clientDashboard}
               </Link>
               <Link
                 href=""
                 className="hover:text-blue-200 transition-colors py-2"
               >
-                Job Opportunities
+                {t.header.jobOpportunities}
               </Link>
               <Link
                 href=""
                 className="hover:text-blue-200 transition-colors py-2"
               >
-                All Properties
+                {t.header.allProperties}
               </Link>
               <div className="flex items-center space-x-3 pt-2">
                 // Add onClick handler to the mobile menu logout button
