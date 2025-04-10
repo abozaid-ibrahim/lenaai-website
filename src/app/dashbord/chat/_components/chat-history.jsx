@@ -1,15 +1,7 @@
-"use client";
-
-import { useState } from "react";
 import UserMessageCard from "./user-message";
 import BotMessageCard from "./bot-message";
-import ChatMetaDataModal from "./meta-data-dialog";
 
 export default function ChatHistory({ data }) {
-  console.log(data);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [metaData, setMetaData] = useState(null);
-
   return (
     <div className=" rounded-lg px-4 pt-4 overflow-y-auto">
       {data.map((message, index) => (
@@ -19,23 +11,10 @@ export default function ChatHistory({ data }) {
           </div>
 
           <div className="flex justify-start mb-3">
-            <BotMessageCard
-              key={index}
-              message={message}
-              setModalOpen={setModalOpen}
-              setMetaData={setMetaData}
-            />
+            <BotMessageCard key={index} message={message} />
           </div>
         </div>
       ))}
-
-      {/* TODO: Modal should NOT renders here. This in NOT a performant approach */}
-      {modalOpen && (
-        <ChatMetaDataModal
-          onClose={() => setModalOpen(false)}
-          metaData={metaData}
-        />
-      )}
     </div>
   );
 }

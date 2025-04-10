@@ -57,8 +57,8 @@ export default function PropertyCard({ data }) {
         ) : (
           <Image
             src="/images/property_placeholder.jpg"
-            width={100}
-            height={100}
+            layout="fill"
+            objectFit="cover"
             alt="property_iamge"
           />
         )}
