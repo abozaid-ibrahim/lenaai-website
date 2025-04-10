@@ -10,6 +10,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Share2,
 } from "lucide-react";
 import AddUnitModal from "../scomponent/AddUnitModal";
 import Link from "next/link";
@@ -287,7 +288,11 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {currentItems.map((estate, idx) => (
-              <div key={idx} className="flex flex-col">
+              <Link href={`/dashbord/units/${estate.unitId}`}
+               
+                key={idx}
+                className="flex flex-col"
+              >
                 {/* Estate Card with fixed height */}
                 <div
                   className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-[450px] flex flex-col cursor-pointer"
@@ -349,6 +354,19 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
                       )}
 
                       <button
+                        // onClick={(e) => {
+                        //   e.stopPropagation();
+                        //   const url = `${window.location.origin}/dashbord/units/${estate.unitId}`;
+                        //   navigator.clipboard.writeText(url);
+                        //   toast.success("Link copied to clipboard!");
+                        // }}
+                        className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md font-medium transition duration-300 flex items-center justify-center text-sm mt-2"
+                      >
+                        <Share2 className="mr-2 w-4 h-4" />
+                        Share unit
+                      </button>
+
+                      <button
                         onClick={() =>
                           navigate.push(`/dashbord/units/${estate.unitId}`)
                         }
@@ -360,7 +378,7 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

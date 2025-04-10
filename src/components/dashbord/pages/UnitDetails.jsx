@@ -14,11 +14,16 @@ export default function UnitDetails({ unit }) {
         toast(
             <div className='flex flex-col gap-4 text-black rounded-md'>
                 <p>Are you sure you want to delete this unit?</p>
-                <button className='bg-red-500 text-white px-4 py-2 rounded-md' onClick={() => {
-                    deleteUnit(unit.unitId);
-                    toast.dismiss();
-                    router.push('/dashbord/units');
-                }}>Delete</button>
+                <div className="flex gap-2">
+                    <button className='bg-red-500 cursor-pointer text-white px-4 py-2 rounded-md' onClick={() => {
+                        deleteUnit(unit.unitId);
+                        toast.dismiss();
+                        router.push('/dashbord/units');
+                    }}>Delete</button>
+                    <button className='bg-gray-500 cursor-pointer text-white px-4 py-2 rounded-md' onClick={() => {
+                        toast.dismiss();
+                    }}>Cancel</button>
+                </div>
             </div>
         )
     }
