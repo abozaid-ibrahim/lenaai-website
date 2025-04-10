@@ -1,0 +1,56 @@
+{
+  "EnumViewType": [
+    "park",
+    "street",
+    "lagoon",
+    "sea",
+    "city",
+    "river",
+    "pool",
+    "golf",
+    "garden",
+    "open area",
+    "mountain"
+  ],
+  "EnumBuildingType": [
+    "apartment",
+    "villa",
+    "townhouse",
+    "duplex",
+    "penthouse",
+    "studio",
+    "chalet",
+    "office",
+    "shop",
+    "twinhouse",
+    "house"
+  ],
+  "EnumFinishingType": [
+    "fully finished",
+    "semi finished",
+    "core & shell",
+    "furnished",
+    "unfurnished"
+  ],
+  "EnumPropertyStatus": [
+    "ready to move",
+    "under construction",
+    "resale",
+    "off-plan"
+  ],
+  "EnumPropertyUsage": [
+    "residential",
+    "commercial",
+    "mixed-use"
+  ],
+  "EnumPropertyPurpose": [
+    "housing",
+    "investment"
+  ],
+  "EnumPropertyIntent": [
+    "buy",
+    "rent",
+    "sell",
+    "lease"
+  ]
+}

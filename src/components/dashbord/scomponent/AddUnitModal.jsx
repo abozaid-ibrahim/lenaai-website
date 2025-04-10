@@ -4,6 +4,7 @@ import { X, Upload, Trash2, Plus } from "lucide-react";
 import AddCompoundModal from "./AddCompoundModal";
 import PaymentPlanPopup from "./PaymentPlanPopup";
 import { useUnitForm } from "../hooks/useUnitForm";
+import propertyEnums from "../data/propertyEnums.json";
 
 const AddUnitModal = ({
   isOpen,
@@ -135,9 +136,12 @@ const AddUnitModal = ({
                       : "border-gray-300 focus:ring-primary"
                   } focus:border-transparent`}
                 >
-                  <option value="Apartment">Apartment</option>
-                  <option value="Villa">Villa</option>
-                  <option value="Townhouse">Townhouse</option>
+                  <option value="">Select Building Type</option>
+                  {propertyEnums.EnumBuildingType.map((type, index) => (
+                    <option key={index} value={type.charAt(0).toUpperCase() + type.slice(1)}>
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </option>
+                  ))}
                 </select>
                 {formik.touched.buildingType && formik.errors.buildingType && (
                   <p className="mt-1 text-sm text-red-500">
@@ -161,9 +165,12 @@ const AddUnitModal = ({
                       : "border-gray-300 focus:ring-primary"
                   } focus:border-transparent`}
                 >
-                  <option value="Buy">Buy</option>
-                  <option value="Rent">Rent</option>
-                  <option value="sell">sell</option>
+                  <option value="">Select Purpose</option>
+                  {propertyEnums.EnumPropertyIntent.map((intent, index) => (
+                    <option key={index} value={intent.charAt(0).toUpperCase() + intent.slice(1)}>
+                      {intent.charAt(0).toUpperCase() + intent.slice(1)}
+                    </option>
+                  ))}
                 </select>
                 {formik.touched.purpose && formik.errors.purpose && (
                   <p className="mt-1 text-sm text-red-500">
@@ -197,6 +204,29 @@ const AddUnitModal = ({
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
+                  District
+                </label>
+                <input
+                  type="text"
+                  name="district"
+                  value={formik.values.district}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`w-full px-4 py-2 rounded-lg border ${
+                    formik.touched.district && formik.errors.district
+                      ? "border-red-500 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-primary"
+                  } focus:border-transparent`}
+                />
+                {formik.touched.district && formik.errors.district && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {formik.errors.district}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   View
                 </label>
                 <select
@@ -210,10 +240,12 @@ const AddUnitModal = ({
                       : "border-gray-300 focus:ring-primary"
                   } focus:border-transparent`}
                 >
-                  <option value="Lagoon">Lagoon</option>
-                  <option value="Garden">Garden</option>
-                  <option value="Pool">Pool</option>
-                  <option value="Street">Street</option>
+                  <option value="">Select View</option>
+                  {propertyEnums.EnumViewType.map((view, index) => (
+                    <option key={index} value={view.charAt(0).toUpperCase() + view.slice(1)}>
+                      {view.charAt(0).toUpperCase() + view.slice(1)}
+                    </option>
+                  ))}
                 </select>
                 {formik.touched.view && formik.errors.view && (
                   <p className="mt-1 text-sm text-red-500">
@@ -237,8 +269,13 @@ const AddUnitModal = ({
                 <input
                   type="number"
                   name="downPayment"
+                  min="0"
                   value={formik.values.downPayment}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (value < 0) e.target.value = 0;
+                    formik.handleChange(e);
+                  }}
                   onBlur={formik.handleBlur}
                   className={`w-full px-4 py-2 rounded-lg border ${
                     formik.touched.downPayment && formik.errors.downPayment
@@ -283,8 +320,13 @@ const AddUnitModal = ({
                 <input
                   type="number"
                   name="totalPrice"
+                  min="0"
                   value={formik.values.totalPrice}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (value < 0) e.target.value = 0;
+                    formik.handleChange(e);
+                  }}
                   onBlur={formik.handleBlur}
                   className={`w-full px-4 py-2 rounded-lg border ${
                     formik.touched.totalPrice && formik.errors.totalPrice
@@ -360,8 +402,13 @@ const AddUnitModal = ({
                 <input
                   type="number"
                   name="roomsCount"
+                  min="0"
                   value={formik.values.roomsCount}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (value < 0) e.target.value = 0;
+                    formik.handleChange(e);
+                  }}
                   onBlur={formik.handleBlur}
                   className={`w-full px-4 py-2 rounded-lg border ${
                     formik.touched.roomsCount && formik.errors.roomsCount
@@ -383,8 +430,13 @@ const AddUnitModal = ({
                 <input
                   type="number"
                   name="bathroomCount"
+                  min="0"
                   value={formik.values.bathroomCount}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (value < 0) e.target.value = 0;
+                    formik.handleChange(e);
+                  }}
                   onBlur={formik.handleBlur}
                   className={`w-full px-4 py-2 rounded-lg border ${
                     formik.touched.bathroomCount && formik.errors.bathroomCount
@@ -407,8 +459,13 @@ const AddUnitModal = ({
                 <input
                   type="number"
                   name="floor"
+                  min="0"
                   value={formik.values.floor}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (value < 0) e.target.value = 0;
+                    formik.handleChange(e);
+                  }}
                   onBlur={formik.handleBlur}
                   className={`w-full px-4 py-2 rounded-lg border ${
                     formik.touched.floor && formik.errors.floor
@@ -430,8 +487,13 @@ const AddUnitModal = ({
                 <input
                   type="number"
                   name="landArea"
+                  min="0"
                   value={formik.values.landArea}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (value < 0) e.target.value = 0;
+                    formik.handleChange(e);
+                  }}
                   onBlur={formik.handleBlur}
                   className={`w-full px-4 py-2 rounded-lg border ${
                     formik.touched.landArea && formik.errors.landArea
@@ -453,8 +515,13 @@ const AddUnitModal = ({
                 <input
                   type="number"
                   name="gardenSize"
+                  min="0"
                   value={formik.values.gardenSize}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (value < 0) e.target.value = 0;
+                    formik.handleChange(e);
+                  }}
                   onBlur={formik.handleBlur}
                   className={`w-full px-4 py-2 rounded-lg border ${
                     formik.touched.gardenSize && formik.errors.gardenSize
@@ -476,8 +543,13 @@ const AddUnitModal = ({
                 <input
                   type="number"
                   name="garageArea"
+                  min="0"
                   value={formik.values.garageArea}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (value < 0) e.target.value = 0;
+                    formik.handleChange(e);
+                  }}
                   onBlur={formik.handleBlur}
                   className={`w-full px-4 py-2 rounded-lg border ${
                     formik.touched.garageArea && formik.errors.garageArea
@@ -539,20 +611,14 @@ const AddUnitModal = ({
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Data Source
-                </label>
-                <input
-                  type="text"
-                  name="dataSource"
-                  value={formik.values.dataSource}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="e.g., Website URL, Brochure"
-                />
-              </div>
+              {/* Hidden dataSource field */}
+              <input
+                type="hidden"
+                name="dataSource"
+                value={formik.values.dataSource || "website"}
+              />
+
+              {/* Removed visible dataSource input field */}
             </div>
           </div>
 
@@ -575,16 +641,12 @@ const AddUnitModal = ({
               </p>
               <input
                 type="file"
-                multiple
                 accept="image/*"
                 className="hidden"
                 id="image-upload"
                 ref={fileInputRef}
                 onChange={(e) => {
-                  // When "Change Images" is clicked, replace existing selection with new files
-                  if (selectedFiles.length > 0 && e.target.files.length > 0) {
-                    handleFileSelection(e.target.files, true); // Pass true to indicate replacement
-                  } else {
+                  if (e.target.files && e.target.files.length > 0) {
                     handleFileSelection(e.target.files);
                   }
                 }}
@@ -593,37 +655,34 @@ const AddUnitModal = ({
                   // allowing the same file to be selected again
                   e.target.value = "";
                 }}
-                disabled={formik.values.images.length > 0}
               />
               <label
                 htmlFor="image-upload"
-                className={`mt-4 inline-block px-4 py-2 ${formik.values.images.length > 0 ? "bg-gray-400 cursor-not-allowed" : "bg-primary cursor-pointer hover:bg-primary/90"} text-white rounded-lg transition-colors mr-2`}
+                className="mt-4 inline-block px-4 py-2 bg-primary cursor-pointer hover:bg-primary/90 text-white rounded-lg transition-colors mr-2"
               >
-                {formik.values.images.length > 0
-                  ? "Images Uploaded"
-                  : selectedFiles.length > 0
-                    ? "Change Images"
-                    : "Select Files"}
+                {selectedFiles.length > 0 ? "Change Image" : "Select Image"}
               </label>
+              
+              {selectedFiles.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleImageUpload}
+                  disabled={uploadingImages}
+                  className="mt-4 inline-block px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400"
+                >
+                  {uploadingImages ? "Uploading..." : "Upload Image"}
+                </button>
+              )}
             </div>
 
             {/* Display selected files waiting to be uploaded */}
-            {selectedFiles.length > 0 && formik.values.images.length === 0 && (
+            {selectedFiles.length > 0 && (
               <div className="mt-4">
                 <div className="flex justify-between items-center mb-2">
                   <h4 className="text-sm font-medium text-gray-700">
-                    Selected Images:
+                    Selected Image:
                   </h4>
-                  <button
-                    type="button"
-                    onClick={handleImageUpload}
-                    disabled={uploadingImages}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400"
-                  >
-                    {uploadingImages
-                      ? "Uploading..."
-                      : "Upload Selected Images"}
-                  </button>
+                  {/* Removed duplicate upload button */}
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {selectedFiles.map((file, index) => (

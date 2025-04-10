@@ -85,7 +85,9 @@ export async function deleteUnit(id) {
 }
 
 // You can add your other service fetching functions below
-export async function fetchUsers(cursor) {
+
+export async function fetchUsersData(cursor) {
+
   const clientId = await getClientid();
   try {
     const params = {
@@ -103,7 +105,7 @@ export async function fetchUsers(cursor) {
   } catch (error) {
     console.error("Failed to fetch users:", error.message);
     return { error: error.message};
-}
+  }
 }
 
 export async function fetchDevelopers() {

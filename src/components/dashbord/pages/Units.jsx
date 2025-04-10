@@ -10,10 +10,12 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Share2,
 } from "lucide-react";
 import AddUnitModal from "../scomponent/AddUnitModal";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import propertyEnums from "../data/propertyEnums.json";
 // Sample data - replace with your actual data
 const realEstateData = [
   {
@@ -111,13 +113,14 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
   const navigate = useRouter();
   const [selectedEstate, setSelectedEstate] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [developerFilter, setDeveloperFilter] = useState("all"); // Changed from priceFilter
-  const [compoundFilter, setCompoundFilter] = useState("all"); // إضافة فلتر للمجمعات
+  const [developerFilter, setDeveloperFilter] = useState("all");
+  const [compoundFilter, setCompoundFilter] = useState("all");
+  const [purposeFilter, setPurposeFilter] = useState("all"); // Add purpose filter state
   const [currentPage, setCurrentPage] = useState(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const itemsPerPage = 8;
-
-  // Filter estates based on search, developer filter, and compound filter
+console.log(initialData)
+  // Filter estates based on search, developer filter, compound filter, and purpose filter
   const filteredEstates = initialData
     ? initialData.filter((estate) => {
         const matchesSearch =
@@ -138,8 +141,13 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
         if (compoundFilter !== "all") {
           matchesCompound = estate.compound === compoundFilter;
         }
+        
+        let matchesPurpose = true;
+        if (purposeFilter !== "all") {
+          matchesPurpose = estate.purpose === purposeFilter;
+        }
 
-        return matchesSearch && matchesDeveloper && matchesCompound;
+        return matchesSearch && matchesDeveloper && matchesCompound && matchesPurpose;
       })
     : [];
 
@@ -265,6 +273,22 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
                     </option>
                   ))}
               </select>
+              
+              <select
+                className="flex-1 min-w-[180px] px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                value={purposeFilter}
+                onChange={(e) => setPurposeFilter(e.target.value)}
+              >
+                <option value="all">All Purposes</option>
+                {propertyEnums && propertyEnums.EnumPropertyIntent.map((purpose, index) => (
+                  <option
+                    key={`purpose-${index}-${purpose}`}
+                    value={purpose.charAt(0).toUpperCase() + purpose.slice(1)}
+                  >
+                    {purpose.charAt(0).toUpperCase() + purpose.slice(1)}
+                  </option>
+                ))}
+              </select>
 
               <button
                 onClick={handleAddBuilding}
@@ -287,7 +311,11 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {currentItems.map((estate, idx) => (
-              <div key={idx} className="flex flex-col">
+              <Link href={`/dashbord/units/${estate.unitId}`}
+               
+                key={idx}
+                className="flex flex-col"
+              >
                 {/* Estate Card with fixed height */}
                 <div
                   className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-[450px] flex flex-col cursor-pointer"
@@ -312,13 +340,27 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
                   <div className="p-4 flex-grow flex flex-col justify-between">
                     <div>
                       <h3 className="text-xl font-bold text-gray-800 mb-1 line-clamp-1 rtl:text-right">
-                        {estate.compound || estate.name || "Unnamed Property"}
+                        {estate?.unitTitle || "Unnamed Property"}
                       </h3>
                       <div className="flex items-center text-gray-700 mb-2">
                         <MapPin className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
                         <span className="line-clamp-1">
                           {estate.city || "Location not specified"}
                         </span>
+                      </div>
+                      
+                      {/* Compound and Purpose Display */}
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {estate.compound && (
+                          <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                            {estate.compound}
+                          </span>
+                        )}
+                        {estate.purpose && (
+                          <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">
+                            {estate.purpose}
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -349,6 +391,19 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
                       )}
 
                       <button
+                        // onClick={(e) => {
+                        //   e.stopPropagation();
+                        //   const url = `${window.location.origin}/dashbord/units/${estate.unitId}`;
+                        //   navigator.clipboard.writeText(url);
+                        //   toast.success("Link copied to clipboard!");
+                        // }}
+                        className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md font-medium transition duration-300 flex items-center justify-center text-sm mt-2"
+                      >
+                        <Share2 className="mr-2 w-4 h-4" />
+                        Share unit
+                      </button>
+
+                      <button
                         onClick={() =>
                           navigate.push(`/dashbord/units/${estate.unitId}`)
                         }
@@ -360,7 +415,7 @@ const RealEstateListings = ({ initialData, comboundata, developersData }) => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
