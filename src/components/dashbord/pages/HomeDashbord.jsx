@@ -402,10 +402,14 @@ const RealEstateDashboard = ({ users }) => {
                       return (
                         <tr
                           onClick={() =>
-                            router.push(
-                              `/dashbord/chat/history/${user.phoneNumber}`
-                            )
+                            router.push(`/dashbord/chat/${user.phoneNumber}`)
                           }
+                          onKeyDown={(e) =>
+                            e.key === "Enter" &&
+                            router.push(`/dashbord/chat/${user.phoneNumber}`)
+                          }
+                          role="button"
+                          tabIndex={0}
                           key={user.phoneNumber}
                           className="hover:bg-gray-50 transition-colors text-xs sm:text-sm"
                         >
