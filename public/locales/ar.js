@@ -1,4 +1,7 @@
 export default {
+  // common
+  direction: "rtl",
+  login: "تسجيل الدخول",
   welcome: "مرحبا",
   dashboard: "لوحة التحكم",
   language: "اللغة",

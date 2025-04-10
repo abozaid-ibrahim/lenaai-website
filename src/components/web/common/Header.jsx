@@ -9,8 +9,10 @@ import {
 } from "@/components/services/clientCookies";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { useI18n } from "@/app/context/translate-api";
 
 const Header = () => {
+  const { t } = useI18n();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -64,7 +66,7 @@ const Header = () => {
                 href="/auth/login"
                 className="text-yellow-400 border border-yellow-400 px-5 py-1.5 rounded-full hover:border-yellow-200 hover:text-yellow-200 transition-all duration-300"
               >
-                Sign In
+                {t.login}
               </Link>
             ) : (
               <button

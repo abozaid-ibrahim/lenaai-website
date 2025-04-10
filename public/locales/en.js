@@ -1,4 +1,7 @@
 export default {
+  // common
+  direction: "ltr",
+  login: "Login",
   welcome: "Welcome",
   dashboard: "Dashboard",
   language: "Language",
