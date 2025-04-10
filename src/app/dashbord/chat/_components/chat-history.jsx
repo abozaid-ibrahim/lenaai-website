@@ -1,17 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
-import UserMessageCard from "./UserMessage";
-import BotMessageCard from "./BotMessage";
-import ChatMetaDataModal from "./ChatMetaDataModal";
+import { useState } from "react";
+import UserMessageCard from "./user-message";
+import BotMessageCard from "./bot-message";
+import ChatMetaDataModal from "./meta-data-dialog";
 
-export default function ChatHistoryContent({ data }) {
+export default function ChatHistory({ data }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [metaData, setMetaData] = useState(null);
 
-  console.log(data);
   return (
-    <div className="container relative mx-auto bg-gray-200 rounded-lg p-4 h-160 overflow-y-auto">
+    <div className=" rounded-lg px-4 pt-4 overflow-y-auto">
       {data.map((message, index) => (
         <div key={index} className="w-full flex flex-col">
           <div className="flex justify-end mb-3">

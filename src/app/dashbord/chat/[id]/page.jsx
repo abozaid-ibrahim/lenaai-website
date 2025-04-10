@@ -1,18 +1,17 @@
 import { getChatHistory } from "@/components/services/serviceFetching";
-import ChatHistoryContent from "@/components/dashbord/scomponent/ChatHistoryContent";
+import SendNewMessageForm from "../_components/send-new-message";
+import ChatHistory from "../_components/chat-history";
 
 export default async function ChatPage({ params }) {
   const { id } = await params;
 
   const data = await getChatHistory(id);
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="container mx-auto bg-gray-200 rounded-lg p-4 h-160 overflow-y-auto">
-        <p className="text-center text-gray-500">No chat history available.</p>
-      </div>
-    );
-  }
+  return (
+    <div className="relative container mx-auto flex flex-col h-full bg-gray-200 rounded-md pb-14">
+      <ChatHistory data={data} />
 
-  return <ChatHistoryContent data={data} />;
+      <SendNewMessageForm />
+    </div>
+  );
 }
