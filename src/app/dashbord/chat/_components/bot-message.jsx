@@ -1,10 +1,17 @@
+import PropertyCard from "@/components/ui/property-card";
+
 export default function BotMessageCard({ message, setModalOpen, setMetaData }) {
+  const { properties, bot_response } = message;
+  const propertiesItems = Object.values(properties);
+
   return (
     <div className=" w-fit rounded-lg p-2 bg-white flex flex-col">
-      <div className="text-sm">{message.bot_response}</div>
-      <div className="text-xs text-gray-500 mt-2">
+      <div className="text-sm">{bot_response}</div>
+
+      {/* <div className="text-xs text-gray-500 mt-2">
         {new Date().toLocaleString()}
-      </div>
+      </div> */}
+
       {message.properties && (
         <button
           onClick={() => {
@@ -16,6 +23,11 @@ export default function BotMessageCard({ message, setModalOpen, setMetaData }) {
           Show Properties
         </button>
       )}
+
+      {propertiesItems?.length > 0 &&
+        propertiesItems.map((itm) => (
+          <PropertyCard key={itm.property_id} data={itm.metadata} />
+        ))}
     </div>
   );
 }

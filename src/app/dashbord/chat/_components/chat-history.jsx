@@ -6,6 +6,7 @@ import BotMessageCard from "./bot-message";
 import ChatMetaDataModal from "./meta-data-dialog";
 
 export default function ChatHistory({ data }) {
+  console.log(data);
   const [modalOpen, setModalOpen] = useState(false);
   const [metaData, setMetaData] = useState(null);
 
@@ -16,6 +17,7 @@ export default function ChatHistory({ data }) {
           <div className="flex justify-end mb-3">
             <UserMessageCard key={index} message={message.user_message} />
           </div>
+
           <div className="flex justify-start mb-3">
             <BotMessageCard
               key={index}
