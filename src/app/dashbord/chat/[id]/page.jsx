@@ -14,9 +14,5 @@ export default async function ChatPage({ params }) {
     );
   }
 
-  return (
-    <div className="container mx-auto bg-gray-200 rounded-lg p-4 h-160 overflow-y-auto">
-      <ChatHistoryContent data={data} />
-    </div>
-  );
+  return <ChatHistoryContent data={data} />;
 }
