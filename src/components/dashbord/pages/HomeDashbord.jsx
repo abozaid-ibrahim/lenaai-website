@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import formatDateForDisplay from "@/utils/formateDate";
 import PropertyDetailsModal from "../scomponent/PropertyDetailsModal";
-import { fetchUsers } from "@/components/services/serviceFetching";
+import { fetchUsersData } from "@/components/services/serviceFetching";
 import { useRouter } from "next/navigation";
 const RealEstateDashboard = ({ users }) => {
   // Sample data
@@ -176,10 +176,10 @@ const RealEstateDashboard = ({ users }) => {
     if (hasMore) {
       setPreviousCursor(nextCursor);
       setCurrentPage(currentPage + 1);
-      const nextUsers = await fetchUsers(nextCursor);
-      setUsersData([...nextUsers.users]);
-      setNextCursor(nextUsers.pagination.next_cursor);
-      setHasMore(nextUsers.pagination.has_more);
+      const nextUsers = await fetchUsersData(nextCursor);
+      setUsersData([...nextUsers.data.users]);
+      setNextCursor(nextUsers.data.pagination.next_cursor);
+      setHasMore(nextUsers.data.pagination.has_more);
     }
   };
 
@@ -271,11 +271,10 @@ const RealEstateDashboard = ({ users }) => {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap ${
-                      activeTab === tab
+                    className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap ${activeTab === tab
                         ? "bg-white text-blue-700 shadow-sm"
                         : "text-gray-600 hover:bg-gray-200"
-                    }`}
+                      }`}
                   >
                     {tab}
                   </button>
@@ -397,8 +396,9 @@ const RealEstateDashboard = ({ users }) => {
                         "Not specified";
                       const messageCount = user.conversation?.length || 0;
                       const status =
-                        user.profile?.Score?.details?.buyer?.category || "Cold";
-
+                        user.actions?.action || "No Action";
+                      
+                      const statusStyle = getStatusStyle(status);
                       return (
                         <tr
                           onClick={() =>
@@ -447,13 +447,7 @@ const RealEstateDashboard = ({ users }) => {
                           <td className="px-2 sm:px-4 py-2 sm:py-3">
                             <div className="flex justify-center">
                               <span
-                                className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap ${
-                                  status === "Hot"
-                                    ? "bg-green-100 text-green-700"
-                                    : status === "Warm"
-                                      ? "bg-yellow-100 text-yellow-700"
-                                      : "bg-gray-100 text-gray-700"
-                                }`}
+                                className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap ${statusStyle.bgColor}`}
                               >
                                 {status}
                               </span>
@@ -475,22 +469,20 @@ const RealEstateDashboard = ({ users }) => {
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage === 1}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${
-                    currentPage === 1
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${currentPage === 1
                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : "bg-blue-600 text-white hover:bg-blue-700"
-                  }`}
+                    }`}
                 >
                   Previous
                 </button>
                 <button
                   onClick={handleNextPage}
                   disabled={!hasMore}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${
-                    hasMore
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${hasMore
                       ? "bg-blue-600 text-white hover:bg-blue-700"
                       : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  }`}
+                    }`}
                 >
                   Next
                 </button>

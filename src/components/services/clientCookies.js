@@ -3,7 +3,8 @@ import { cookies } from "next/headers";
 import toast from "react-hot-toast";
 
 export const getClientid = async () => {
-  const cookie = cookies().get("client_id");
+  const cookieStore = await cookies();
+  const cookie = cookieStore.get("client_id");
 
   console.log(cookie);
   if (!cookie || !cookie.value) return {};
