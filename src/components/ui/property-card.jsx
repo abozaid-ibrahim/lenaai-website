@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -26,7 +29,14 @@ const InfoItem = ({ icon, label, value }) => (
 );
 
 export default function PropertyCard({ data }) {
-  console.log(data);
+  const [hoveredImage, setHoveredImage] = useState(null);
+
+  const handleImageHover = () => {
+    if (data.images?.length > 1) {
+      setHoveredImage(data.images[1].url);
+    }
+  };
+
   const {
     buildingType,
     floor,
@@ -49,7 +59,9 @@ export default function PropertyCard({ data }) {
       >
         {data.images?.length > 0 ? (
           <Image
-            src={data.images[0].url}
+            onMouseEnter={handleImageHover}
+            onMouseLeave={() => setHoveredImage(null)}
+            src={hoveredImage || data.images[0].url}
             layout="fill"
             objectFit="cover"
             alt="property_iamge"
