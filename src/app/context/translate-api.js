@@ -26,7 +26,6 @@ export const I18nProvider = ({ initialLocal = "ar", children }) => {
     // Sync with cookie on mount (client-side only)
     useEffect(() => {
         const cookieLang = Cookies.get('lang');
-        console.log(cookieLang, "initialLocal");
         if (cookieLang && cookieLang !== locale) {
             setLocale(cookieLang);
         }
