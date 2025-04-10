@@ -21,7 +21,7 @@ export const I18nProvider = ({ initialLocal = "ar", children }) => {
      * INFO: Hydration error:
      *   The hydration error occurs because `I18nProvider` is a client-side component, 
      *   but it’s being used in a server-rendered context (the root layout) WITHOUT proper synchronization between server and client states.
-     */
+    */
 
     // Sync with cookie on mount (client-side only)
     useEffect(() => {
@@ -38,7 +38,7 @@ export const I18nProvider = ({ initialLocal = "ar", children }) => {
         document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
     }, []);
 
-    const t = useMemo(() => locale === "en" ? en : ar, [locale]);
+    const t = useMemo(() => locale === "ar" ? ar : en, [locale]);
 
     return (
         <I18nContext.Provider value={{ locale, t, changeLanguage }}>

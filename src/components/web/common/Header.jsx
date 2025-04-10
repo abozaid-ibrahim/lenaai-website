@@ -2,15 +2,18 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Globe, AlertTriangle } from "lucide-react";
-// import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+
 import {
   getClientid,
   removeClientId,
 } from "@/components/services/clientCookies";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { useI18n } from "@/app/context/translate-api";
 
 const Header = () => {
+  const { t } = useI18n();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const ci = Cookies.get("client_id");
@@ -33,7 +36,7 @@ const Header = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  
+
   return (
     <>
       {/* Logout Confirmation Popup */}
@@ -45,18 +48,22 @@ const Header = () => {
               <div className="bg-red-100 p-3 rounded-full mb-4">
                 <AlertTriangle className="h-6 w-6 text-red-500" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-800">Are you sure?</h3>
-              <p className="text-gray-600 mt-2">You will be logged out of your account</p>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Are you sure?
+              </h3>
+              <p className="text-gray-600 mt-2">
+                You will be logged out of your account
+              </p>
             </div>
-            
+
             <div className="flex gap-3 mt-6">
-              <button 
+              <button
                 onClick={cancelLogout}
                 className="flex-1 py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md font-medium transition-colors"
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={confirmLogout}
                 className="flex-1 py-2 px-4 bg-primary hover:bg-primary/90 text-white rounded-md font-medium transition-colors"
               >
@@ -78,24 +85,25 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
               <Link href="/" className="hover:text-blue-200 transition-colors">
-                Home
+                {t.header.home}
               </Link>
               <Link
                 href="/dashbord"
                 className="hover:text-blue-200 transition-colors"
               >
-                Client Dashboard
+                {t.header.clientDashboard}
               </Link>
               <Link href="" className="hover:text-blue-200 transition-colors">
-                Job Opportunities
+                {t.header.jobOpportunities}
               </Link>
               <Link href="" className="hover:text-blue-200 transition-colors">
-                All Properties
+                {t.header.allProperties}
               </Link>
             </nav>
 
             {/* Action Buttons */}
             <div className="hidden md:flex items-center space-x-4">
+              <LanguageSwitcher />
               {!ci ? (
                 <Link
                   href="/auth/login"
