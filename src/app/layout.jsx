@@ -3,7 +3,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { I18nProvider } from "./context/translate-api";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +25,29 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   // Get the initial locale from the cookie on the server
   const cookieStore = await cookies();
-  const initialLocale = cookieStore.get("lang")?.value || "ar";
+  const langCookie = cookieStore.get("lang")?.value || "ar";
+
+  // Get Accept-Language header from the request
+  const headersStore = await headers();
+  const acceptLanguage = headersStore.get("accept-language");
+  const supportedLocales = ["en", "ar"];
+  const defaultLocale = "ar";
+
+  // Parse the preferred locale from Accept-Language
+  let initialLocale = defaultLocale;
+  if (!langCookie && acceptLanguage) {
+    const preferredLocales = acceptLanguage
+      .split(",")
+      .map((lang) => lang.split(";")[0].trim().toLowerCase());
+    initialLocale =
+      preferredLocales.find((loc) =>
+        supportedLocales.includes(loc.split("-")[0])
+      ) || defaultLocale;
+  } else if (langCookie) {
+    initialLocale = supportedLocales.includes(langCookie)
+      ? langCookie
+      : defaultLocale;
+  }
 
   return (
     <html lang={initialLocale} dir={initialLocale === "ar" ? "rtl" : "ltr"}>
