@@ -39,32 +39,32 @@ const Header = () => {
       {/* Logout Confirmation Popup */}
       {showLogoutConfirm && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-            {/* Popup container */}
-            <div className="bg-white rounded-lg shadow-lg p-6 w-80 m-4 animate-fade-in">
-              <div className="flex flex-col items-center text-center mb-4">
-                <div className="bg-red-100 p-3 rounded-full mb-4">
-                  <AlertTriangle className="h-6 w-6 text-red-500" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-800">Are you sure?</h3>
-                <p className="text-gray-600 mt-2">You will be logged out of your account</p>
+          {/* Popup container */}
+          <div className="bg-white rounded-lg shadow-lg p-6 w-80 m-4 animate-fade-in">
+            <div className="flex flex-col items-center text-center mb-4">
+              <div className="bg-red-100 p-3 rounded-full mb-4">
+                <AlertTriangle className="h-6 w-6 text-red-500" />
               </div>
-              
-              <div className="flex gap-3 mt-6">
-                <button 
-                  onClick={cancelLogout}
-                  className="flex-1 py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md font-medium transition-colors"
-                >
-                  Cancel
-                </button>
-                <button 
-                  onClick={confirmLogout}
-                  className="flex-1 py-2 px-4 bg-primary hover:bg-primary/90 text-white rounded-md font-medium transition-colors"
-                >
-                  Log Out
-                </button>
-              </div>
+              <h3 className="text-lg font-semibold text-gray-800">Are you sure?</h3>
+              <p className="text-gray-600 mt-2">You will be logged out of your account</p>
+            </div>
+            
+            <div className="flex gap-3 mt-6">
+              <button 
+                onClick={cancelLogout}
+                className="flex-1 py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md font-medium transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmLogout}
+                className="flex-1 py-2 px-4 bg-primary hover:bg-primary/90 text-white rounded-md font-medium transition-colors"
+              >
+                Log Out
+              </button>
             </div>
           </div>
+        </div>
       )}
 
       <header className="bg-primary text-white shadow-md">
