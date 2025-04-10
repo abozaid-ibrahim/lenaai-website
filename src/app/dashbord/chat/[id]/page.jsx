@@ -1,10 +1,13 @@
-import React from "react";
 import { getChatHistory } from "@/components/services/serviceFetching";
-import ChatHistory from "@/components/dashbord/pages/ChatHistory";
-export default async function Page({ params }) {
+import ChatHistoryContent from "@/components/dashbord/scomponent/ChatHistoryContent";
+
+export default async function ChatPage({ params }) {
   const { id } = await params;
-  console.log("id", id);
 
   const data = await getChatHistory(id);
-  return <ChatHistory data={data} />;
+  return (
+    <div className="container mx-auto bg-gray-200 rounded-lg p-4 h-160 overflow-y-auto">
+      <ChatHistoryContent data={data} />
+    </div>
+  );
 }
