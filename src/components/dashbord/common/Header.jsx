@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Search, Bell, User, MessageSquare, Menu } from "lucide-react";
-import { LanguageSwitcher } from "../../i18n/LanguageSwitcher";
+import { LanguageSwitcher } from "../../ui/LanguageSwitcher";
 
 const Header = () => {
   const handleMenuClick = () => {
