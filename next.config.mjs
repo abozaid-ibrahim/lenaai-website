@@ -9,11 +9,16 @@ const nextConfig = {
       },
     ],
   },
-  i18n: {
-    locales: ["en", "ar"],  // Supported locales
-    defaultLocale: "ar", // Default locale
-    localeDetection: true, // Enable automatic locale detection
-  },
 };
 
 export default nextConfig;
+// module.exports = {
+//     async rewrites() {
+//       return [
+//         {
+//           source: '/api/:path*',
+//           destination: 'http://api.lenaai.net/:path*',
+//         },
+//       ];
+//     },
+//   };
