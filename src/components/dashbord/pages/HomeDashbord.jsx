@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Search,
   Filter,
@@ -16,6 +16,9 @@ import formatDateForDisplay from "@/utils/formateDate";
 import PropertyDetailsModal from "../scomponent/PropertyDetailsModal";
 import { fetchUsers } from "@/components/services/serviceFetching";
 import { useRouter } from "next/navigation";
+import { useFormik } from "formik";
+import toast from "react-hot-toast";
+import axios from "axios";
 const RealEstateDashboard = ({ users }) => {
   // Sample data
   const router = useRouter();
@@ -24,6 +27,16 @@ const RealEstateDashboard = ({ users }) => {
   const [nextCursor, setNextCursor] = useState(users?.pagination?.next_cursor);
   const [previousCursor, setPreviousCursor] = useState(null);
   // Sample property details data
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+  };
+
   const propertyDetails = {
     "Three Bedroom": {
       title: "Three Bedroom Apartment in Madinaty",
@@ -102,6 +115,7 @@ const RealEstateDashboard = ({ users }) => {
   // const [leads, setLeads] = useState(initialLeads);
   const [activeTab, setActiveTab] = useState("All Chats");
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,11 +124,14 @@ const RealEstateDashboard = ({ users }) => {
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
-
+  const [isOpenmodle, setIsOpenmodle] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   // Date filter states
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [startDate, setStartDate] = useState("2025-03-26");
   const [endDate, setEndDate] = useState("2025-04-12");
+  const [action, setaction] = useState(null);
+
   const [displayDateRange, setDisplayDateRange] = useState(
     "26 Mar 25 - 12 Apr 25"
   );
@@ -151,27 +168,6 @@ const RealEstateDashboard = ({ users }) => {
     setCurrentPage(1); // Reset to first page when filters are reset
   };
 
-  // Filter leads based on active tab and search
-  // const filteredLeads = leads.filter(lead => {
-  //   if (activeTab === 'All Chats') return true;
-  //   if (activeTab === 'Recent Chats') return new Date(lead.date.split('-').reverse().join('-')) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  //   if (activeTab === 'Needs Action') return ['Missing Info', 'Schedule Call', 'Make a Call', 'Book Viewing'].includes(lead.status);
-  //   if (activeTab === 'NO Action') return ['Not Interested', 'Not Qualified'].includes(lead.status);
-  //   return true;
-  // }).filter(lead => {
-  //   if (!searchTerm) return true;
-  //   return lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     lead.requirements.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     lead.phone.includes(searchTerm);
-  // });
-
-  // Calculate pagination
-  // const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
-  // const startIndex = (currentPage - 1) * itemsPerPage;
-  // const endIndex = startIndex + itemsPerPage;
-  // const currentLeads = filteredLeads.slice(startIndex, endIndex);
-
-  // Pagination handlers
   const handleNextPage = async () => {
     if (hasMore) {
       setPreviousCursor(nextCursor);
@@ -188,20 +184,7 @@ const RealEstateDashboard = ({ users }) => {
       setCurrentPage(currentPage - 1);
     }
   };
-  //   const filteredLeads = leads.filter(lead => {
-  //     if (activeTab === 'All Chats') return true;
-  //     if (activeTab === 'Recent Chats') return new Date(lead.date.split('-').reverse().join('-')) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  //     if (activeTab === 'Needs Action') return ['Missing Info', 'Schedule Call', 'Make a Call', 'Book Viewing'].includes(lead.status);
-  //     if (activeTab === 'NO Action') return ['Not Interested', 'Not Qualified'].includes(lead.status);
-  //     return true;
-  //   }).filter(lead => {
-  //     if (!searchTerm) return true;
-  //     return lead.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //            lead.requirements.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //            lead.phone.includes(searchTerm);
-  //   });
 
-  // Get status color and icon
   const getStatusStyle = (status) => {
     switch (status) {
       case "Follow up later":
@@ -259,6 +242,132 @@ const RealEstateDashboard = ({ users }) => {
     }
   };
 
+  const actionidd = `${selectedId?.phoneNumber}_${selectedId?.client_id}`;
+  const formik = useFormik({
+    initialValues: {
+      spreadsheet_url: "",
+      media_url: ""
+    },
+    onSubmit: async (values) => {
+      const payload = {
+        client_id: values.client_id,
+        user_id: values.user_id,
+        created_at: values.created_at,
+        preferred_time: values.preferred_time,
+        description: values.description,
+        action: values.action,
+        actions_history: [
+          {
+            user: "string", // يمكن تغييره لاحقًا حسب المستخدم الفعلي
+            comment: values.comment,
+            created_at: new Date().toISOString(),
+            action: values.action
+          }
+        ]
+      };
+
+      try {
+        setLoading(true);
+        const response = await axios.put(`https://api.lenaai.net/actions/${actionidd}`, payload, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        toast.success(response.data);
+      } catch (error) {
+        toast.error(error?.message);
+        console.error(error?.message);
+      } finally {
+        setLoading(false);
+        formikinput.resetForm();
+      }
+    }
+
+  });
+
+ 
+
+  const formikinput = useFormik({
+    enableReinitialize: true, // This allows the form to update when initialValues change
+    initialValues: {
+      client_id: action?.client_id || "",
+      user_id: action?.user_id || "",
+      created_at: action?.created_at || "",
+      preferred_time: action?.preferred_time || "",
+      description: action?.description || "",
+      action: action?.action || "",
+      comment: ""
+    },
+  
+    onSubmit: async (values) => {
+      const payload = {
+        client_id: values.client_id,
+        user_id: values.user_id,
+        created_at: values.created_at,
+        preferred_time: values.preferred_time,
+        description: values.description,
+        action: values.action,
+        comment: "",
+        actions_history: [
+          {
+            user: values.user_id || "current_user_id",
+            comment: values.comment,
+            created_at: new Date().toISOString(),
+            action: values.action
+          }
+        ]
+      };
+  
+      try {
+        setLoading(true);
+        const response = await axios.put(
+          `https://api.lenaai.net/actions/01187394794767_DREAM_HOMES`,
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        toast.success("Action updated successfully!");
+      } catch (error) {
+        toast.error(error?.message || "Something went wrong");
+        console.error(error);
+      } finally {
+        setLoading(false);
+        formikinput.resetForm();
+        setIsOpenmodle(true);
+      }
+    },
+  });
+
+
+
+  console.log(selectedId);
+  const actionid = `${selectedId?.phoneNumber}_${selectedId?.client_id}`;
+
+
+
+  useEffect(() => {
+    if (!selectedId) return;
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`https://api.lenaai.net/actions/${actionid}`);
+
+        setaction(response?.data);
+      } catch (error) {
+        console.error(error);
+      }
+
+    };
+
+    fetchData();
+  }, [selectedId]);
+
+
+
+
   return (
     <div className="min-h-screen bg-gray-50 p-2 sm:p-4 md:p-6">
       <div className="max-w-7xl mx-auto bg-white rounded-xl shadow-sm">
@@ -271,21 +380,109 @@ const RealEstateDashboard = ({ users }) => {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap ${
-                      activeTab === tab
-                        ? "bg-white text-blue-700 shadow-sm"
-                        : "text-gray-600 hover:bg-gray-200"
-                    }`}
+                    className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap ${activeTab === tab
+                      ? "bg-white text-blue-700 shadow-sm"
+                      : "text-gray-600 hover:bg-gray-200"
+                      }`}
                   >
                     {tab}
                   </button>
                 )
               )}
             </div>
-            <button className="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2">
+            <button onClick={handleOpenModal} className="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2">
               <MessageSquare size={16} />
               WhatsApp Leads
             </button>
+
+            {isOpen && (
+              <div className="fixed inset-0 bg-[#00000042] bg-opacity-40 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg shadow-lg w-[90%] max-w-md p-6 relative">
+                  {/* إغلاق */}
+                  <button
+                    onClick={handleCloseModal}
+                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 mt-4"
+                  >
+                    <X size={20} />
+                  </button>
+
+                  <h2 className="text-lg font-semibold mb-2">  Send Cold Whats Messages Patch</h2>
+                  <div>
+
+                    <form onSubmit={formik.handleSubmit}>
+                      <div className="grid gap-12 mb-6 mt-5 mb-5">
+                        <div>
+                          <label htmlFor="spreadsheet_url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Link or File
+                          </label>
+                          <input
+                            type="text"
+                            id="spreadsheet_url"
+                            name="spreadsheet_url"
+                            onChange={formik.handleChange}
+                            value={formik.values.spreadsheet_url}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
+            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+            dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Spreadsheet Link"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="media_url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Video Link
+                          </label>
+                          <input
+                            type="text"
+                            id="media_url"
+                            name="media_url"
+                            onChange={formik.handleChange}
+                            value={formik.values.media_url}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
+            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+            dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Video Link"
+                            required
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          disabled={loading}
+                          className="bg-blue-600 text-white px-4 py-2 rounded"
+                        >
+                          {loading ? "Sending..." : "Send"}
+                        </button>
+                      </div>
+                    </form>
+
+                  </div>
+
+                  <div className="flex justify-end gap-2">
+                    {/* <button
+                        onClick={handleCloseModal}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm"
+                      >
+                        إلغاء
+                      </button>
+                      <button
+                        onClick={() => {
+                          // من هنا ترسل رسائل واتساب
+                          console.log("تم الإرسال...");
+                          setIsOpen(false);
+                        }}
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm"
+                      >
+                        إرسال
+                      </button> */}
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
 
           {/* Search and filter */}
@@ -401,65 +598,84 @@ const RealEstateDashboard = ({ users }) => {
 
                       return (
                         <tr
-                          onClick={() =>
-                            router.push(
-                              `/dashbord/chat/history/${user.phoneNumber}`
-                            )
-                          }
-                          key={user.phoneNumber}
-                          className="hover:bg-gray-50 transition-colors text-xs sm:text-sm"
-                        >
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 font-medium text-gray-900">
-                            <div className="flex flex-col sm:hidden">
-                              <span className="text-xs text-gray-500">
-                                {user.phoneNumber}
-                              </span>
-                              <span
-                                className="text-xs text-blue-600 cursor-pointer hover:underline"
-                                onClick={() =>
-                                  openPropertyDetails(requirements)
-                                }
-                              >
-                                {requirements}
-                              </span>
-                            </div>
-                            <span className="hidden sm:inline">
+                        onClick={() => router.push(`/dashbord/chat/history/${user.phoneNumber}`)}
+                        key={user.phoneNumber}
+                        className="hover:bg-gray-50 transition-colors text-xs sm:text-sm"
+                      >
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 font-medium text-gray-900">
+                          <div className="flex flex-col sm:hidden">
+                            <span className="text-xs text-gray-500">
                               {user.phoneNumber}
                             </span>
-                          </td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 hidden sm:table-cell">
-                            {user.phoneNumber}
-                          </td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600">
-                            {lastActivity}
-                          </td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 hidden md:table-cell">
                             <span
-                              className="text-blue-600 cursor-pointer hover:underline"
-                              onClick={() => openPropertyDetails(requirements)}
+                              className="text-xs text-blue-600 cursor-pointer hover:underline"
+                              onClick={(e) => {
+                                e.stopPropagation(); // لمنع تفعيل onClick للـ tr
+                                openPropertyDetails(requirements);
+                              }}
                             >
                               {requirements}
                             </span>
-                          </td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-medium">
-                            {messageCount}
-                          </td>
-                          <td className="px-2 sm:px-4 py-2 sm:py-3">
-                            <div className="flex justify-center">
-                              <span
-                                className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap ${
-                                  status === "Hot"
-                                    ? "bg-green-100 text-green-700"
-                                    : status === "Warm"
-                                      ? "bg-yellow-100 text-yellow-700"
-                                      : "bg-gray-100 text-gray-700"
-                                }`}
+                          </div>
+                          <span className="hidden sm:inline">
+                            {user.phoneNumber}
+                          </span>
+                        </td>
+                      
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 hidden sm:table-cell">
+                          {user.phoneNumber}
+                        </td>
+                      
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600">
+                          {lastActivity}
+                        </td>
+                      
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 hidden md:table-cell">
+                          <span
+                            className="text-blue-600 cursor-pointer hover:underline"
+                            onClick={(e) => {
+                              e.stopPropagation(); // لمنع تفعيل onClick للـ tr
+                              openPropertyDetails(requirements);
+                            }}
+                          >
+                            {requirements}
+                          </span>
+                        </td>
+                      
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-medium">
+                          {messageCount}
+                        </td>
+                      
+                        <td className="px-2 sm:px-4 py-2 sm:py-3">
+                          <div className="flex justify-center">
+                            <span
+                              className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap ${
+                                status === "Hot"
+                                  ? "bg-green-100 text-green-700"
+                                  : status === "Warm"
+                                  ? "bg-yellow-100 text-yellow-700"
+                                  : "bg-gray-100 text-gray-700"
+                              }`}
+                            >
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation(); // يمنع تفعيل التوجيه عند الضغط على الزر
+                                  setIsOpenmodle(true);
+                                  setSelectedId({
+                                    phoneNumber: user?.phoneNumber,
+                                    client_id: user?.client_id,
+                                  });
+                                }}
+                                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 cursor-pointer py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                               >
-                                {status}
-                              </span>
-                            </div>
-                          </td>
-                        </tr>
+                                Action
+                              </button>
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                      
                       );
                     })}
                   </tbody>
@@ -468,6 +684,99 @@ const RealEstateDashboard = ({ users }) => {
             </div>
           </div>
 
+          {/* Modle in Action  */}
+
+
+          {isOpenmodle && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#00000042] bg-opacity-50">
+              <div className="relative p-4 w-full max-w-2xl max-h-full">
+                <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+
+                  <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                    <h3 className="text-xl font-semibold  dark:text-white">
+                      change Action
+                    </h3>
+                    <button
+                      onClick={() => setIsOpenmodle(false)}
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
+                      <svg
+                        className="w-3 h-3"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 14 14"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7L1 13"
+                        />
+                      </svg>
+                      <span className="sr-only">Close modal</span>
+                    </button>
+                  </div>
+
+                  <div className="p-4 md:p-5 space-y-4">
+
+                    <form className="max-w- mx-auto" onSubmit={formikinput.handleSubmit}>
+                      {/* Select Field */}
+                      <label htmlFor="action" className="block mb-2 mt-2  text-sm font-medium text-gray-900 dark:text-white">
+                        Action
+                      </label>
+                      <select
+                        id="action"
+                        name="action"
+                        onChange={formikinput.handleChange}
+                        value={formikinput.values.action}
+                        className="bg-gray-50 mx-0 border-gray-300 border-0 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 px-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      >
+                        <option value="">Select an option</option>
+                        <option value="Make a call">Make a call</option>
+                        <option value="Office visit">office visit</option>
+                        <option value="Property view">property view</option>
+                        <option value="Not interested">Not interested</option>
+                        <option value="Not qualified">Not qualified</option>
+                        <option value="Follow up later">Follow up later</option>
+                        <option value="Missing Requirement">Missing Requirement</option>
+                      </select>
+
+                      {/* Text Input */}
+                      <div className="mt-5">
+                        <label htmlFor="comment" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                          Comment
+                        </label>
+                        <input
+                          type="text"
+                          id="comment"
+                          name="comment"  // Changed to lowercase to match initialValues
+                          onChange={formikinput.handleChange}
+                          value={formikinput.values.comment}
+                          className="bg-gray-50 border-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="comment"
+                          required
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="mt-5 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg disabled:opacity-50"
+                      >
+                        send
+                      </button>
+                    </form>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Pagination controls */}
           {usersData?.length > 0 && (
             <div className="flex justify-end items-center mt-4">
@@ -475,22 +784,20 @@ const RealEstateDashboard = ({ users }) => {
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage === 1}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${
-                    currentPage === 1
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-blue-600 text-white hover:bg-blue-700"
-                  }`}
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${currentPage === 1
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 text-white hover:bg-blue-700"
+                    }`}
                 >
                   Previous
                 </button>
                 <button
                   onClick={handleNextPage}
                   disabled={!hasMore}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${
-                    hasMore
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  }`}
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${hasMore
+                    ? "bg-blue-600 text-white hover:bg-blue-700"
+                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    }`}
                 >
                   Next
                 </button>
