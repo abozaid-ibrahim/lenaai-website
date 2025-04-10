@@ -2,11 +2,8 @@ import axiosInstance from "@/utils/axiosInstance";
 import Cookies from "js-cookie";
 import { getClientid } from "./clientCookies";
 
-// Function to get client_id from cookies safely
 
-// For server-side, fetch the cookie from an API route
 
-// Fetch units using axios
 export async function fetchUnits() {
   const clientId = await getClientid();
 
@@ -88,21 +85,26 @@ export async function deleteUnit(id) {
 }
 
 // You can add your other service fetching functions below
-export async function fetchUsers(cursor) {
+
+export async function fetchUsersData(cursor) {
+
+  const clientId = await getClientid();
   try {
     const params = {
       limit: 5,
     };
+
     if (cursor) {
       params.cursor = cursor;
     }
-    const response = await axiosInstance.get(`dashboard/ALL`, {
+
+    const response = await axiosInstance.get(`dashboard/${clientId}`, {
       params: params,
     });
     return response.data;
   } catch (error) {
     console.error("Failed to fetch users:", error.message);
-    return { error: error.message };
+    return { error: error.message};
   }
 }
 

@@ -25,7 +25,7 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   // Get the initial locale from the cookie on the server
   const cookieStore = await cookies();
-  const langCookie = cookieStore.get("lang")?.value || "ar";
+  const langCookie = cookieStore.get("lang")?.value;
 
   // Get Accept-Language header from the request
   const headersStore = await headers();

@@ -13,6 +13,7 @@ import {
 } from "@/components/services/serviceFetching";
 import Cookies from "js-cookie";
 // import { uploadImages, deleteImage, addUnit } from '@/components/services/serviceFetching';
+import propertyEnums from "../data/propertyEnums.json";
 
 export const useUnitForm = (onClose, onSave) => {
   const router = useRouter();
@@ -28,6 +29,7 @@ export const useUnitForm = (onClose, onSave) => {
     purpose: Yup.string().required("Purpose is required"),
     country: Yup.string().required("Country is required"),
     city: Yup.string().required("City is required"),
+    district: Yup.string(),
     view: Yup.string().required("View is required"),
     totalPrice: Yup.number()
       .positive("Price must be greater than zero")
@@ -51,7 +53,7 @@ export const useUnitForm = (onClose, onSave) => {
     finishing: Yup.string().required("Finishing type is required"),
     developer: Yup.string().required("Developer is required"),
     dataSource: Yup.string().required("Data source is required"),
-    paymentPlans: Yup.string().required("Payment plans are required"),
+    paymentPlans: Yup.string(),
   });
 
   const [isAddCompoundModalOpen, setIsAddCompoundModalOpen] = useState(false);
@@ -60,15 +62,21 @@ export const useUnitForm = (onClose, onSave) => {
   const [isPaymentPlanPopupOpen, setIsPaymentPlanPopupOpen] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Initialize formik
+  // Get default values from the JSON file
+  const defaultBuildingType = propertyEnums.EnumBuildingType[0] || "apartment";
+  const defaultPurpose = propertyEnums.EnumPropertyIntent[0] || "buy";
+  const defaultView = propertyEnums.EnumViewType[0] || "lagoon";
+
+  // Initialize formik with default values from the JSON file
   const formik = useFormik({
     initialValues: {
-      buildingType: "Apartment",
-      purpose: "Buy",
+      buildingType: defaultBuildingType.charAt(0).toUpperCase() + defaultBuildingType.slice(1),
+      purpose: defaultPurpose.charAt(0).toUpperCase() + defaultPurpose.slice(1),
       compound: "",
-      view: "Lagoon",
+      view: defaultView.charAt(0).toUpperCase() + defaultView.slice(1),
       country: "Egypt",
       city: "",
+      district: "",
       clientName: clientId,
       clientId: clientId,
       developer: "",
@@ -81,7 +89,7 @@ export const useUnitForm = (onClose, onSave) => {
       landArea: "",
       gardenSize: "",
       finishing: "",
-      dataSource: "",
+      dataSource: "website", // Set default value for dataSource
       downPayment: "",
       totalPrice: "",
       paymentPlans: "",
@@ -121,10 +129,11 @@ export const useUnitForm = (onClose, onSave) => {
         // Reset form to initial values with a new UUID
         formik.resetForm();
         formik.setFieldValue("unitId", uuidv4());
-        formik.setFieldValue("buildingType", "Apartment");
-        formik.setFieldValue("purpose", "Buy");
-        formik.setFieldValue("view", "Lagoon");
+        formik.setFieldValue("buildingType", defaultBuildingType.charAt(0).toUpperCase() + defaultBuildingType.slice(1));
+        formik.setFieldValue("purpose", defaultPurpose.charAt(0).toUpperCase() + defaultPurpose.slice(1));
+        formik.setFieldValue("view", defaultView.charAt(0).toUpperCase() + defaultView.slice(1));
         formik.setFieldValue("country", "Egypt");
+        formik.setFieldValue("district", "");
         formik.setFieldValue("clientId", "DREAM_HOMES");
         formik.setFieldValue("images", []);
 
@@ -151,17 +160,11 @@ export const useUnitForm = (onClose, onSave) => {
   const handleFileSelection = (files, replace = false) => {
     if (!files || files.length === 0) return;
 
-    // Convert FileList to Array
-    const newFiles = Array.from(files);
+    // Convert FileList to Array and take only the first file for single image upload
+    const newFile = Array.from(files).slice(0, 1);
 
-    // Store the selected files without uploading immediately
-    if (replace) {
-      // Replace existing selection with new files
-      setSelectedFiles(newFiles);
-    } else {
-      // Add to existing selection
-      setSelectedFiles((prev) => [...prev, ...newFiles]);
-    }
+    // Store the selected file without uploading immediately
+    setSelectedFiles(newFile);
   };
 
   const handleImageUpload = async () => {
@@ -172,10 +175,8 @@ export const useUnitForm = (onClose, onSave) => {
     try {
       const formDataToUpload = new FormData();
 
-      // Add all files with the same key 'file'
-      selectedFiles.forEach((file) => {
-        formDataToUpload.append("file", file);
-      });
+      // Add the file with the key 'file'
+      formDataToUpload.append("file", selectedFiles[0]);
 
       // استخدام وظيفة uploadImages من serviceFetching
       const uploadedImages = await uploadImages(formDataToUpload);
@@ -188,13 +189,13 @@ export const useUnitForm = (onClose, onSave) => {
       // Update formik values
       formik.setFieldValue("images", [...formik.values.images, ...imagesArray]);
 
-      toast.success(`${imagesArray.length} images uploaded successfully`);
+      toast.success(`Image uploaded successfully`);
       setSelectedFiles([]);
       resetFileInput();
     } catch (error) {
-      console.error("Error uploading images:", error);
+      console.error("Error uploading image:", error);
       toast.error(
-        `Failed to upload images: ${error.message || "Unknown error"}`
+        `Failed to upload image: ${error.message || "Unknown error"}`
       );
     } finally {
       setUploadingImages(false);
