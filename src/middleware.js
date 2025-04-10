@@ -10,18 +10,18 @@ export async function middleware(request) {
     return NextResponse.redirect(new URL("/web", request.url));
   }
 
-  // Protect dashboard routes
-  if (path.startsWith("/dashbord")) {
-    // Check for client_id cookie
-    const clientId = request.cookies.get("client_id")?.value;
+  // // Protect dashboard routes
+  // if (path.startsWith("/dashbord")) {
+  //   // Check for client_id cookie
+  //   const clientId = request.cookies.get("client_id")?.value;
 
-    // If no client_id, redirect to login with a message
-    if (!clientId) {
-      return NextResponse.redirect(
-        new URL("/auth/login?message=Please login first", request.url)
-      );
-    }
-  }
+  //   // If no client_id, redirect to login with a message
+  //   if (!clientId) {
+  //     return NextResponse.redirect(
+  //       new URL("/auth/login?message=Please login first", request.url)
+  //     );
+  //   }
+  // }
 
   // Continue with the request for all other paths
   return NextResponse.next();
