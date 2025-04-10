@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useMemo, useCallback, useState } from "react";
+import { createContext, useContext, useMemo, useCallback, useState, useEffect } from "react";
 
 import en from "../../../public/locales/en";
 import ar from "../../../public/locales/ar";
@@ -14,8 +14,22 @@ const context = {
 
 const I18nContext = createContext(context);
 
-export const I18nProvider = ({ children }) => {
-    const [locale, setLocale] = useState(() => Cookies.get('lang') || "ar");
+export const I18nProvider = ({ initialLocal = "ar", children }) => {
+    const [locale, setLocale] = useState(initialLocal);
+
+    /**
+     * INFO: Hydration error:
+     *   The hydration error occurs because `I18nProvider` is a client-side component, 
+     *   but it’s being used in a server-rendered context (the root layout) WITHOUT proper synchronization between server and client states.
+     */
+
+    // Sync with cookie on mount (client-side only)
+    useEffect(() => {
+        const cookieLang = Cookies.get('lang');
+        if (cookieLang && cookieLang !== locale) {
+            setLocale(cookieLang);
+        }
+    }, []);
 
     const changeLanguage = useCallback((lang) => {
         setLocale(lang);
