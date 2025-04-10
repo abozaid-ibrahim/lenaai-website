@@ -39,19 +39,19 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             <Link href="/" className="hover:text-blue-200 transition-colors">
-              Home
+              {t.header.home}
             </Link>
             <Link
               href="/dashbord"
               className="hover:text-blue-200 transition-colors"
             >
-              Client Dashboard
+              {t.header.clientDashboard}
             </Link>
             <Link href="" className="hover:text-blue-200 transition-colors">
-              Job Opportunities
+              {t.header.jobOpportunities}
             </Link>
             <Link href="" className="hover:text-blue-200 transition-colors">
-              All Properties
+              {t.header.allProperties}
             </Link>
           </nav>
 
@@ -94,25 +94,25 @@ const Header = () => {
                 href="/"
                 className="hover:text-blue-200 transition-colors py-2"
               >
-                Home
+                {t.header.home}
               </Link>
               <Link
                 href=""
                 className="hover:text-blue-200 transition-colors py-2"
               >
-                Client Dashboard
+                {t.header.clientDashboard}
               </Link>
               <Link
                 href=""
                 className="hover:text-blue-200 transition-colors py-2"
               >
-                Job Opportunities
+                {t.header.jobOpportunities}
               </Link>
               <Link
                 href=""
                 className="hover:text-blue-200 transition-colors py-2"
               >
-                All Properties
+                {t.header.allProperties}
               </Link>
               <div className="flex items-center space-x-3 pt-2">
                 // Add onClick handler to the mobile menu logout button

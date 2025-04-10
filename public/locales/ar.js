@@ -2,6 +2,12 @@ export default {
   // common
   direction: "rtl",
   login: "تسجيل الدخول",
+  header: {
+    home: "الرئيسية",
+    clientDashboard: "لوحة تحكم العميل",
+    jobOpportunities: "فرص العمل",
+    allProperties: "جميع العقارات",
+  },
   welcome: "مرحبا",
   dashboard: "لوحة التحكم",
   language: "اللغة",

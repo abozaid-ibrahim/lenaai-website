@@ -1,7 +1,14 @@
 export default {
   // common
   direction: "ltr",
+
   login: "Login",
+  header: {
+    home: "Home",
+    clientDashboard: "Client Dashboard",
+    jobOpportunities: "Job Opportunities",
+    allProperties: "All Properties",
+  },
   welcome: "Welcome",
   dashboard: "Dashboard",
   language: "Language",
