@@ -119,7 +119,7 @@ export default function PropertyCard({ data }) {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center mt-2 gap-1">
+        {/* <div className="flex items-center mt-2 gap-1">
           <Link
             href={`/dashbord/units/${unitId}`}
             role="button"
@@ -134,7 +134,7 @@ export default function PropertyCard({ data }) {
           <button className="flex items-center cursor-pointer justify-center h-8 w-10 py-1.5 bg-gray-50 rounded-md hover:bg-gray-100 transition duration-300">
             <Share2Icon size={22} />
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
