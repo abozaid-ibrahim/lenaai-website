@@ -246,7 +246,7 @@ const RealEstateDashboard = ({ users }) => {
   const formik = useFormik({
     initialValues: {
       spreadsheet_url: "",
-      media_url: ""
+      media_url: "",
     },
     onSubmit: async (values) => {
       const payload = {
@@ -261,18 +261,22 @@ const RealEstateDashboard = ({ users }) => {
             user: "string", // يمكن تغييره لاحقًا حسب المستخدم الفعلي
             comment: values.comment,
             created_at: new Date().toISOString(),
-            action: values.action
-          }
-        ]
+            action: values.action,
+          },
+        ],
       };
 
       try {
         setLoading(true);
-        const response = await axios.put(`https://api.lenaai.net/actions/${actionidd}`, payload, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axios.put(
+          `https://api.lenaai.net/actions/${actionidd}`,
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         toast.success(response.data);
       } catch (error) {
         toast.error(error?.message);
@@ -281,11 +285,8 @@ const RealEstateDashboard = ({ users }) => {
         setLoading(false);
         formikinput.resetForm();
       }
-    }
-
+    },
   });
-
- 
 
   const formikinput = useFormik({
     enableReinitialize: true, // This allows the form to update when initialValues change
@@ -296,9 +297,9 @@ const RealEstateDashboard = ({ users }) => {
       preferred_time: action?.preferred_time || "",
       description: action?.description || "",
       action: action?.action || "",
-      comment: ""
+      comment: "",
     },
-  
+
     onSubmit: async (values) => {
       const payload = {
         client_id: values.client_id,
@@ -313,11 +314,11 @@ const RealEstateDashboard = ({ users }) => {
             user: values.user_id || "current_user_id",
             comment: values.comment,
             created_at: new Date().toISOString(),
-            action: values.action
-          }
-        ]
+            action: values.action,
+          },
+        ],
       };
-  
+
       try {
         setLoading(true);
         const response = await axios.put(
@@ -341,32 +342,26 @@ const RealEstateDashboard = ({ users }) => {
     },
   });
 
-
-
   console.log(selectedId);
   const actionid = `${selectedId?.phoneNumber}_${selectedId?.client_id}`;
-
-
 
   useEffect(() => {
     if (!selectedId) return;
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://api.lenaai.net/actions/${actionid}`);
+        const response = await axios.get(
+          `https://api.lenaai.net/actions/${actionid}`
+        );
 
         setaction(response?.data);
       } catch (error) {
         console.error(error);
       }
-
     };
 
     fetchData();
   }, [selectedId]);
-
-
-
 
   return (
     <div className="min-h-screen bg-gray-50 p-2 sm:p-4 md:p-6">
@@ -380,19 +375,21 @@ const RealEstateDashboard = ({ users }) => {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap ${activeTab === tab
-
+                    className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap ${
+                      activeTab === tab
                         ? "bg-white text-blue-700 shadow-sm"
                         : "text-gray-600 hover:bg-gray-200"
-
-                      }`}
+                    }`}
                   >
                     {tab}
                   </button>
                 )
               )}
             </div>
-            <button onClick={handleOpenModal} className="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2">
+            <button
+              onClick={handleOpenModal}
+              className="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2"
+            >
               <MessageSquare size={16} />
               WhatsApp Leads
             </button>
@@ -408,13 +405,18 @@ const RealEstateDashboard = ({ users }) => {
                     <X size={20} />
                   </button>
 
-                  <h2 className="text-lg font-semibold mb-2">  Send Cold Whats Messages Patch</h2>
+                  <h2 className="text-lg font-semibold mb-2">
+                    {" "}
+                    Send Cold Whats Messages Patch
+                  </h2>
                   <div>
-
                     <form onSubmit={formik.handleSubmit}>
                       <div className="grid gap-12 mb-6 mt-5 mb-5">
                         <div>
-                          <label htmlFor="spreadsheet_url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                          <label
+                            htmlFor="spreadsheet_url"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
                             Link or File
                           </label>
                           <input
@@ -433,7 +435,10 @@ const RealEstateDashboard = ({ users }) => {
                         </div>
 
                         <div>
-                          <label htmlFor="media_url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                          <label
+                            htmlFor="media_url"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
                             Video Link
                           </label>
                           <input
@@ -460,7 +465,6 @@ const RealEstateDashboard = ({ users }) => {
                         </button>
                       </div>
                     </form>
-
                   </div>
 
                   <div className="flex justify-end gap-2">
@@ -484,7 +488,6 @@ const RealEstateDashboard = ({ users }) => {
                 </div>
               </div>
             )}
-
           </div>
 
           {/* Search and filter */}
@@ -595,23 +598,54 @@ const RealEstateDashboard = ({ users }) => {
                         user.requirements?.userBuildingType?.[0] ||
                         "Not specified";
                       const messageCount = user.conversation?.length || 0;
-                      const status =
-                        user.actions?.action || "No Action";
-                      
+                      const status = user.actions?.action || "No Action";
+
                       const statusStyle = getStatusStyle(status);
                       return (
                         <tr
-                        onClick={() => router.push(`/dashbord/chat/history/${user.phoneNumber}`)}
-                        key={user.phoneNumber}
-                        className="hover:bg-gray-50 transition-colors text-xs sm:text-sm"
-                      >
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 font-medium text-gray-900">
-                          <div className="flex flex-col sm:hidden">
-                            <span className="text-xs text-gray-500">
+                          onClick={() =>
+                            router.push(`/dashbord/chat/${user.phoneNumber}`)
+                          }
+                          onKeyDown={(e) =>
+                            e.key === "Enter" &&
+                            router.push(`/dashbord/chat/${user.phoneNumber}`)
+                          }
+                          role="button"
+                          tabIndex={0}
+                          key={user.phoneNumber}
+                          className="hover:bg-gray-50 transition-colors text-xs sm:text-sm"
+                        >
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 font-medium text-gray-900">
+                            <div className="flex flex-col sm:hidden">
+                              <span className="text-xs text-gray-500">
+                                {user.phoneNumber}
+                              </span>
+                              <span
+                                className="text-xs text-blue-600 cursor-pointer hover:underline"
+                                onClick={(e) => {
+                                  e.stopPropagation(); // لمنع تفعيل onClick للـ tr
+                                  openPropertyDetails(requirements);
+                                }}
+                              >
+                                {requirements}
+                              </span>
+                            </div>
+                            <span className="hidden sm:inline">
                               {user.phoneNumber}
                             </span>
+                          </td>
+
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 hidden sm:table-cell">
+                            {user.phoneNumber}
+                          </td>
+
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600">
+                            {lastActivity}
+                          </td>
+
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 hidden md:table-cell">
                             <span
-                              className="text-xs text-blue-600 cursor-pointer hover:underline"
+                              className="text-blue-600 cursor-pointer hover:underline"
                               onClick={(e) => {
                                 e.stopPropagation(); // لمنع تفعيل onClick للـ tr
                                 openPropertyDetails(requirements);
@@ -619,66 +653,41 @@ const RealEstateDashboard = ({ users }) => {
                             >
                               {requirements}
                             </span>
-                          </div>
-                          <span className="hidden sm:inline">
-                            {user.phoneNumber}
-                          </span>
-                        </td>
-                      
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 hidden sm:table-cell">
-                          {user.phoneNumber}
-                        </td>
-                      
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-600">
-                          {lastActivity}
-                        </td>
-                      
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 hidden md:table-cell">
-                          <span
-                            className="text-blue-600 cursor-pointer hover:underline"
-                            onClick={(e) => {
-                              e.stopPropagation(); // لمنع تفعيل onClick للـ tr
-                              openPropertyDetails(requirements);
-                            }}
-                          >
-                            {requirements}
-                          </span>
-                        </td>
-                      
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-medium">
-                          {messageCount}
-                        </td>
-                      
-                        <td className="px-2 sm:px-4 py-2 sm:py-3">
-                          <div className="flex justify-center">
-                            <span
-                              className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap ${
-                                status === "Hot"
-                                  ? "bg-green-100 text-green-700"
-                                  : status === "Warm"
-                                  ? "bg-yellow-100 text-yellow-700"
-                                  : "bg-gray-100 text-gray-700"
-                              }`}
-                            >
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation(); // يمنع تفعيل التوجيه عند الضغط على الزر
-                                  setIsOpenmodle(true);
-                                  setSelectedId({
-                                    phoneNumber: user?.phoneNumber,
-                                    client_id: user?.client_id,
-                                  });
-                                }}
-                                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 cursor-pointer py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                          </td>
+
+                          <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-medium">
+                            {messageCount}
+                          </td>
+
+                          <td className="px-2 sm:px-4 py-2 sm:py-3">
+                            <div className="flex justify-center">
+                              <span
+                                className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap ${
+                                  status === "Hot"
+                                    ? "bg-green-100 text-green-700"
+                                    : status === "Warm"
+                                      ? "bg-yellow-100 text-yellow-700"
+                                      : "bg-gray-100 text-gray-700"
+                                }`}
                               >
-                                Action
-                              </button>
-                            </span>
-                          </div>
-                        </td>
-                      </tr>
-                      
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation(); // يمنع تفعيل التوجيه عند الضغط على الزر
+                                    setIsOpenmodle(true);
+                                    setSelectedId({
+                                      phoneNumber: user?.phoneNumber,
+                                      client_id: user?.client_id,
+                                    });
+                                  }}
+                                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 cursor-pointer py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                >
+                                  Action
+                                </button>
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
                       );
                     })}
                   </tbody>
@@ -689,12 +698,10 @@ const RealEstateDashboard = ({ users }) => {
 
           {/* Modle in Action  */}
 
-
           {isOpenmodle && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#00000042] bg-opacity-50">
               <div className="relative p-4 w-full max-w-2xl max-h-full">
                 <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-
                   <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                     <h3 className="text-xl font-semibold  dark:text-white">
                       change Action
@@ -724,10 +731,15 @@ const RealEstateDashboard = ({ users }) => {
                   </div>
 
                   <div className="p-4 md:p-5 space-y-4">
-
-                    <form className="max-w- mx-auto" onSubmit={formikinput.handleSubmit}>
+                    <form
+                      className="max-w- mx-auto"
+                      onSubmit={formikinput.handleSubmit}
+                    >
                       {/* Select Field */}
-                      <label htmlFor="action" className="block mb-2 mt-2  text-sm font-medium text-gray-900 dark:text-white">
+                      <label
+                        htmlFor="action"
+                        className="block mb-2 mt-2  text-sm font-medium text-gray-900 dark:text-white"
+                      >
                         Action
                       </label>
                       <select
@@ -745,18 +757,23 @@ const RealEstateDashboard = ({ users }) => {
                         <option value="Not interested">Not interested</option>
                         <option value="Not qualified">Not qualified</option>
                         <option value="Follow up later">Follow up later</option>
-                        <option value="Missing Requirement">Missing Requirement</option>
+                        <option value="Missing Requirement">
+                          Missing Requirement
+                        </option>
                       </select>
 
                       {/* Text Input */}
                       <div className="mt-5">
-                        <label htmlFor="comment" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label
+                          htmlFor="comment"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
                           Comment
                         </label>
                         <input
                           type="text"
                           id="comment"
-                          name="comment"  // Changed to lowercase to match initialValues
+                          name="comment" // Changed to lowercase to match initialValues
                           onChange={formikinput.handleChange}
                           value={formikinput.values.comment}
                           className="bg-gray-50 border-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -774,7 +791,6 @@ const RealEstateDashboard = ({ users }) => {
                       </button>
                     </form>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -787,20 +803,22 @@ const RealEstateDashboard = ({ users }) => {
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage === 1}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${currentPage === 1
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${
+                    currentPage === 1
                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : "bg-blue-600 text-white hover:bg-blue-700"
-                    }`}
+                  }`}
                 >
                   Previous
                 </button>
                 <button
                   onClick={handleNextPage}
                   disabled={!hasMore}
-                  className={`px-4 py-2 rounded-md text-sm font-medium ${hasMore
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${
+                    hasMore
                       ? "bg-blue-600 text-white hover:bg-blue-700"
                       : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    }`}
+                  }`}
                 >
                   Next
                 </button>
